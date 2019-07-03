@@ -1,50 +1,105 @@
-const noIcon = require("fastify-fastify-no-icon");
+require('dotenv').config();
 const compress = require("fastify-compress");
+const _static = require("fastify-static");
+const noIcon = require("fastify-no-icon");
 const helmet = require("fastify-helmet");
-const static = require("fastify-static");
+const assets = require('cloudinary').v2;
 const fastify = require("fastify");
+const axios = require("axios");
 const path = require("path");
 
+// List of routes
+let { routes } = require("./config");
+let { render } = require("./plugin");
+
 let PORT = process.env.PORT || 3000;
+let root = path.join(__dirname, 'public');
 let dev = process.env.NODE_ENV == "developement";
 let app = fastify({
-    logger: { prettyPrint: !dev },
+    logger: dev && {
+        prettyPrint: {
+            translateTime: "hh:MM:ss TT",
+        },
+    },
     ignoreTrailingSlash: true,
     caseSensitive: false
 });
 
-// Cache times
-let day = (dev ? 0 : 1) * 1000 * 60 * 60 * 24;
-let week = (dev ? 0 : 1) * 1000 * 60 * 60 * 24 * 7;
-
-// Render function
-let render = (file = "index", dur) => (req, res) => {
-
-};
+if (typeof (process.env.CLOUDINARY_URL) === 'undefined') {
+    console.warn('!! Cloudinary config is undefined !!');
+    console.warn('export CLOUDINARY_URL or set dotenv file');
+}
 
 app.register(compress) // Compress/GZIP/Brotil Server
    .register(helmet) // Protect server
-    .register(noIcon) // Remove the no favicon error
+   .register(noIcon) // Remove the no favicon error
+   .register(render) // Render Plugin
 
    // Server Static File
-   .register(static, {
-        root: path.join(__dirname, 'public'),
+   .register(_static, {
+        maxAge: (dev ? 0 : 1) * 1000 * 60 * 60 * 24 * 7,
         cacheControl: true,
-        maxAge: day
+        root: root
+    })
+
+   // Server Static File
+   .register(_static, {
+        maxAge: (dev ? 0 : 1) * 1000 * 60 * 60 * 24 * 7,
+        cacheControl: true,
+        root: path.join(__dirname, 'config.min.js')
     });
 
+// Load assets and cache assets
+app.get("/assets/:asset", (req, res) => {
+    var mime = {
+        html: 'text/html',
+        txt: 'text/plain',
+        css: 'text/css',
+        gif: 'image/gif',
+        jpg: 'image/jpeg',
+        png: 'image/png',
+        svg: 'image/svg+xml',
+        js: 'application/javascript'
+    };
 
-app.decorateReply('view', function (template, args) {
-  // Amazing view rendering engine.
-})
+    let asset = req.params.asset;
+    let url = assets.url(asset);
+    let indx = url.lastIndexOf(".");
+    var type = mime[url.slice(indx + 1)] || 'text/plain';
+    let media = /image/g.test(type);
+    let key = `assets__${asset}__fastify`;
 
-app.get('/', (req, res) => {
-  res.view('/index.html', { hello: 'world' })
+    if (key in app.cache) {
+        let val = app.cache[key];
+        if (val.type) { res.type(val.type).send(val.data); }
+        else { res.send(val.data); }
+    } else {
+        if (/text|application/g.test(type)) url = url.replace("image", "raw");
+        axios.get(url, media ? { responseType: 'arraybuffer' } : undefined)
+            .then(val => {
+                if (media) {
+                    let buf = Buffer.from(val.data, 'base64');
+                    app.cache[key] = {
+                        type: val.headers['content-type'],
+                        data: buf
+                    };
+                    return res.type(val.headers['content-type']).send(buf);
+                }
+
+                app.cache[key] = { data: val.data };
+                return res.send(val.data);
+            }).catch(err => {
+                res.send(err.message);
+                app.log.error(err);
+            });
+    }
 });
 
-
-app.get('/', (req, res) => res.send({ message: "Fast, and Speedy" }))
-   .get('/run', (req, res) => res.send("It works"));
+// Routes and the pages to render
+for (let i in routes)
+    app.get(i, (req, res) => {
+        res.render(routes[i], req.headers["x-barba"]);
+    });
 
 // Error handling
 app.setNotFoundHandler((req, res) => {
@@ -56,6 +111,5 @@ app.setNotFoundHandler((req, res) => {
 
 app.listen(PORT, err => {
     if (err) app.log.error(err);
-    app.log.warn('this is a waring text');
     app.log.info("Server listening on port", PORT);
 });

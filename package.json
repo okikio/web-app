@@ -2,11 +2,13 @@
   "name": "fastify-app",
   "version": "1.0.0",
   "description": "A fastify app.",
-  "main": "server.js",
+  "main": "./server.min",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1",
-    "start": "nodemon server.js",
-    "dev": "node server.js"
+    "watch": "export NODE_ENV=development && gulp && gulp watch --gulpfile ./gulpfile.min.js",
+    "build:dev": "export NODE_ENV=development && gulp --gulpfile ./gulpfile.js",
+    "build": "export NODE_ENV=production && gulp --gulpfile ./gulpfile.min.js",
+    "start": "nodemon ./server.min",
+    "dev": "nodemon ./server"
   },
   "engines": {
     "node": "v12.5.0",
@@ -19,6 +21,8 @@
   "keywords": [
     "Fastify",
     "Node",
+    "Site",
+    "Web",
     "JS"
   ],
   "author": "Okiki Ojo",
@@ -40,6 +44,21 @@
     "nodemon": "^1.19.1"
   },
   "devDependencies": {
+    "@babel/core": "^7.4.5",
+    "@babel/preset-env": "^7.4.5",
+    "autoprefixer": "^9.6.0",
+    "cssnano": "^4.1.10",
+    "gulp": "^4.0.2",
+    "gulp-babel": "^8.0.0",
+    "gulp-beautify": "^3.0.0",
+    "gulp-htmlmin": "^5.0.1",
+    "gulp-if": "^2.0.2",
+    "gulp-postcss": "^8.0.0",
+    "gulp-pug": "^4.0.1",
+    "gulp-rename": "^1.4.0",
+    "gulp-sass": "^4.0.2",
+    "gulp-sourcemaps": "^2.6.5",
+    "gulp-uglify": "^3.0.2",
     "pino-pretty": "^3.2.0"
   }
 }
