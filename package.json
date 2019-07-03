@@ -4,9 +4,9 @@
   "description": "A fastify app.",
   "main": "./server.min",
   "scripts": {
-    "watch": "export NODE_ENV=development && gulp && gulp watch --gulpfile ./gulpfile.min.js",
-    "build:dev": "export NODE_ENV=development && gulp --gulpfile ./gulpfile.js",
-    "build": "export NODE_ENV=production && gulp --gulpfile ./gulpfile.min.js",
+    "watch": "gulp watch --gulpfile ./gulpfile.min.js",
+    "build:dev": "gulp --gulpfile ./gulpfile.js",
+    "build": "gulp --gulpfile ./gulpfile.min.js",
     "start": "nodemon ./server.min",
     "dev": "nodemon ./server"
   },
@@ -40,6 +40,7 @@
     "fastify-helmet": "^3.0.1",
     "fastify-no-icon": "^3.0.0",
     "fastify-static": "^2.5.0",
+    "gulper": "^0.1.3",
     "jsdom": "^15.1.1",
     "nodemon": "^1.19.1"
   },

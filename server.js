@@ -9,8 +9,8 @@ const axios = require("axios");
 const path = require("path");
 
 // List of routes
-let { routes } = require("./config");
-let { render } = require("./plugin");
+let { routes } = require("./config.min");
+let { render } = require("./plugin.min");
 
 let PORT = process.env.PORT || 3000;
 let root = path.join(__dirname, 'public');
@@ -19,7 +19,7 @@ let app = fastify({
     logger: dev && {
         prettyPrint: {
             translateTime: "hh:MM:ss TT",
-        },
+        }
     },
     ignoreTrailingSlash: true,
     caseSensitive: false
@@ -40,13 +40,6 @@ app.register(compress) // Compress/GZIP/Brotil Server
         maxAge: (dev ? 0 : 1) * 1000 * 60 * 60 * 24 * 7,
         cacheControl: true,
         root: root
-    })
-
-   // Server Static File
-   .register(_static, {
-        maxAge: (dev ? 0 : 1) * 1000 * 60 * 60 * 24 * 7,
-        cacheControl: true,
-        root: path.join(__dirname, 'config.min.js')
     });
 
 // Load assets and cache assets

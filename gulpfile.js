@@ -1,7 +1,6 @@
 const gulp = require('gulp');
 const { src, task, series, parallel, dest, watch } = gulp;
 const { spawn } = require('child_process');
-// const modifyFile = require('gulp-modify-file');
 const autoprefixer = require('autoprefixer');
 const sourcemap = require('gulp-sourcemaps');
 const beautify = require('gulp-beautify');
@@ -18,6 +17,7 @@ const $if = require('gulp-if');
 const fs = require("fs");
 const { pages } = config;
 
+// Vars
 let last;
 let plugins = [
     autoprefixer,
@@ -58,7 +58,7 @@ let stringify = obj => {
 // Based on: [https://gist.github.com/millermedeiros/4724047]
 let exec = (cmd, cb) => {
     var parts = cmd.split(/\s+/g);
-    spawn(parts[0], parts.slice(1), { stdio: 'inherit' })
+    return spawn(parts[0], parts.slice(1), { stdio: 'inherit' })
         .on('data', data => process.stdout.write(data))
         .on('exit', code => {
             var err = null;
@@ -73,16 +73,20 @@ let exec = (cmd, cb) => {
 
 // Execute multiple commands in series
 let execSeries = (cmds, cb) => {
+    let arr = [];
     var execNext = () => {
-        exec(cmds.shift(), err => {
-            if (err) { cb(err); }
-            else {
-                if (cmds.length) execNext();
-                else cb(null);
-            }
-        });
+        arr.push(
+            exec(cmds.shift(), err => {
+                if (err) { cb(err); }
+                else {
+                    if (cmds.length) execNext();
+                    else cb(null);
+                }
+            })
+        );
     };
     execNext();
+    return arr;
 };
 
 task('html', () => {
@@ -166,18 +170,6 @@ task("server", () =>
         .pipe(dest('.'))
 );
 
-task("gulpfile", () =>
-    src("gulpfile.js", { allowEmpty: true })
-        // ES5 file for uglifing
-        .pipe(babel(babelPresets))
-        // Minify the file
-        .pipe(uglify())
-        // Rename
-        .pipe(rename(minSuffix))
-        // Output
-        .pipe(dest('.'))
-);
-
 task("config", () => {
     let content = `"use strict";module.exports = ${stringify(config)};`;
 
@@ -191,11 +183,23 @@ task("config", () => {
 });
 
 task("config:watch", fn => {
-    exec("gulp config server html", () => fn())
+    exec("gulp config server html --gulpfile ./gulpfile.min.js", () => fn());
 });
 
+task("update", () =>
+    src("gulpfile.js", { allowEmpty: true })
+        // ES5 file for uglifing
+        .pipe(babel(babelPresets))
+        // Minify the file
+        .pipe(uglify())
+        // Rename
+        .pipe(rename(minSuffix))
+        // Output
+        .pipe(dest('.'))
+);
+
 task("gulpfile:watch", fn => {
-    exec("gulp gulpfile", () => fn())
+    exec("gulp update", () => fn());
 });
 
 task("git", fn => {
@@ -210,7 +214,7 @@ task("git", fn => {
 });
 
 // Gulp task to minify all files
-task('default', parallel(series("gulpfile", "config", "server", "html"), "js", "css"));
+task('default', parallel(series("update", "config", "server", "html"), "js", "css"));
 
 // Gulp task to check to make sure a file has changed before minify that file files
 task('watch', () => {
@@ -218,5 +222,6 @@ task('watch', () => {
     watch('gulpfile.js', watchDelay, series('gulpfile:watch'));
     watch('views/**/*.pug', watchDelay, series('html'));
     watch('src/**/*.scss', watchDelay, series('css'));
+    watch('server.js', watchDelay, series('server'));
     watch('src/**/*.js', watchDelay, series('js'));
 });
