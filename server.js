@@ -4,6 +4,7 @@ const _static = require("fastify-static");
 const noIcon = require("fastify-no-icon");
 const helmet = require("fastify-helmet");
 const assets = require('cloudinary').v2;
+const cors = require("fastify-cors");
 const fastify = require("fastify");
 const axios = require("axios");
 const path = require("path");
@@ -14,7 +15,9 @@ let { render } = require("./plugin.min");
 
 let PORT = process.env.PORT || 3000;
 let root = path.join(__dirname, 'public');
-let dev = process.env.NODE_ENV == "developement";
+let dev = process.env.dev;
+
+let maxAge = (dev ? 0 : 1) * 1000 * 60 * 60 * 24 * 7;
 let app = fastify({
     logger: dev && {
         prettyPrint: {
@@ -35,12 +38,11 @@ app.register(compress) // Compress/GZIP/Brotil Server
    .register(noIcon) // Remove the no favicon error
    .register(render) // Render Plugin
 
+   // Apply CORS
+   .register(cors, { cacheControl: true, maxAge: maxAge })
+
    // Server Static File
-   .register(_static, {
-        maxAge: (dev ? 0 : 1) * 1000 * 60 * 60 * 24 * 7,
-        cacheControl: true,
-        root: root
-    });
+   .register(_static, { cacheControl: true, maxAge: maxAge, root: root });
 
 // Load assets and cache assets
 app.get("/assets/:asset", (req, res) => {
@@ -62,6 +64,7 @@ app.get("/assets/:asset", (req, res) => {
     let media = /image/g.test(type);
     let key = `assets__${asset}__fastify`;
 
+    res.header("cache-control", `public, max-age=${maxAge}`);
     if (key in app.cache) {
         let val = app.cache[key];
         if (val.type) { res.type(val.type).send(val.data); }
@@ -91,6 +94,7 @@ app.get("/assets/:asset", (req, res) => {
 // Routes and the pages to render
 for (let i in routes)
     app.get(i, (req, res) => {
+        res.header("cache-control", `public, max-age=${maxAge}`);
         res.render(routes[i], req.headers["x-barba"]);
     });
 

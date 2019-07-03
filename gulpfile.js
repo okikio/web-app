@@ -99,7 +99,7 @@ task('html', () => {
             // Minifies html
             .pipe(
                 $if(
-                    process.env.NODE_ENV == "production",
+                    !process.env.dev,
                     htmlmin(htmlMinOpts),
                     beautify.html({ indent_size: 4 })
                 )
@@ -123,7 +123,7 @@ task("css", () =>
         // Minify & Autoprefix the file
         .pipe(
             $if(
-                process.env.NODE_ENV == "production",
+                !process.env.dev,
                 postcss(plugins),
                 beautify.css({ indent_size: 4 })
             )
@@ -145,7 +145,7 @@ task("js", () =>
         // Minify the file
         .pipe(
             $if(
-                process.env.NODE_ENV == "production",
+                !process.env.dev,
                 uglify(),
                 beautify.js({ indent_size: 4 })
             )
