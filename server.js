@@ -15,7 +15,7 @@ let { render } = require("./plugin.min");
 
 let PORT = process.env.PORT || 3000;
 let root = path.join(__dirname, 'public');
-let dev = process.env.dev;
+let dev = process.env.dev == "true";
 
 let maxAge = (dev ? 0 : 1) * 1000 * 60 * 60 * 24 * 7;
 let app = fastify({
@@ -58,12 +58,17 @@ app.get("/assets/:asset", (req, res) => {
     };
 
     let asset = req.params.asset;
-    let url = assets.url(asset);
+    let url = assets.url(asset, {
+        quality: 30,
+        transformation: [
+            { aspect_ratio: "4:3", crop: "fill" },
+            { width: "auto", dpr: "auto", crop: "scale" }
+        ]
+    });
     let indx = url.lastIndexOf(".");
     var type = mime[url.slice(indx + 1)] || 'text/plain';
     let media = /image/g.test(type);
     let key = `assets__${asset}__fastify`;
-
     res.header("cache-control", `public, max-age=${maxAge}`);
     if (key in app.cache) {
         let val = app.cache[key];
