@@ -40,7 +40,6 @@
     "fastify-cors": "^2.1.3",
     "fastify-helmet": "^3.0.1",
     "fastify-no-icon": "^3.0.0",
-    "fastify-static": "^2.5.0",
     "glob": "^7.1.4",
     "jsdom": "^15.1.1",
     "mime-types": "^2.1.24",
