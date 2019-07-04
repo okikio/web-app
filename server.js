@@ -8,7 +8,7 @@ const path = require("path");
 
 // List of routes
 let { routes } = require("./config.min");
-let { _render, _static, _assets } = require("./plugin");
+let { _render, _static, _assets } = require("./plugin.min");
 
 let PORT = process.env.PORT || 3000;
 let root = path.join(__dirname, 'public');
