@@ -41,9 +41,11 @@
     "fastify-helmet": "^3.0.1",
     "fastify-no-icon": "^3.0.0",
     "fastify-static": "^2.5.0",
-    "gulper": "^0.1.3",
+    "glob": "^7.1.4",
     "jsdom": "^15.1.1",
-    "nodemon": "^1.19.1"
+    "mime-types": "^2.1.24",
+    "nodemon": "^1.19.1",
+    "send": "^0.17.1"
   },
   "devDependencies": {
     "@babel/core": "^7.4.5",
