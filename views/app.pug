@@ -34,8 +34,7 @@ html(lang="en")
                   each detail in val.layer.layout.values
                     if detail.section.title
                       +title(detail.section)
-                    else
-                      +content(detail.section)
+                    +content(detail.section)
 
     +footer("2019 Okiki Ojo")
     script(src='./js/app.min.js')

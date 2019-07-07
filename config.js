@@ -18,7 +18,9 @@ module.exports = {
                             section(
                                 title("Hello"),
                                 values(
-                                    img("/assets/city.jpg", "A city Image")
+                                    img("/assets/city.jpg", "A city Image"),
+                                content("X value -- "),
+                                content("Print so many")
                                 )
                             )
                         )

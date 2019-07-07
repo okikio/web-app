@@ -25,7 +25,7 @@ module.exports = {
             },
             "values": [{
                     "layer": {
-                        "class": "layout-color-primary",
+                        "class": "layer-color-primary",
                         "hero": {
                             "img": {
                                 "src": "/assets/blue-sky.jpg",
@@ -39,11 +39,18 @@ module.exports = {
                                 "section": {
                                     "title": "Hello",
                                     "values": [{
-                                        "img": {
-                                            "src": "/assets/city.jpg",
-                                            "alt": "A city Image"
+                                            "img": {
+                                                "src": "/assets/city.jpg",
+                                                "alt": "A city Image"
+                                            }
+                                        },
+                                        {
+                                            "content": "X value -- "
+                                        },
+                                        {
+                                            "content": "Print so many"
                                         }
-                                    }]
+                                    ]
                                 }
                             }]
                         }
