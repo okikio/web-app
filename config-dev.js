@@ -1,30 +1,51 @@
-let { values, title, tile, tabs, src, section, row, page, padding, margin, link, layout, layer, img, href, hero, font_size, content, component, color, col, _class, class_add, background, attr, alt } = require("./containers/page")
 module.exports = {
     "pages": {
-        "index": page(
-            title("Hello There"),
-            values(
-                layer(
-                    _class(
-                        background("primary")
-                    ),
-                    hero(
-                        img("/assets/blue-sky.jpg", "A city Image"),
-                        title("HEro to REscue")
-                    )
-                    // values(
-                //         layout(
-                //             _class("layout-enlarge"),
-                //             values(
-                //                 title("Hello")
-                //             )
-                //         )
-                    // )
-                ),
-                img("/assets/blue-sky.jpg", "A city Image"),
-                content("Shes alive")
-            )
-        )
+        "index": {
+            "title": "Hello There",
+            "tabs": {
+                "values": [{
+                        "a": {
+                            "href": "/about",
+                            "content": "ABOUT"
+                        }
+                    },
+                    {
+                        "a": {
+                            "href": "/projects",
+                            "content": "PROJECTS"
+                        }
+                    },
+                    {
+                        "a": {
+                            "href": "/contact",
+                            "content": "CONTACT"
+                        }
+                    }
+                ]
+            },
+            "values": [{
+                    "layer": {
+                        "class": "layout-color-primary",
+                        "hero": {
+                            "img": {
+                                "src": "/assets/blue-sky.jpg",
+                                "alt": "A city Image"
+                            },
+                            "title": "HEro to REscue"
+                        }
+                    }
+                },
+                {
+                    "img": {
+                        "src": "/assets/blue-sky.jpg",
+                        "alt": "A city Image"
+                    }
+                },
+                {
+                    "content": "Shes alive"
+                }
+            ]
+        }
     },
     "routes": {
         "/": "index",

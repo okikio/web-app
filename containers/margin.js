@@ -1,4 +1,4 @@
-let attr = require("./attr");
+let class_add = require("./class-add");
 
 // Margins of a component
-module.exports = attr("margin", [], true);
+module.exports = class_add("layout-margin");

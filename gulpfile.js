@@ -91,9 +91,14 @@ let execSeries = (cmds, cb) => {
 task('html', () => {
     for (let i in pages)
         last = src('views/app.pug')
+            // Rename
+            .pipe(rename({
+                basename: i,
+                extname: ".html"
+            }))
             // Pug compiler
             .pipe(pug({
-                data: pages[i]
+                locals: pages[i]
             }))
             // Minifies html
             .pipe(
@@ -103,11 +108,6 @@ task('html', () => {
                     beautify.html({ indent_size: 4 })
                 )
             )
-            // Rename
-            .pipe(rename({
-                basename: i,
-                extname: ".html"
-            }))
             // Output
             .pipe(dest(publicDest));
     return last;
@@ -158,7 +158,7 @@ task("js", () =>
 );
 
 task("server", () =>
-   src(["*.js", "!*.min.js", "!gulpfile.js", "!config.js"], { allowEmpty: true })
+   src(["*.js", "!*.min.js", "!gulpfile.js", "!config.js", "!config-dev.js"], { allowEmpty: true })
         // ES5 file for uglifing
         .pipe(babel(babelPresets))
         // Minify the file
@@ -170,15 +170,28 @@ task("server", () =>
 );
 
 task("config", () => {
-    let content = `"use strict";module.exports = ${stringify(config)};`;
+    let content = `module.exports = ${stringify(config)};`;
 
     // Create config.min
     fs.writeFile("./config.min.js", content, err => { if (err) throw err; });
     return src("config.min.js", { allowEmpty: true })
+        // ES5 file for uglifing
+        .pipe(babel(babelPresets))
         // Minify the file
         .pipe(uglify())
         // Output
-        .pipe(dest('.'))
+        .pipe(dest('.')),
+
+        src("config.min.js", { allowEmpty: true })
+            // Beautify the file
+            .pipe(beautify.js({ indent_size: 4 }))
+            // Rename
+            .pipe(rename({
+                basename: "config-dev",
+                extname: ".js"
+            }))
+            // Output
+            .pipe(dest('.'));
 });
 
 task("config:watch", fn => {
@@ -218,9 +231,9 @@ task('default', parallel(series("update", "config", "server", "html"), "js", "cs
 // Gulp task to check to make sure a file has changed before minify that file files
 task('watch', () => {
     watch(['config.js', 'containers/*.js'], watchDelay, series('config:watch'));
+    watch('gulpfile.js', watchDelay, series('gulpfile:watch', 'server'));
     watch(['server.js', 'plugin.js'], watchDelay, series('server'));
-    watch('gulpfile.js', watchDelay, series('gulpfile:watch'));
-    watch('views/**/*.pug', watchDelay, series('html'));
-    watch('src/**/*.scss', watchDelay, series('css'));
-    watch('src/**/*.js', watchDelay, series('js'));
+    watch('views/**/*.pug', watchDelay, series('html', 'server'));
+    watch('src/**/*.scss', watchDelay, series('css', 'server'));
+    watch('src/**/*.js', watchDelay, series('js', 'server'));
 });

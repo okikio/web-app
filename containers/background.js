@@ -1,4 +1,4 @@
-let attr = require("./attr");
+let class_add = require("./class-add");
 
 // Background of a component
-module.exports = attr("background", "background");
+module.exports = class_add("layout-color");

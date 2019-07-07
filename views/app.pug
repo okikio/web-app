@@ -1,12 +1,41 @@
-<!DOCTYPE html>
+doctype html
 html(lang="en")
-    head
-        meta(charset="UTF-8")
-        meta(name="viewport", content="width=device-width, initial-scale=1.0")
-        meta(http-equiv="X-UA-Compatible", content="ie=edge")
-        title Document
-    body
-        //- - Shes alive
-        p= title
-        span= `${Alive}Ok what you mean`
-        h1 Ok this works wierdly enogh
+  head
+    meta(charset="UTF-8")
+    meta(name="viewport", content="width=device-width, initial-scale=1.0")
+    meta(http-equiv="X-UA-Compatible", content="ie=edge")
+    link(rel='stylesheet' href='./css/app.min.css')
+    title= title
+
+    include ./components/header.pug
+    include ./components/layer.pug
+    include ./components/layout.pug
+    include ./components/title.pug
+    include ./components/content.pug
+    include ./components/hero.pug
+    include ./components/footer.pug
+  body
+    +header(tabs, title)
+
+    .header-top-spot
+    main.main
+      //- if self
+        +doc(self, false)
+      if values
+        each val in values
+          +doc(val, false)
+        each val in values
+          if val.layer
+            +layer(val.layer)
+              if val.layer.hero
+                +hero(val.layer.hero)
+              if val.layer.layout
+                +layout(val.layout)
+                  each detail in val.layout.values
+                    if detail.section.title
+                      +title(detail.section)
+                    else
+                      +content(detail.section)
+
+    +footer("2019 Okiki Ojo")
+    script(src='./js/app.min.js')

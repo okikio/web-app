@@ -1,4 +1,4 @@
 let attr = require("./attr");
 
 // The value property
-module.exports = attr("value", [], true);
+module.exports = attr("values", [], true);

@@ -1,4 +1,4 @@
-let attr = require("./attr");
+let class_add = require("./class-add");
 
 // Color of a component
-module.exports = attr("color", "primary");
+module.exports = class_add("style-color");

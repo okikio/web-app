@@ -1,4 +1,4 @@
-let attr = require("./attr");
+let class_add = require("./class-add");
 
-// Padding of a component
-module.exports = attr("padding", [], true);
+// Paddings of a component
+module.exports = class_add("layout-padding");

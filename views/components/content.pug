@@ -1,0 +1,34 @@
+mixin doc(val, col)
+  - val = val || {};
+  if val.content
+    if col
+      span.style-font-16(class=val.class)= val.content
+    else
+      .layout-padding-vert(class=val.class)= val.content
+  else if val.img
+    img(class=val.class src=val.img.src alt=val.img.alt)
+  else if val.a
+    a.layout-inline(href=val.a.href)= val.a.content
+
+mixin content(val)
+  - val = val || {};
+  section.layer-main(class=val.class)
+    span.style-line-height
+      +doc(val, false)
+
+      if val.values
+        each txt in val.values
+          +doc(txt, false)
+
+          if txt.row
+            .layout-row
+              each col in txt.row.values
+                section(class=col.col.class)
+                  +doc(col.col, true)
+
+                  if col.col.values
+                    each col_txt in col.col.values
+                      +doc(col_col, true)
+
+
+

@@ -1,0 +1,15 @@
+mixin hero(val)
+  - val = val || { img: {} };
+  article.layout-contain.layout-padding-horz-small.layout-padding-bottom.layout-padding-dull-top
+    .layer-hero.layout-enlarge
+      .layer-image
+        img.load-img(src=val.img.src, alt=val.img.alt)
+        .layer-image-overlay
+      .layer-content
+        section.layer-header
+        section.layer-main.style-center
+          h1.style-white.style-bolder= val.title
+          a.h3.style-primary.layer-hero-scroll-down.layer-shadow.icon-btn
+            .layout-padding-small
+              i.icon expand_more
+
