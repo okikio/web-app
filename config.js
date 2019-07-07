@@ -11,15 +11,18 @@ module.exports = {
                     hero(
                         img("/assets/blue-sky.jpg", "A city Image"),
                         title("HEro to REscue")
+                    ),
+                    layout(
+                        _class("layout-enlarge"),
+                        values(
+                            section(
+                                title("Hello"),
+                                values(
+                                    img("/assets/city.jpg", "A city Image")
+                                )
+                            )
+                        )
                     )
-                    // values(
-                //         layout(
-                //             _class("layout-enlarge"),
-                //             values(
-                //                 title("Hello")
-                //             )
-                //         )
-                    // )
                 ),
                 img("/assets/blue-sky.jpg", "A city Image"),
                 content("Shes alive")

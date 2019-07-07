@@ -30,8 +30,8 @@ html(lang="en")
               if val.layer.hero
                 +hero(val.layer.hero)
               if val.layer.layout
-                +layout(val.layout)
-                  each detail in val.layout.values
+                +layout(val.layer.layout)
+                  each detail in val.layer.layout.values
                     if detail.section.title
                       +title(detail.section)
                     else

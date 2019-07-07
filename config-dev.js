@@ -32,6 +32,20 @@ module.exports = {
                                 "alt": "A city Image"
                             },
                             "title": "HEro to REscue"
+                        },
+                        "layout": {
+                            "class": "layout-enlarge",
+                            "values": [{
+                                "section": {
+                                    "title": "Hello",
+                                    "values": [{
+                                        "img": {
+                                            "src": "/assets/city.jpg",
+                                            "alt": "A city Image"
+                                        }
+                                    }]
+                                }
+                            }]
                         }
                     }
                 },
