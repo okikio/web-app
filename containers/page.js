@@ -1,5 +1,4 @@
 let background = require("./background");
-let font_size = require("./font-size");
 let component = require("./component");
 let class_add = require("./class-add");
 let padding = require("./padding");
@@ -18,6 +17,7 @@ let href = require("./href");
 let hero = require("./hero");
 let attr = require("./attr");
 let link = require("./link");
+let font = require("./font");
 let src = require("./src");
 let row = require("./row");
 let img = require("./img");
@@ -31,5 +31,5 @@ let page = (...args) => {
     return assign(assign(...defaults), ...args);
 };
 
-assign(page, { values, title, tile, tabs, src, section, row, page, padding, margin, link, layout, layer, img, href, hero, font_size, content, component, color, col, _class, class_add, background, attr, alt });
+assign(page, { values, title, tile, tabs, src, section, row, page, padding, margin, link, layout, layer, img, href, hero, font, content, component, color, col, _class, class_add, background, attr, alt });
 module.exports = page;

@@ -1,0 +1,27 @@
+/* -- Icons & Font -- */
+.icon {
+   -webkit-font-feature-settings: "liga" off, "dlig"; /* Ch 16-26, BB 10, And 18.0 */
+   -moz-font-feature-settings: "liga=0, dlig=1"; /* Fx 4-21 */
+   font-feature-settings: "liga", "dlig"; /* IE 10, Saf 4.0-6.0 */
+   text-rendering: optimizeLegibility;
+   font-family: $icon-font;
+   vertical-align: middle;
+   letter-spacing: normal;
+   display: inline-block;
+   text-decoration: none;
+   text-transform: none;
+   white-space: nowrap;
+   font-weight: normal;
+   position: relative;
+   font-size: inherit;
+   font-style: normal;
+   word-wrap: normal;
+   line-height: 1;
+   direction: ltr;
+   height: 1em;
+   width: 1em;
+
+   &-btn {
+      border-radius: 20em;
+   }
+}

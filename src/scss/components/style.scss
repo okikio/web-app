@@ -1,0 +1,151 @@
+/* -- Styles (only affect text) -- */
+.style {
+   $styleParent: &;
+   &, &-font {
+      $fontFamily: (
+         "light": $light-font,
+         "regular": $regular-font,
+         "bolder": $bold-font,
+         "bold": $bold-font
+      );
+
+      @each $name, $family in $fontFamily {
+         &-#{$name}, &-#{$name}-font {
+            font-family: #{$family};
+         }
+      }
+
+      &, &-sz {
+         font-size: 14px;
+
+         $fontSz: (12, 13, 15, 16, 18, 20, 22, 25);
+         @each $sz in $fontSz {
+            &-#{$sz} {
+               font-size: #{$sz}px;
+            }
+         }
+      }
+
+      &, &-weight {
+         font-weight: 400;
+
+         $fontWeight: (200, 300, 400, 500, 600, 700, 800, 900);
+         @each $weight in $fontWeight {
+            &-#{$weight} {
+               font-weight: #{$weight};
+            }
+         }
+      }
+
+      &-italic {
+         font-style: italic;
+      }
+
+      &-underline {
+         text-decoration: underline;
+      }
+
+      &-larger {
+         font-size: 35px;
+      }
+
+      &-large {
+         font-size: 18px;
+      }
+
+      &-normal {
+         font-size: 15px;
+      }
+
+      &-small {
+         font-size: 12px;
+      }
+
+      &-bolder {
+         font-weight: 900;
+      }
+
+      &-bold {
+         font-weight: 700;
+      }
+
+      &-regular {
+         font-weight: 600;
+      }
+
+      &-thin {
+         font-weight: 300;
+      }
+
+      &-thiner {
+         font-weight: 100;
+      }
+   }
+
+   &-spaceout,
+   &-letter-spacing {
+      letter-spacing: 3px;
+
+      &-none {
+         letter-spacing: 0;
+      }
+
+      &-small {
+         letter-spacing: 1px;
+      }
+
+      &-double {
+         letter-spacing: 2px;
+      }
+
+      &-large {
+         letter-spacing: 7px;
+      }
+   }
+
+   &-line-height {
+      line-height: 1.5em;
+
+      &-none {
+         line-height: 0;
+      }
+
+      &-small {
+         line-height: 1;
+      }
+
+      &-double {
+         line-height: 2em;
+      }
+
+      &-large {
+         line-height: 3em;
+      }
+   }
+
+   &-left {
+      text-align: left;
+   }
+
+   &-center {
+      text-align: center;
+   }
+
+   &-right {
+      text-align: right;
+   }
+
+   &-capital {
+      text-transform: capitalize;
+   }
+
+   &-uppercase {
+      text-transform: uppercase;
+   }
+
+   &-lowercase {
+      text-transform: lowercase;
+   }
+
+   @include colorList(color);
+}

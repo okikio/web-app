@@ -17,15 +17,13 @@ let dev = process.env.dev == "true";
 let maxAge = (dev ? 0 : 1) * 1000 * 60 * 60 * 24 * 7;
 let app = fastify({
     logger: dev && {
-        prettyPrint: {
-            translateTime: "hh:MM:ss TT",
-        }
+        prettyPrint: { translateTime: "hh:MM:ss TT", }
     },
     ignoreTrailingSlash: true,
     caseSensitive: false
 });
 
-if (typeof (process.env.CLOUDINARY_URL) === 'undefined') {
+if (typeof (process.env.CLOUDINARY_URL) == 'undefined') {
     console.warn('!! Cloudinary config is undefined !!');
     console.warn('export CLOUDINARY_URL or set dotenv file');
 }
@@ -37,10 +35,10 @@ app.register(compress) // Compress/GZIP/Brotil Server
    .register(_assets) // Assets Plugin
 
    // Apply CORS
-   .register(cors, { cacheControl: true, maxAge: maxAge })
+   .register(cors, { cacheControl: true, maxAge })
 
    // Server Static File
-   .register(_static, { cacheControl: true, maxAge: maxAge, root: root });
+   .register(_static, { cacheControl: true, maxAge, root });
 
 // Routes and the pages to render
 for (let i in routes)

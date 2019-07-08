@@ -1,0 +1,572 @@
+/*
+    -- Layout (margin, padding, postion, shape, etc...) --
+     * vert = vertical
+     * horz = horizontal
+*/
+.layout {
+   position: relative;
+   display: block;
+   margin: 0 auto;
+   width: 100%;
+
+   &,
+   &-vert {
+      padding: {
+         bottom: 100px;
+         top: 100px;
+      }
+   }
+
+   &,
+   &-horz {
+      padding: {
+         right: 80px;
+         left: 80px;
+      }
+   }
+
+   /*
+       -- Base Layouts (these tamper with all the layout setting and provide a great start for a layer) --
+   */
+   &-enlarge {
+      &,
+      &-vert {
+         padding: {
+            bottom: 180px;
+            top: 180px;
+         }
+      }
+
+      &,
+      &-horz {
+         padding: {
+            right: 120px;
+            left: 120px;
+         }
+      }
+   }
+
+   &-shorten {
+      &,
+      &-vert {
+         padding: {
+            bottom: 50px;
+            top: 50px;
+         }
+      }
+
+      &,
+      &-horz {
+         padding: {
+            right: 50px;
+            left: 50px;
+         }
+      }
+
+      &,
+      &-vert,
+      &-horz {
+         position: relative;
+         margin: 0 auto;
+         width: 100%;
+      }
+   }
+
+   @media (max-width: 500px) {
+      &,
+      &-vert {
+         padding: {
+            bottom: 50px;
+            top: 50px;
+         }
+      }
+
+      &,
+      &-horz {
+         padding: {
+            right: 40px;
+            left: 40px;
+         }
+      }
+
+      &-enlarge {
+         &,
+         &-vert {
+            padding: {
+               bottom: 90px;
+               top: 90px;
+            }
+         }
+
+         &,
+         &-horz {
+            padding: {
+               right: 60px;
+               left: 60px;
+            }
+         }
+      }
+
+      &-shorten {
+         &,
+         &-vert {
+            padding: {
+               bottom: 25px;
+               top: 25px;
+            }
+         }
+
+         &,
+         &-horz {
+            padding: {
+               right: 25px;
+               left: 25px;
+            }
+         }
+      }
+
+      &-shrink {
+         &,
+         &-vert {
+            padding: {
+               bottom: 50px !important;
+               top: 50px !important;
+            }
+         }
+
+         &,
+         &-horz {
+            padding: {
+               right: 40px !important;
+               left: 40px !important;
+            }
+         }
+
+         &-shorten {
+            &,
+            &-vert {
+               padding: {
+                  bottom: 25px !important;
+                  top: 25px !important;
+               }
+            }
+
+            &,
+            &-horz {
+               padding: {
+                  right: 25px !important;
+                  left: 25px !important;
+               }
+            }
+         }
+
+         &-mini {
+            &,
+            &-vert {
+               padding: {
+                  bottom: 15px !important;
+                  top: 15px !important;
+               }
+            }
+
+            &,
+            &-horz {
+               padding: {
+                  right: 15px !important;
+                  left: 15px !important;
+               }
+            }
+         }
+      }
+   }
+
+   /* -- Layout Type (block, inline-block, inline, flex) -- */
+   &-block {
+      display: block !important;
+   }
+
+   &-flex {
+      display: flex !important;
+      display: -webkit-flex;
+      display: -webkit-box;
+      display: -ms-flexbox;
+
+      &-center {
+         justify-content: center;
+         align-content: center;
+         align-items: center;
+      }
+
+      &-wrap {
+         flex-wrap: wrap;
+      }
+
+      &-row {
+         flex-direction: row;
+      }
+
+      &-col {
+         flex-direction: column;
+      }
+   }
+
+   &-align-items {
+      &-start {
+         align-items: flex-start;
+      }
+
+      &-center {
+         align-items: center;
+      }
+
+      &-stretch {
+         align-items: stretch;
+      }
+
+      &-end {
+         align-items: flex-end;
+      }
+   }
+
+   &-justify-content {
+      &-start {
+         justify-content: start;
+      }
+
+      &-center {
+         justify-content: center;
+      }
+   }
+
+   &-spacer {
+      -webkit-box-flex: 1; /* OLD - iOS 6-, Safari 3.1-6 */
+      -webkit-flex: 1; /* Safari 6.1+. iOS 7.1+, BB10 */
+      -ms-flex: 1; /* IE 10 */
+      flex: 1;
+   }
+
+   &-inline {
+      display: inline !important;
+
+      &-block {
+         display: inline-block !important;
+      }
+   }
+
+   /* -- Position (horizontal - left, center, right) -- */
+   &-left {
+      position: relative;
+      float: left;
+   }
+
+   &-center {
+      position: relative;
+      margin: 0 auto;
+      width: 100%;
+   }
+
+   &-right {
+      position: relative;
+      float: right;
+   }
+
+   /* -- Container (keep the page focused and content central) -- */
+   &-contain {
+      &,
+      &-large,
+      &-small {
+         margin: 0 auto;
+         width: 100%;
+      }
+
+      &-small {
+         max-width: 550px;
+      }
+
+      @media (min-width: 300px) {
+         &-slim {
+            padding: {
+               left: 0;
+               right: 0;
+            }
+         }
+      }
+
+      @media (min-width: 650px) {
+         .layout-row {
+            margin: {
+               right: -15px;
+               left: -15px;
+            }
+         }
+      }
+
+      @media (min-width: 800px) {
+         &,
+         &-large {
+            max-width: 800px;
+         }
+      }
+
+      @media (min-width: 900px) {
+         &-small {
+            max-width: 700px;
+         }
+
+         &,
+         &-large {
+            max-width: 1000px;
+         }
+      }
+
+      @media (min-width: 1000px) {
+         &-large {
+            max-width: 1200px;
+         }
+      }
+   }
+
+   /*
+    -- Paddings & Margins (create padding & margin defaults for left, top, right, bottom, small, mid, large, etc...[these can be conbined to make cool paddings and margins without css]) --
+     * dull = the value is 0
+   */
+   $spaceTypes: ("margin", "padding");
+   @each $spacing in $spaceTypes {
+      &-#{$spacing} {
+         $spacing-parent: &;
+         #{$spacing}: {
+            bottom: $size;
+            right: $size;
+            left: $size;
+            top: $size;
+         };
+
+         $types: (
+            "dull": 0px !important,
+            "small": $size-small,
+            "mid": $size-mid,
+            "large": $size-large
+         );
+
+         @each $type, $val in $types {
+            &-#{$type} {
+               $type-parent: &;
+               $basic-dirs: (
+                  "horz": ("left", "right"),
+                  "vert": ("top", "bottom")
+               );
+
+               @each $basic-dir, $dirs in $basic-dirs {
+                  &, &-#{$basic-dir} {
+                     @each $dir in $dirs {
+                        &,
+                        &-#{$dir} {
+                           #{$spacing}-#{$dir}: $val;
+                        }
+
+
+                        @at-root
+                        #{$spacing-parent}-#{$type}-#{$dir},
+                        #{$type-parent}-#{$dir}-#{$basic-dir},
+                        #{$spacing-parent}-#{$basic-dir}-#{$type}-#{$dir},
+                        #{$spacing-parent}-#{$basic-dir}-#{$dir}-#{$type} {
+                           #{$spacing}-#{$dir}: $val;
+                        }
+                     }
+                  }
+               }
+            }
+
+            // Padding sizes
+            &-small {
+               $sz: 15px;
+               padding: {
+                  bottom: $sz;
+                  right: $sz;
+                  left: $sz;
+                  top: $sz;
+               };
+
+               &-horz {
+                  padding-right: $sz;
+                  padding-left: $sz;
+               }
+            }
+         }
+
+
+         /* -- Horizontal Padding -- */
+         &, &-horz {
+            padding-right: 25px;
+            padding-left: 25px;
+
+            &-small {
+               padding-right: 15px;
+               padding-left: 15px;
+            }
+
+            &-mid {
+               padding-right: 20px;
+               padding-left: 20px;
+            }
+
+            &-large {
+               padding-right: 50px;
+               padding-left: 50px;
+            }
+
+            &-left {
+               padding-left: 25px;
+            }
+
+            &-right {
+               padding-right: 25px;
+            }
+
+            &-left-small,
+            &-small-left {
+               padding-left: 15px;
+            }
+
+            &-right-small,
+            &-small-right {
+               padding-right: 15px;
+            }
+
+            &-left-mid,
+            &-mid-left {
+               padding-left: 20px;
+            }
+
+            &-right-mid,
+            &-mid-right {
+               padding-right: 20px;
+            }
+
+            &-left-large,
+            &-large-left {
+               padding-left: 50px;
+            }
+
+            &-right-large,
+            &-large-right {
+               padding-right: 50px;
+            }
+         }
+
+         /* -- Vertical Padding -- */
+         &, &-vert {
+            padding-bottom: 25px;
+            padding-top: 25px;
+
+            &-small {
+               padding-bottom: 15px;
+               padding-top: 15px;
+            }
+
+            &-mid {
+               padding-bottom: 20px;
+               padding-top: 20px;
+            }
+
+            &-large {
+               padding-bottom: 50px;
+               padding-top: 50px;
+            }
+
+            &-top {
+               padding-top: 25px;
+            }
+
+            &-bottom {
+               padding-bottom: 25px;
+            }
+
+            &-top-small,
+            &-small-top {
+               padding-top: 15px;
+            }
+
+            &-bottom-small,
+            &-small-bottom {
+               padding-bottom: 15px;
+            }
+
+            &-top-mid,
+            &-mid-top {
+               padding-top: 20px;
+            }
+
+            &-bottom-mid,
+            &-mid-bottom {
+               padding-bottom: 20px;
+            }
+
+            &-top-large,
+            &-large-top {
+               padding-top: 50px;
+            }
+
+            &-bottom-large,
+            &-large-bottom {
+               padding-bottom: 50px;
+            }
+         }
+      }
+   }
+
+   /* -- Clearfix (fix for using float) -- */
+   &-clearfix:after,
+   &-clearfix:before,
+   &-contain:after,
+   &-contain:before,
+   &-contain-small:after,
+   &-contain-small:before,
+   &-row:after,
+   &-row:before {
+      display: table;
+      content: "";
+      clear: both;
+   }
+
+   /* -- Rows & Columns -- */
+   &-row {
+      flex-flow: row wrap;
+      display: flex;
+
+      [class*="layout-col"] {
+         position: relative;
+         min-height: 1px;
+         max-width: 100%;
+         width: 100%;
+
+         @media (min-width: 550px) {
+            padding-right: 15px;
+            padding-left: 15px;
+         }
+      }
+
+      .layout-col {
+         max-width: 100%;
+         flex-basis: 0;
+         flex-grow: 1;
+
+         @for $i from 1 through 12 {
+            &-#{$i} {
+               max-width: 100% / 12 * $i;
+               @media (max-width: 750px) {
+                  @if $i >= 6 {
+                     max-width: 100%;
+                  }
+               }
+
+               @media (max-width: 550px) {
+                  @if $i < 6 {
+                     max-width: 50%;
+                  }
+               }
+            }
+         }
+      }
+   }
+}

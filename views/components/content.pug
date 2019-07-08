@@ -1,14 +1,30 @@
+mixin cols(val)
+  span(class=val.class) !{val.content}
+    block
+
+mixin norm(val)
+  span.style-line-height-double.layout-padding-vert-small(class=val.class)= val.content
+    block
+
+mixin contents(val)
+  - val = val || {};
+  if val.content
+    +norm(val)
+      block
+  if val.img
+    img(class=val.class src=val.img.src alt=val.img.alt)
+  else if val.a
+    a.layout-inline(href=val.a.href)= val.a.content
+
 mixin doc(val, col)
   - val = val || {};
   if val.content
     if col
-      span.style-font-16(class=val.class)= val.content
+      +cols(val)
     else
-      .layout-padding-vert(class=val.class)= val.content
-  else if val.img
-    img(class=val.class src=val.img.src alt=val.img.alt)
-  else if val.a
-    a.layout-inline(href=val.a.href)= val.a.content
+      +norm(val)
+  else
+    +contents(val)
 
 mixin content(val)
   - val = val || {};
@@ -21,14 +37,15 @@ mixin content(val)
           +doc(txt, false)
 
           if txt.row
-            .layout-row
+            .layout-row(class=txt.row.class)
               each col in txt.row.values
-                section(class=col.col.class)
-                  +doc(col.col, true)
+                if col.col
+                  section(class=col.col.class)
+                    +doc(col.col, true)
 
-                  if col.col.values
-                    each col_txt in col.col.values
-                      +doc(col_col, true)
+                    if col.col.values
+                      each col_txt in col.col.values
+                        +doc(col_txt, true)
 
 
 
