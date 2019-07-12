@@ -345,7 +345,8 @@
             "dull": 0px !important,
             "small": $size-small,
             "mid": $size-mid,
-            "large": $size-large
+            "large": $size-large,
+            "default": $size
          );
 
          @each $type, $val in $types {
@@ -379,137 +380,135 @@
 
             // Padding sizes
             &-small {
-               $sz: 15px;
-               padding: {
-                  bottom: $sz;
-                  right: $sz;
-                  left: $sz;
-                  top: $sz;
+               #{$spacing}: {
+                  bottom: $size-small;
+                  right: $size-small;
+                  left: $size-small;
+                  top: $size-small;
                };
 
                &-horz {
-                  padding-right: $sz;
-                  padding-left: $sz;
+                  padding-right: $size-small;
+                  padding-left: $size-small;
                }
             }
          }
 
-
          /* -- Horizontal Padding -- */
          &, &-horz {
-            padding-right: 25px;
-            padding-left: 25px;
+            #{$spacing}-right: $size;
+            #{$spacing}-left: $size;
 
             &-small {
-               padding-right: 15px;
-               padding-left: 15px;
+               #{$spacing}-right: $size-small;
+               #{$spacing}-left: $size-small;
             }
 
             &-mid {
-               padding-right: 20px;
-               padding-left: 20px;
+               #{$spacing}-right: $size-mid;
+               #{$spacing}-left: $size-mid;
             }
 
             &-large {
-               padding-right: 50px;
-               padding-left: 50px;
+               #{$spacing}-right: $size-large;
+               #{$spacing}-left: $size-large;
             }
 
             &-left {
-               padding-left: 25px;
+               #{$spacing}-left: $size;
             }
 
             &-right {
-               padding-right: 25px;
+               #{$spacing}-right: $size;
             }
 
             &-left-small,
             &-small-left {
-               padding-left: 15px;
+               #{$spacing}-left: $size-small;
             }
 
             &-right-small,
             &-small-right {
-               padding-right: 15px;
+               #{$spacing}-right: $size-small;
             }
 
             &-left-mid,
             &-mid-left {
-               padding-left: 20px;
+               #{$spacing}-left: $size-mid;
             }
 
             &-right-mid,
             &-mid-right {
-               padding-right: 20px;
+               #{$spacing}-right: $size-mid;
             }
 
             &-left-large,
             &-large-left {
-               padding-left: 50px;
+               #{$spacing}-left: $size-large;
             }
 
             &-right-large,
             &-large-right {
-               padding-right: 50px;
+               #{$spacing}-right: $size-large;
             }
          }
 
          /* -- Vertical Padding -- */
          &, &-vert {
-            padding-bottom: 25px;
-            padding-top: 25px;
+            #{$spacing}-bottom: $size;
+            #{$spacing}-top: $size;
 
             &-small {
-               padding-bottom: 15px;
-               padding-top: 15px;
+               #{$spacing}-bottom: $size-small;
+               #{$spacing}-top: $size-small;
             }
 
             &-mid {
-               padding-bottom: 20px;
-               padding-top: 20px;
+               #{$spacing}-bottom: $size-mid;
+               #{$spacing}-top: $size-mid;
             }
 
             &-large {
-               padding-bottom: 50px;
-               padding-top: 50px;
+               #{$spacing}-bottom: $size-large;
+               #{$spacing}-top: $size-large;
             }
 
             &-top {
-               padding-top: 25px;
+               #{$spacing}-top: $size;
             }
 
             &-bottom {
-               padding-bottom: 25px;
+               #{$spacing}-bottom: $size;
             }
 
             &-top-small,
             &-small-top {
-               padding-top: 15px;
+               #{$spacing}-top: $size-small;
             }
 
             &-bottom-small,
             &-small-bottom {
-               padding-bottom: 15px;
+               #{$spacing}-bottom: $size-small;
             }
 
             &-top-mid,
             &-mid-top {
-               padding-top: 20px;
+               #{$spacing}-top: $size-mid;
             }
 
             &-bottom-mid,
             &-mid-bottom {
-               padding-bottom: 20px;
+               #{$spacing}-bottom: $size-mid;
             }
 
             &-top-large,
             &-large-top {
-               padding-top: 50px;
+               #{$spacing}-top: $size-large;
             }
 
             &-bottom-large,
             &-large-bottom {
-               padding-bottom: 50px;
+               #{$spacing}-bottom: $size-large;
             }
          }
       }

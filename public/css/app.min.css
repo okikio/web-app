@@ -982,10 +982,10 @@ li {
 }
 
 .layout-margin-small {
-    padding-bottom: 15px;
-    padding-right: 15px;
-    padding-left: 15px;
-    padding-top: 15px;
+    margin-bottom: 15px;
+    margin-right: 15px;
+    margin-left: 15px;
+    margin-top: 15px;
 }
 
 .layout-margin-small-horz {
@@ -1050,10 +1050,10 @@ li {
 }
 
 .layout-margin-small {
-    padding-bottom: 15px;
-    padding-right: 15px;
-    padding-left: 15px;
-    padding-top: 15px;
+    margin-bottom: 15px;
+    margin-right: 15px;
+    margin-left: 15px;
+    margin-top: 15px;
 }
 
 .layout-margin-small-horz {
@@ -1118,10 +1118,10 @@ li {
 }
 
 .layout-margin-small {
-    padding-bottom: 15px;
-    padding-right: 15px;
-    padding-left: 15px;
-    padding-top: 15px;
+    margin-bottom: 15px;
+    margin-right: 15px;
+    margin-left: 15px;
+    margin-top: 15px;
 }
 
 .layout-margin-small-horz {
@@ -1186,10 +1186,78 @@ li {
 }
 
 .layout-margin-small {
-    padding-bottom: 15px;
+    margin-bottom: 15px;
+    margin-right: 15px;
+    margin-left: 15px;
+    margin-top: 15px;
+}
+
+.layout-margin-small-horz {
     padding-right: 15px;
     padding-left: 15px;
-    padding-top: 15px;
+}
+
+.layout-margin-default,
+.layout-margin-default-left,
+.layout-margin-default-horz,
+.layout-margin-default-horz-left {
+    margin-left: 25px;
+}
+
+.layout-margin-default-left,
+.layout-margin-default-left-horz,
+.layout-margin-horz-default-left,
+.layout-margin-horz-left-default {
+    margin-left: 25px;
+}
+
+.layout-margin-default,
+.layout-margin-default-right,
+.layout-margin-default-horz,
+.layout-margin-default-horz-right {
+    margin-right: 25px;
+}
+
+.layout-margin-default-right,
+.layout-margin-default-right-horz,
+.layout-margin-horz-default-right,
+.layout-margin-horz-right-default {
+    margin-right: 25px;
+}
+
+.layout-margin-default,
+.layout-margin-default-top,
+.layout-margin-default-vert,
+.layout-margin-default-vert-top {
+    margin-top: 25px;
+}
+
+.layout-margin-default-top,
+.layout-margin-default-top-vert,
+.layout-margin-vert-default-top,
+.layout-margin-vert-top-default {
+    margin-top: 25px;
+}
+
+.layout-margin-default,
+.layout-margin-default-bottom,
+.layout-margin-default-vert,
+.layout-margin-default-vert-bottom {
+    margin-bottom: 25px;
+}
+
+.layout-margin-default-bottom,
+.layout-margin-default-bottom-vert,
+.layout-margin-vert-default-bottom,
+.layout-margin-vert-bottom-default {
+    margin-bottom: 25px;
+}
+
+.layout-margin-small {
+    margin-bottom: 15px;
+    margin-right: 15px;
+    margin-left: 15px;
+    margin-top: 15px;
 }
 
 .layout-margin-small-horz {
@@ -1199,154 +1267,154 @@ li {
 
 .layout-margin,
 .layout-margin-horz {
-    padding-right: 25px;
-    padding-left: 25px;
+    margin-right: 25px;
+    margin-left: 25px;
 }
 
 .layout-margin-small,
 .layout-margin-horz-small {
-    padding-right: 15px;
-    padding-left: 15px;
+    margin-right: 15px;
+    margin-left: 15px;
 }
 
 .layout-margin-mid,
 .layout-margin-horz-mid {
-    padding-right: 20px;
-    padding-left: 20px;
+    margin-right: 20px;
+    margin-left: 20px;
 }
 
 .layout-margin-large,
 .layout-margin-horz-large {
-    padding-right: 50px;
-    padding-left: 50px;
+    margin-right: 50px;
+    margin-left: 50px;
 }
 
 .layout-margin-left,
 .layout-margin-horz-left {
-    padding-left: 25px;
+    margin-left: 25px;
 }
 
 .layout-margin-right,
 .layout-margin-horz-right {
-    padding-right: 25px;
+    margin-right: 25px;
 }
 
 .layout-margin-left-small,
 .layout-margin-small-left,
 .layout-margin-horz-left-small,
 .layout-margin-horz-small-left {
-    padding-left: 15px;
+    margin-left: 15px;
 }
 
 .layout-margin-right-small,
 .layout-margin-small-right,
 .layout-margin-horz-right-small,
 .layout-margin-horz-small-right {
-    padding-right: 15px;
+    margin-right: 15px;
 }
 
 .layout-margin-left-mid,
 .layout-margin-mid-left,
 .layout-margin-horz-left-mid,
 .layout-margin-horz-mid-left {
-    padding-left: 20px;
+    margin-left: 20px;
 }
 
 .layout-margin-right-mid,
 .layout-margin-mid-right,
 .layout-margin-horz-right-mid,
 .layout-margin-horz-mid-right {
-    padding-right: 20px;
+    margin-right: 20px;
 }
 
 .layout-margin-left-large,
 .layout-margin-large-left,
 .layout-margin-horz-left-large,
 .layout-margin-horz-large-left {
-    padding-left: 50px;
+    margin-left: 50px;
 }
 
 .layout-margin-right-large,
 .layout-margin-large-right,
 .layout-margin-horz-right-large,
 .layout-margin-horz-large-right {
-    padding-right: 50px;
+    margin-right: 50px;
 }
 
 .layout-margin,
 .layout-margin-vert {
-    padding-bottom: 25px;
-    padding-top: 25px;
+    margin-bottom: 25px;
+    margin-top: 25px;
 }
 
 .layout-margin-small,
 .layout-margin-vert-small {
-    padding-bottom: 15px;
-    padding-top: 15px;
+    margin-bottom: 15px;
+    margin-top: 15px;
 }
 
 .layout-margin-mid,
 .layout-margin-vert-mid {
-    padding-bottom: 20px;
-    padding-top: 20px;
+    margin-bottom: 20px;
+    margin-top: 20px;
 }
 
 .layout-margin-large,
 .layout-margin-vert-large {
-    padding-bottom: 50px;
-    padding-top: 50px;
+    margin-bottom: 50px;
+    margin-top: 50px;
 }
 
 .layout-margin-top,
 .layout-margin-vert-top {
-    padding-top: 25px;
+    margin-top: 25px;
 }
 
 .layout-margin-bottom,
 .layout-margin-vert-bottom {
-    padding-bottom: 25px;
+    margin-bottom: 25px;
 }
 
 .layout-margin-top-small,
 .layout-margin-small-top,
 .layout-margin-vert-top-small,
 .layout-margin-vert-small-top {
-    padding-top: 15px;
+    margin-top: 15px;
 }
 
 .layout-margin-bottom-small,
 .layout-margin-small-bottom,
 .layout-margin-vert-bottom-small,
 .layout-margin-vert-small-bottom {
-    padding-bottom: 15px;
+    margin-bottom: 15px;
 }
 
 .layout-margin-top-mid,
 .layout-margin-mid-top,
 .layout-margin-vert-top-mid,
 .layout-margin-vert-mid-top {
-    padding-top: 20px;
+    margin-top: 20px;
 }
 
 .layout-margin-bottom-mid,
 .layout-margin-mid-bottom,
 .layout-margin-vert-bottom-mid,
 .layout-margin-vert-mid-bottom {
-    padding-bottom: 20px;
+    margin-bottom: 20px;
 }
 
 .layout-margin-top-large,
 .layout-margin-large-top,
 .layout-margin-vert-top-large,
 .layout-margin-vert-large-top {
-    padding-top: 50px;
+    margin-top: 50px;
 }
 
 .layout-margin-bottom-large,
 .layout-margin-large-bottom,
 .layout-margin-vert-bottom-large,
 .layout-margin-vert-large-bottom {
-    padding-bottom: 50px;
+    margin-bottom: 50px;
 }
 
 .layout-padding {
@@ -1616,6 +1684,74 @@ li {
 .layout-padding-vert-large-bottom,
 .layout-padding-vert-bottom-large {
     padding-bottom: 50px;
+}
+
+.layout-padding-small {
+    padding-bottom: 15px;
+    padding-right: 15px;
+    padding-left: 15px;
+    padding-top: 15px;
+}
+
+.layout-padding-small-horz {
+    padding-right: 15px;
+    padding-left: 15px;
+}
+
+.layout-padding-default,
+.layout-padding-default-left,
+.layout-padding-default-horz,
+.layout-padding-default-horz-left {
+    padding-left: 25px;
+}
+
+.layout-padding-default-left,
+.layout-padding-default-left-horz,
+.layout-padding-horz-default-left,
+.layout-padding-horz-left-default {
+    padding-left: 25px;
+}
+
+.layout-padding-default,
+.layout-padding-default-right,
+.layout-padding-default-horz,
+.layout-padding-default-horz-right {
+    padding-right: 25px;
+}
+
+.layout-padding-default-right,
+.layout-padding-default-right-horz,
+.layout-padding-horz-default-right,
+.layout-padding-horz-right-default {
+    padding-right: 25px;
+}
+
+.layout-padding-default,
+.layout-padding-default-top,
+.layout-padding-default-vert,
+.layout-padding-default-vert-top {
+    padding-top: 25px;
+}
+
+.layout-padding-default-top,
+.layout-padding-default-top-vert,
+.layout-padding-vert-default-top,
+.layout-padding-vert-top-default {
+    padding-top: 25px;
+}
+
+.layout-padding-default,
+.layout-padding-default-bottom,
+.layout-padding-default-vert,
+.layout-padding-default-vert-bottom {
+    padding-bottom: 25px;
+}
+
+.layout-padding-default-bottom,
+.layout-padding-default-bottom-vert,
+.layout-padding-vert-default-bottom,
+.layout-padding-vert-bottom-default {
+    padding-bottom: 25px;
 }
 
 .layout-padding-small {
@@ -1980,7 +2116,7 @@ li {
 
 .layer-shadow,
 .layer .layer-hero {
-    box-shadow: 0 40px 85px rgba(0, 0, 40, 0.3);
+    box-shadow: 0 20px 85px rgba(0, 0, 40, 0.3);
 }
 
 .layer-shadow--1 {

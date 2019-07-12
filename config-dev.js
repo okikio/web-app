@@ -185,8 +185,11 @@ module.exports = {
                                                         "col": {
                                                             "class": "layout-col-9 layout-padding-small layout-padding-vert-large",
                                                             "values": [{
-                                                                "content": " ",
-                                                                "class": "layout-block layer-box layer-surface layer-shadow--1"
+                                                                "img": {
+                                                                    "src": "/assets/city.jpg",
+                                                                    "alt": "A city Image"
+                                                                },
+                                                                "class": "layout-block layer-box layer-surface layer-shadow"
                                                             }]
                                                         }
                                                     },

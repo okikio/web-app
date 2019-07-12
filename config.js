@@ -241,12 +241,12 @@ module.exports = {
                                                 ),
                                                 values(
                                                     assign(
-                                                        content(` `),
+                                                        img("/assets/city.jpg"),
                                                         _class(
                                                             "layout-block",
                                                             "layer-box",
                                                             "layer-surface",
-                                                            "layer-shadow--1"
+                                                            "layer-shadow"
                                                         )
                                                     )
                                                 )
