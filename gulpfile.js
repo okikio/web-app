@@ -1,20 +1,22 @@
 const gulp = require('gulp');
 const { src, task, series, parallel, dest, watch } = gulp;
-const { spawn } = require('child_process');
+const { init, write } = require('gulp-sourcemaps');
+const { html, js, css } = require('gulp-beautify');
+const webpackStream = require('webpack-stream');
 const autoprefixer = require('autoprefixer');
-const sourcemap = require('gulp-sourcemaps');
-const beautify = require('gulp-beautify');
+const { spawn } = require('child_process');
 const htmlmin = require('gulp-htmlmin');
 const postcss = require('gulp-postcss');
 const uglify = require('gulp-uglify');
 const rename = require('gulp-rename');
 const babel = require('gulp-babel');
+const { writeFile } = require("fs");
 const cssnano = require('cssnano');
 const config = require('./config');
+const webpack = require('webpack');
 const sass = require('gulp-sass');
 const pug = require('gulp-pug');
 const $if = require('gulp-if');
-const fs = require("fs");
 const { pages } = config;
 
 let last;
@@ -36,8 +38,19 @@ let htmlMinOpts = {
 let minSuffix = { suffix: ".min" };
 let watchDelay = { delay: 500 };
 let publicDest = 'public';
-let babelPresets = {
-    presets: ['@babel/env']
+let webpackConfig = {
+    devtool: "source-map",
+    mode: process.env.dev ? 'development' : 'production',
+    output: { filename: 'app.min.js' },
+    module: {
+        rules: [
+            {
+                test: /\.(js|jsx)$/,
+                exclude: /(node_modules)/,
+                use: "babel-loader"
+            }
+        ]
+    }
 };
 
 // Stringify
@@ -105,7 +118,7 @@ task('html', () => {
                 $if(
                     process.env.dev == "false",
                     htmlmin(htmlMinOpts),
-                    beautify.html({ indent_size: 4 })
+                    html({ indent_size: 4 })
                 )
             )
             // Output
@@ -116,7 +129,7 @@ task('html', () => {
 task("css", () =>
     src('src/scss/app.scss')
         // Sourcemaps start
-        .pipe(sourcemap.init())
+        .pipe(init())
         // Compile to css
         .pipe(sass().on('error', sass.logError))
         // Minify & Autoprefix the file
@@ -124,35 +137,29 @@ task("css", () =>
             $if(
                 process.env.dev == "false",
                 postcss(plugins),
-                beautify.css({ indent_size: 4 })
+                css({ indent_size: 4 })
             )
         )
         // Rename
         .pipe(rename(minSuffix))
         // Put sourcemap in public folder
-        .pipe(sourcemap.write('.'))
+        .pipe(write('.'))
         // Output
         .pipe(dest(`${publicDest}/css`))
 );
 
 task("js", () =>
     src("src/js/app.js", { allowEmpty: true })
-        // Sourcemaps start
-        .pipe(sourcemap.init())
-        // ES5 file for uglifing
-        .pipe(babel(babelPresets))
+        // Configure webpack & ES5 file for uglifing
+        .pipe(webpackStream(webpackConfig, webpack))
         // Minify the file
         .pipe(
             $if(
                 process.env.dev == "false",
                 uglify(),
-                beautify.js({ indent_size: 4 })
+                js({ indent_size: 4 })
             )
         )
-        // Rename
-        .pipe(rename(minSuffix))
-        // Put sourcemap in public folder
-        .pipe(sourcemap.write('.'))
         // Output
         .pipe(dest(`${publicDest}/js`))
 );
@@ -160,7 +167,7 @@ task("js", () =>
 task("server", () =>
    src(["*.js", "!*.min.js", "!gulpfile.js", "!config.js", "!config-dev.js"], { allowEmpty: true })
         // ES5 file for uglifing
-        .pipe(babel(babelPresets))
+        .pipe(babel())
         // Minify the file
         .pipe(uglify())
         // Rename
@@ -173,10 +180,10 @@ task("config", () => {
     let content = `module.exports = ${stringify(config)};`;
 
     // Create config.min
-    fs.writeFile("./config.min.js", content, err => { if (err) throw err; });
+    writeFile("./config.min.js", content, err => { if (err) throw err; });
     return src("config.min.js", { allowEmpty: true })
         // ES5 file for uglifing
-        .pipe(babel(babelPresets))
+        .pipe(babel())
         // Minify the file
         .pipe(uglify())
         // Output
@@ -184,7 +191,7 @@ task("config", () => {
 
         src("config.min.js", { allowEmpty: true })
             // Beautify the file
-            .pipe(beautify.js({ indent_size: 4 }))
+            .pipe(js({ indent_size: 4 }))
             // Rename
             .pipe(rename({
                 basename: "config-dev",
@@ -201,7 +208,7 @@ task("config:watch", fn => {
 task("update", () =>
     src("gulpfile.js", { allowEmpty: true })
         // ES5 file for uglifing
-        .pipe(babel(babelPresets))
+        .pipe(babel())
         // Minify the file
         .pipe(uglify())
         // Rename
