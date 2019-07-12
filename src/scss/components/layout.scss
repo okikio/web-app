@@ -365,10 +365,12 @@
                            #{$spacing}-#{$dir}: $val;
                         }
 
-
                         @at-root
+                        #{$spacing-parent}-#{$type},
                         #{$spacing-parent}-#{$type}-#{$dir},
+                        #{$type-parent}-#{$basic-dir}-#{$dir},
                         #{$type-parent}-#{$dir}-#{$basic-dir},
+                        #{$spacing-parent}-#{$basic-dir}-#{$type},
                         #{$spacing-parent}-#{$basic-dir}-#{$type}-#{$dir},
                         #{$spacing-parent}-#{$basic-dir}-#{$dir}-#{$type} {
                            #{$spacing}-#{$dir}: $val;
