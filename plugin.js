@@ -1,11 +1,17 @@
+if ('dev' in process.env) require('dotenv').config();
 const { statSync, createReadStream } = require("fs");
 const { PassThrough } = require("stream");
 const plugin = require("fastify-plugin");
 const { lookup } = require("mime-types");
+const assets = require("cloudinary").v2;
+const axios = require("axios");
 const path = require("path");
 const glob = require("glob");
 const send = require("send");
 const url = require("url");
+
+const { cloud_name } = require('./config.min');
+assets.config({ cloud_name, secure: true });
 
 // For faster efficient page switching using partial output
 const jsdom = require("jsdom");
@@ -124,6 +130,8 @@ module.exports._static = plugin((app, opts, next) => {
     // Pumps `send` to the reply/response Object
     app.decorate('sendReply', (req, reply, path) => {
         let stream, file, wrap, key = `static__${path}__fastify`;
+        reply.header("cache-control", `public, max-age=${opts.maxAge}`);
+
         if (key in app.cache) {
             reply.type(lookup(path)).send(app.cache[key]);
         } else {
@@ -233,6 +241,51 @@ module.exports._static = plugin((app, opts, next) => {
             return; // Stop
         }
     }
+
+    next();
+});
+
+module.exports._assets = plugin((app, opts, next) => {
+    let maxAge = opts.maxAge;
+
+    // Load and cache assets
+    app.get("/assets/:asset", (req, res) => {
+        let asset = req.params.asset;
+        let url = assets.url(asset, {
+            quality: 30,
+            transformation: [
+                { aspect_ratio: "4:3", crop: "fill" },
+                { width: "auto", dpr: "auto", crop: "scale" }
+            ]
+        });
+
+        var type = lookup(url) || 'text/plain';
+        let media = /image|video/g.test(type);
+        let key = `assets__${asset}__fastify`;
+        res.header("cache-control", `public, max-age=${maxAge}`);
+
+        if (key in app.cache) {
+            let val = app.cache[key];
+            if (val.type) { res.type(val.type).send(val.data); }
+            else { res.send(val.data); }
+        } else {
+            if (/text|application/g.test(type)) url = url.replace("image", "raw");
+            axios.get(url, media ? { responseType: 'arraybuffer' } : undefined)
+                .then(val => {
+                    if (media) {
+                        let buf = Buffer.from(val.data, 'base64');
+                        app.cache[key] = { type: type, data: buf };
+                        return res.type(type).send(buf);
+                    }
+
+                    app.cache[key] = { data: val.data };
+                    return res.send(val.data);
+                }).catch(err => {
+                    res.send(err.message);
+                    app.log.error(err);
+                });
+        }
+    });
 
     next();
 });

@@ -8,11 +8,11 @@ const path = require("path");
 
 // List of routes
 let { routes } = require("./config.min");
-let { _render, _static } = require("./plugin.min");
+let { _render, _static, _assets } = require("./plugin.min");
 
 let PORT = process.env.PORT || 3000;
 let root = path.join(__dirname, 'public');
-let dev = process.env.dev == "true";
+let dev = 'dev' in process.env && process.env.dev == "true";
 
 let maxAge = (dev ? 0 : 1) * 1000 * 60 * 60 * 24 * 7;
 let app = fastify({
@@ -27,9 +27,15 @@ app.register(compress) // Compress/GZIP/Brotil Server
    .register(helmet) // Protect server
    .register(noIcon) // Remove the no favicon error
    .register(_render) // Render Plugin
+   .register(_assets, { maxAge }) // Assets Plugin
 
    // Apply CORS
-   .register(cors, { cacheControl: true, maxAge })
+   .register(cors, {
+        methods: ['GET', 'PUT', 'POST'],
+        cacheControl: true, maxAge,
+        preflightContinue: true,
+        preflight: true
+    })
 
    // Server Static File
    .register(_static, { cacheControl: true, maxAge, root });

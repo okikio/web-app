@@ -17,9 +17,10 @@ const config = require('./config');
 const webpack = require('webpack');
 const sass = require('gulp-sass');
 const pug = require('gulp-pug');
-const { pages, cloud_name } = config;
 
-let dev = process.env.dev == "true";
+let { pages, cloud_name } = config;
+let dev = 'dev' in process.env && process.env.dev == "true";
+let staticSite = 'staticSite' in process.env && process.env.staticSite == "true";
 assets.config({ cloud_name, secure: true });
 
 let assetURL = `https://res.cloudinary.com/${cloud_name}/`;
@@ -122,8 +123,8 @@ task('html', done => {
                 dev ? html({ indent_size: 4 }) : htmlmin(htmlMinOpts),
                 // Replace /assets/... URLs
                 replace(/\/assets\/[^\s\"\']+/g, url => {
-                    return (/\/raw\/[^\s\"\']+/.test(url) ? `${assetURL + url}` :
-                        assets.url(url,assetURLConfig)).replace("/assets/", "");
+                    return staticSite ? (/\/raw\/[^\s\"\']+/.test(url) ? `${assetURL + url}` :
+                        assets.url(url,assetURLConfig)).replace("/assets/", "") : url;
                 })
             ]
         });
