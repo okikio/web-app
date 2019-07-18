@@ -10,7 +10,7 @@ const glob = require("glob");
 const send = require("send");
 const url = require("url");
 
-const { cloud_name } = require('./config.min');
+const { cloud_name, imageURLConfig } = require('./config.min');
 assets.config({ cloud_name, secure: true });
 
 // For faster efficient page switching using partial output
@@ -250,18 +250,21 @@ module.exports._assets = plugin((app, opts, next) => {
 
     // Load and cache assets
     app.get("/assets/:asset", (req, res) => {
+        let URLObj = url.parse(req.raw.url, true);
         let asset = req.params.asset;
-        let url = assets.url(asset, {
-            quality: 30,
-            transformation: [
-                { aspect_ratio: "4:3", crop: "fill" },
-                { width: "auto", dpr: "auto", crop: "scale" }
-            ]
-        });
+        let queryStr = URLObj.search;
+        let query = URLObj.query;
+        // https://3000-a3b2b5f7-b627-40f3-87c9-6330e4d9aefd.ws-us0.gitpod.io/assets/city.webp?w=100
 
-        var type = lookup(url) || 'text/plain';
+        let height = query.h;
+        let width = query.w || 'auto';
+        asset = asset.replace(queryStr, '');
+        let imgURLConfig = { ...imageURLConfig, width, height };
+        let _url = assets.url(asset, imgURLConfig);
+
+        var type = lookup(_url) || 'text/plain';
         let media = /image|video/g.test(type);
-        let key = `assets__${asset}__fastify`;
+        let key = `assets__${URLObj.path}__fastify`;
         res.header("cache-control", `public, max-age=${maxAge}`);
 
         if (key in app.cache) {
@@ -269,8 +272,8 @@ module.exports._assets = plugin((app, opts, next) => {
             if (val.type) { res.type(val.type).send(val.data); }
             else { res.send(val.data); }
         } else {
-            if (/text|application/g.test(type)) url = url.replace("image", "raw");
-            axios.get(url, media ? { responseType: 'arraybuffer' } : undefined)
+            if (/text|application/g.test(type)) _url = _url.replace("image", "raw");
+            axios.get(_url, media ? { responseType: 'arraybuffer' } : undefined)
                 .then(val => {
                     if (media) {
                         let buf = Buffer.from(val.data, 'base64');

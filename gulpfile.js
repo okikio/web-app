@@ -18,19 +18,13 @@ const webpack = require('webpack');
 const sass = require('gulp-sass');
 const pug = require('gulp-pug');
 
-let { pages, cloud_name } = config;
-let dev = 'dev' in process.env && process.env.dev == "true";
-let staticSite = 'staticSite' in process.env && process.env.staticSite == "true";
-assets.config({ cloud_name, secure: true });
+let { env } = process;
+let { pages, cloud_name, imageURLConfig } = config;
+let dev = 'dev' in env && env.dev.toString() == "true";
+let staticSite = 'staticSite' in env && env.staticSite == "true";
 
 let assetURL = `https://res.cloudinary.com/${cloud_name}/`;
-let assetURLConfig = {
-    quality: 30,
-    transformation: [
-        { aspect_ratio: "4:3", crop: "fill" },
-        { width: "auto", dpr: "auto", crop: "scale" }
-    ]
-};
+assets.config({ cloud_name, secure: true });
 
 let htmlMinOpts = {
     minifyJS: true,
@@ -118,13 +112,21 @@ task('html', done => {
                     extname: ".html"
                 }),
                 // Pug compiler
-                pug({ locals: pages[i] }),
+                pug({ locals: { ...pages[i], cloud_name } }),
                 // Minify or Beautify html
                 dev ? html({ indent_size: 4 }) : htmlmin(htmlMinOpts),
                 // Replace /assets/... URLs
                 replace(/\/assets\/[^\s\"\']+/g, url => {
+                    let URLObj = new URL(`${assetURL + url}`.replace("/assets/", ""));
+                    let query = URLObj.searchParams;
+                    let queryString = URLObj.search;
+
+                    let height = query.get("h");
+                    let width = query.get("w") || 'auto';
+                    let imgURLConfig = { ...imageURLConfig, width, height };
+
                     return staticSite ? (/\/raw\/[^\s\"\']+/.test(url) ? `${assetURL + url}` :
-                        assets.url(url,assetURLConfig)).replace("/assets/", "") : url;
+                                 assets.url(url, imgURLConfig)).replace("/assets/", "").replace(queryString, '') : url;
                 })
             ]
         });

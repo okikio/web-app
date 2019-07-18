@@ -1,8 +1,13 @@
 let { values, title, tile, tabs, src, section, row, page, padding, margin, link, layout, layer, img, href, hero, font, content, component, color, col, _class, class_add, background, attr, alt } = require("./containers/page");
 let { assign } = Object;
-let carImg = "https://images.unsplash.com/photo-1561356573-e0bb34e325fe?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=crop&w=1400&q=80";
+let carImg = "/assets/white_car.webp";
 module.exports = {
     "cloud_name": "okikio-assets",
+    "imageURLConfig": {
+        "crop": "scale",
+        "quality": 30,
+        "dpr": "auto"
+    },
     "pages": {
         "index": page(
             title("Hello There"),
@@ -242,7 +247,7 @@ module.exports = {
                                                 ),
                                                 values(
                                                     assign(
-                                                        img("/assets/city.jpg"),
+                                                        img("/assets/city.webp?w=250"),
                                                         _class(
                                                             "layout-block",
                                                             "layer-box",
@@ -316,7 +321,7 @@ module.exports = {
             "detail": "Lorem itpsim",
             "info": "The nature of leadership",
             "img": {
-                "src": "https://res.cloudinary.com/okikio-assets/image/upload/q_10,f_auto/white-flower.jpg",
+                "src": "/assets/white-flower.jpg",
                 "alt": ""
             }
         },
@@ -326,7 +331,7 @@ module.exports = {
             "detail": "Lorem itpsim",
             "info": "Info about Leukemia",
             "img": {
-                "src": "https://res.cloudinary.com/okikio-assets/image/upload/q_10,f_auto/city.jpg",
+                "src": "/assets/city.jpg",
                 "alt": ""
             }
         },
@@ -336,7 +341,7 @@ module.exports = {
             "detail": "Lorem itpsim",
             "info": "A little about renewable sources of energy",
             "img": {
-                "src": "https://res.cloudinary.com/okikio-assets/image/upload/q_10,f_auto/blue-sky.jpg",
+                "src": "/assets/blue-sky.jpg",
                 "alt": ""
             }
         }

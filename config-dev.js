@@ -1,5 +1,10 @@
 module.exports = {
     "cloud_name": "okikio-assets",
+    "imageURLConfig": {
+        "crop": "scale",
+        "quality": 30,
+        "dpr": "auto"
+    },
     "pages": {
         "index": {
             "title": "Hello There",
@@ -28,7 +33,7 @@ module.exports = {
                     "layer": {
                         "hero": {
                             "img": {
-                                "src": "https://images.unsplash.com/photo-1561356573-e0bb34e325fe?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=crop&w=1400&q=80",
+                                "src": "/assets/white_car.webp",
                                 "alt": "A city Image"
                             },
                             "title": "Relax."
@@ -187,7 +192,7 @@ module.exports = {
                                                             "class": "layout-col-9 layout-padding-small layout-padding-vert-large",
                                                             "values": [{
                                                                 "img": {
-                                                                    "src": "/assets/city.jpg",
+                                                                    "src": "/assets/city.webp?w=250",
                                                                     "alt": "A city Image"
                                                                 },
                                                                 "class": "layout-block layer-box layer-surface layer-shadow"
@@ -257,7 +262,7 @@ module.exports = {
             "detail": "Lorem itpsim",
             "info": "The nature of leadership",
             "img": {
-                "src": "https://res.cloudinary.com/okikio-assets/image/upload/q_10,f_auto/white-flower.jpg",
+                "src": "/assets/white-flower.jpg",
                 "alt": ""
             }
         },
@@ -267,7 +272,7 @@ module.exports = {
             "detail": "Lorem itpsim",
             "info": "Info about Leukemia",
             "img": {
-                "src": "https://res.cloudinary.com/okikio-assets/image/upload/q_10,f_auto/city.jpg",
+                "src": "/assets/city.jpg",
                 "alt": ""
             }
         },
@@ -277,7 +282,7 @@ module.exports = {
             "detail": "Lorem itpsim",
             "info": "A little about renewable sources of energy",
             "img": {
-                "src": "https://res.cloudinary.com/okikio-assets/image/upload/q_10,f_auto/blue-sky.jpg",
+                "src": "/assets/blue-sky.jpg",
                 "alt": ""
             }
         }
