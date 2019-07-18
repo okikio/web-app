@@ -109,11 +109,11 @@ a {
    will-change: color;
    overflow: hidden;
    cursor: pointer;
-   color: $secondary;
+   color: $secondary-dark;
 
    :hover,
    :focus {
-      color: $secondary-dark;
+       text-decoration: underline;
    }
 }
 
