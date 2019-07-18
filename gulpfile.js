@@ -125,8 +125,11 @@ task('html', done => {
                     let width = query.get("w") || 'auto';
                     let imgURLConfig = { ...imageURLConfig, width, height };
 
-                    return staticSite ? (/\/raw\/[^\s\"\']+/.test(url) ? `${assetURL + url}` :
-                                 assets.url(url, imgURLConfig)).replace("/assets/", "").replace(queryString, '') : url;
+                    return staticSite ?
+                            (/\/raw\/[^\s\"\']+/.test(url) ?
+                                `${assetURL + url.replace(queryString, '')}` :
+                                 assets.url(url.replace(queryString, ''), imgURLConfig)
+                            ).replace("/assets/", "") : url;
                 })
             ]
         });
