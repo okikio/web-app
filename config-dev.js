@@ -1,4 +1,5 @@
 module.exports = {
+    "cloud_name": "okikio-assets",
     "pages": {
         "index": {
             "title": "Hello There",

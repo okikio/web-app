@@ -1,4 +1,4 @@
-require('dotenv').config();
+if ('dev' in process.env) require('dotenv').config();
 const compress = require("fastify-compress");
 const noIcon = require("fastify-no-icon");
 const helmet = require("fastify-helmet");
@@ -8,7 +8,7 @@ const path = require("path");
 
 // List of routes
 let { routes } = require("./config.min");
-let { _render, _static, _assets } = require("./plugin.min");
+let { _render, _static } = require("./plugin.min");
 
 let PORT = process.env.PORT || 3000;
 let root = path.join(__dirname, 'public');
@@ -23,16 +23,10 @@ let app = fastify({
     caseSensitive: false
 });
 
-if (typeof (process.env.CLOUDINARY_URL) == 'undefined') {
-    console.warn('!! Cloudinary config is undefined !!');
-    console.warn('export CLOUDINARY_URL or set dotenv file');
-}
-
 app.register(compress) // Compress/GZIP/Brotil Server
    .register(helmet) // Protect server
    .register(noIcon) // Remove the no favicon error
    .register(_render) // Render Plugin
-   .register(_assets) // Assets Plugin
 
    // Apply CORS
    .register(cors, { cacheControl: true, maxAge })

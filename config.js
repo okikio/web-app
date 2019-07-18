@@ -2,6 +2,7 @@ let { values, title, tile, tabs, src, section, row, page, padding, margin, link,
 let { assign } = Object;
 let carImg = "https://images.unsplash.com/photo-1561356573-e0bb34e325fe?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=crop&w=1400&q=80";
 module.exports = {
+    "cloud_name": "okikio-assets",
     "pages": {
         "index": page(
             title("Hello There"),

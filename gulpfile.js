@@ -1,56 +1,62 @@
-const gulp = require('gulp');
-const { src, task, series, parallel, dest, watch } = gulp;
+if ('dev' in process.env) require('dotenv').config();
+const { src, task, series, parallel, dest, watch } = require('gulp');
 const { init, write } = require('gulp-sourcemaps');
-const { html, js, css } = require('gulp-beautify');
 const webpackStream = require('webpack-stream');
-const autoprefixer = require('autoprefixer');
+const autoprefix = require("gulp-autoprefixer");
+const replace = require('gulp-string-replace');
+const { html, js } = require('gulp-beautify');
 const { spawn } = require('child_process');
 const htmlmin = require('gulp-htmlmin');
-const postcss = require('gulp-postcss');
+const assets = require("cloudinary").v2;
 const uglify = require('gulp-uglify');
 const rename = require('gulp-rename');
+const { obj } = require('through2');
 const babel = require('gulp-babel');
 const { writeFile } = require("fs");
-const cssnano = require('cssnano');
 const config = require('./config');
 const webpack = require('webpack');
 const sass = require('gulp-sass');
 const pug = require('gulp-pug');
-const $if = require('gulp-if');
-const { pages } = config;
+const { pages, cloud_name } = config;
 
-let last;
-let plugins = [
-    autoprefixer,
-    cssnano
-];
+let dev = process.env.dev == "true";
+assets.config({ cloud_name, secure: true });
+
+let assetURL = `https://res.cloudinary.com/${cloud_name}/`;
+let assetURLConfig = {
+    quality: 30,
+    transformation: [
+        { aspect_ratio: "4:3", crop: "fill" },
+        { width: "auto", dpr: "auto", crop: "scale" }
+    ]
+};
 
 let htmlMinOpts = {
-    collapseWhitespace: true,
-    minifyCSS: true,
     minifyJS: true,
-    processScripts: ["application/ld+json"],
+    minifyCSS: true,
     removeComments: true,
+    collapseWhitespace: true,
     removeEmptyAttributes: false,
-    removeRedundantAttributes: false
+    removeRedundantAttributes: false,
+    processScripts: ["application/ld+json"]
 };
 
 let minSuffix = { suffix: ".min" };
 let watchDelay = { delay: 500 };
 let publicDest = 'public';
 let webpackConfig = {
-    devtool: "source-map",
-    mode: process.env.dev ? 'development' : 'production',
-    output: { filename: 'app.min.js' },
-    module: {
-        rules: [
-            {
-                test: /\.(js|jsx)$/,
-                exclude: /(node_modules)/,
-                use: "babel-loader"
-            }
-        ]
-    }
+    mode: dev ? 'development' : 'production',
+    devtool: dev ? "inline-cheap-source-map" : "source-map",
+    output: { filename: 'app.min.js' }
+};
+
+// Streamlines Gulp Tasks
+let stream = (_src, _opt = { pipes: [], dest: publicDest }, done) => {
+    let host = src(_src, _opt.opts), _pipes = _opt.pipes || [], _dest = _opt.dest || publicDest;
+    _pipes.forEach(val => { host = host.pipe(val); });
+    host = host.pipe(dest(_dest)); // Output
+    if (done) done();
+    return host;
 };
 
 // Stringify
@@ -101,135 +107,132 @@ let execSeries = (cmds, cb) => {
     return arr;
 };
 
-task('html', () => {
-    for (let i in pages)
-        last = src('views/app.pug')
-            // Rename
-            .pipe(rename({
-                basename: i,
-                extname: ".html"
-            }))
-            // Pug compiler
-            .pipe(pug({
-                locals: pages[i]
-            }))
-            // Minifies html
-            .pipe(
-                $if(
-                    process.env.dev == "false",
-                    htmlmin(htmlMinOpts),
-                    html({ indent_size: 4 })
-                )
-            )
-            // Output
-            .pipe(dest(publicDest));
-    return last;
+task('html', done => {
+    for (let i in pages) {
+        stream('views/app.pug', {
+            pipes: [
+                // Rename
+                rename({
+                    basename: i,
+                    extname: ".html"
+                }),
+                // Pug compiler
+                pug({ locals: pages[i] }),
+                // Minify or Beautify html
+                dev ? html({ indent_size: 4 }) : htmlmin(htmlMinOpts),
+                // Replace /assets/... URLs
+                replace(/\/assets\/[^\s\"\']+/g, url => {
+                    return (/\/raw\/[^\s\"\']+/.test(url) ? `${assetURL + url}` :
+                        assets.url(url,assetURLConfig)).replace("/assets/", "");
+                })
+            ]
+        });
+    }
+    done();
 });
 
 task("css", () =>
-    src('src/scss/app.scss')
-        // Sourcemaps start
-        .pipe(init())
-        // Compile to css
-        .pipe(sass().on('error', sass.logError))
-        // Minify & Autoprefix the file
-        .pipe(
-            $if(
-                process.env.dev == "false",
-                postcss(plugins),
-                css({ indent_size: 4 })
-            )
-        )
-        // Rename
-        .pipe(rename(minSuffix))
-        // Put sourcemap in public folder
-        .pipe(write('.'))
-        // Output
-        .pipe(dest(`${publicDest}/css`))
+    stream('src/scss/app.scss', {
+        pipes: [
+            init(), // Sourcemaps init
+            // Compile & Minify scss to css
+            sass({ outputStyle: dev ? 'expanded' : 'compressed' }).on('error', sass.logError),
+            autoprefix(), // Autoprefix the scss
+            rename(minSuffix), // Rename
+            write('.') // Put sourcemap in public folder
+        ],
+        dest: `${publicDest}/css` // Output
+    })
 );
 
 task("js", () =>
-    src("src/js/app.js", { allowEmpty: true })
-        // Configure webpack & ES5 file for uglifing
-        .pipe(webpackStream(webpackConfig, webpack))
-        // Minify the file
-        .pipe(
-            $if(
-                process.env.dev == "false",
-                uglify(),
-                js({ indent_size: 4 })
-            )
-        )
-        // Output
-        .pipe(dest(`${publicDest}/js`))
+    stream("src/js/app.js", {
+        opts: { allowEmpty: true },
+        pipes: [
+            // Configure webpack sourcemaps
+            webpackStream(webpackConfig, webpack),
+            // Push sourcemap to sourcemap.init
+            obj(function (file, enc, cb) {
+                let isSourceMap = /\.map$/.test(file.path);
+                if (!isSourceMap) this.push(file);
+                cb();
+            }),
+            init({ loadMaps: true }), // Sourcemaps init
+            babel(), // ES5 file for uglifing
+            dev ? js({ indent_size: 4 }) : uglify(), // Minify or Beautify file
+            write('.') // Put sourcemap in public folder
+        ],
+        dest: `${publicDest}/js` // Output
+    })
 );
 
 task("server", () =>
-   src(["*.js", "!*.min.js", "!gulpfile.js", "!config.js", "!config-dev.js"], { allowEmpty: true })
-        // ES5 file for uglifing
-        .pipe(babel())
-        // Minify the file
-        .pipe(uglify())
-        // Rename
-        .pipe(rename(minSuffix))
-        // Output
-        .pipe(dest('.'))
+    stream(["*.js", "!*.min.js", "!gulpfile.js", "!config.js", "!config-dev.js"], {
+        opts: { allowEmpty: true },
+        pipes: [
+            babel(), // ES5 file for uglifing
+            uglify(), // Minify the file
+            rename(minSuffix) // Rename
+        ],
+        dest: '.' // Output
+    })
 );
 
-task("config", () => {
-    let content = `module.exports = ${stringify(config)};`;
-
+task("config", () => (
     // Create config.min
-    writeFile("./config.min.js", content, err => { if (err) throw err; });
-    return src("config.min.js", { allowEmpty: true })
-        // ES5 file for uglifing
-        .pipe(babel())
-        // Minify the file
-        .pipe(uglify())
-        // Output
-        .pipe(dest('.')),
+    writeFile("./config.min.js", `module.exports = ${stringify(config)};`,
+              err => { if (err) throw err; }),
+    stream("config.min.js", {
+        opts: { allowEmpty: true },
+        pipes: [
+            babel(), // ES5 file for uglifing
+            uglify() // Minify the file
+        ],
+        dest: '.' // Output
+    }),
 
-        src("config.min.js", { allowEmpty: true })
-            // Beautify the file
-            .pipe(js({ indent_size: 4 }))
+    stream("config.min.js", {
+        opts: { allowEmpty: true },
+        pipes: [
+            js({ indent_size: 4 }), // Beautify the file
             // Rename
-            .pipe(rename({
+            rename({
                 basename: "config-dev",
                 extname: ".js"
-            }))
-            // Output
-            .pipe(dest('.'));
-});
+            })
+        ],
+        dest: '.' // Output
+    })
+));
 
-task("config:watch", fn => {
-    exec("gulp config server html --gulpfile ./gulpfile.min.js", () => fn());
+task("config:watch", done => {
+    exec("gulp config server html --gulpfile ./gulpfile.min.js", () => done());
 });
 
 task("update", () =>
-    src("gulpfile.js", { allowEmpty: true })
-        // ES5 file for uglifing
-        .pipe(babel())
-        // Minify the file
-        .pipe(uglify())
-        // Rename
-        .pipe(rename(minSuffix))
-        // Output
-        .pipe(dest('.'))
+    stream("gulpfile.js", {
+        opts: { allowEmpty: true },
+        pipes: [
+            babel(), // ES5 file for uglifing
+            uglify(), // Minify the file
+            rename(minSuffix) // Rename
+        ],
+        dest: '.' // Output
+    })
 );
 
-task("gulpfile:watch", fn => {
-    exec("gulp update", () => fn());
+task("gulpfile:watch", done => {
+    exec("gulp update", () => done());
 });
 
-task("git", fn => {
+task("git", done => {
     let gitCommand = [
         "git add .",
         "git commit -m 'Upgrade'",
-        "git push -u origin master",
-        // "git push heroku master"
+        "git push -u origin master"
     ];
 
-    execSeries(gitCommand, () => fn());
+    execSeries(gitCommand, () => done());
 });
 
 // Gulp task to minify all files
