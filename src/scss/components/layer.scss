@@ -54,9 +54,13 @@
       overflow: hidden;
       z-index: 125;
 
-      .layer-content {
+      & .layer-content {
          position: relative;
          z-index: 25;
+      }
+
+      & img.load-img {
+          width: 100vmax;
       }
 
       &-scroll-down {

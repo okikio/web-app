@@ -1,6 +1,6 @@
 let { values, title, tile, tabs, src, section, row, page, padding, margin, link, layout, layer, img, href, hero, font, content, component, color, col, _class, class_add, background, attr, alt } = require("./containers/page");
 let { assign } = Object;
-let carImg = "/assets/white_car.webp";
+let carImg = "/assets/white_car.webp?w=400&h=400";
 module.exports = {
     "cloud_name": "okikio-assets",
     "imageURLConfig": {

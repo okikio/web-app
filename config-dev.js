@@ -33,7 +33,7 @@ module.exports = {
                     "layer": {
                         "hero": {
                             "img": {
-                                "src": "/assets/white_car.webp",
+                                "src": "/assets/white_car.webp?w=400&h=400",
                                 "alt": "A city Image"
                             },
                             "title": "Relax."

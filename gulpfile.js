@@ -1,13 +1,14 @@
 if ('dev' in process.env) require('dotenv').config();
 const { src, task, series, parallel, dest, watch } = require('gulp');
+const purgecss = require('@fullhuman/postcss-purgecss');
 const { init, write } = require('gulp-sourcemaps');
 const webpackStream = require('webpack-stream');
-const autoprefix = require("gulp-autoprefixer");
 const replace = require('gulp-string-replace');
 const { html, js } = require('gulp-beautify');
 const { spawn } = require('child_process');
 const htmlmin = require('gulp-htmlmin');
 const assets = require("cloudinary").v2;
+const postcss = require('gulp-postcss');
 const uglify = require('gulp-uglify');
 const rename = require('gulp-rename');
 const { obj } = require('through2');
@@ -141,9 +142,10 @@ task("css", () =>
     stream('src/scss/app.scss', {
         pipes: [
             init(), // Sourcemaps init
-            // Compile & Minify scss to css
+            // Minify scss to css
             sass({ outputStyle: dev ? 'expanded' : 'compressed' }).on('error', sass.logError),
-            autoprefix(), // Autoprefix the scss
+            // Autoprefix &  Remove unused CSS
+            postcss(), // Rest of code is in postcss.config.js
             rename(minSuffix), // Rename
             write('.') // Put sourcemap in public folder
         ],
@@ -242,12 +244,12 @@ task("git", done => {
 });
 
 // Gulp task to minify all files
-task('default', parallel(series("update", "config", "server", "html"), "js", "css"));
+task('default', parallel(series("update", "config", "server", "html", "css"), "js"));
 
 // Gulp task to check to make sure a file has changed before minify that file files
 task('watch', () => {
     watch(['config.js', 'containers/*.js'], watchDelay, series('config:watch'));
-    watch('gulpfile.js', watchDelay, series('gulpfile:watch', 'server'));
+    watch(['gulpfile.js', 'postcss.config.js'], watchDelay, series('gulpfile:watch', 'server'));
     watch(['server.js', 'plugin.js'], watchDelay, series('server'));
     watch('views/**/*.pug', watchDelay, series('html', 'server'));
     watch('src/**/*.scss', watchDelay, series('css', 'server'));
