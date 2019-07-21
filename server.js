@@ -10,9 +10,17 @@ const path = require("path");
 let { routes } = require("./config.min");
 let { _render, _static, _assets, _reload } = require("./plugin.min");
 
+// Normalize a port into a number, string, or false.
+let normalizePort = val => {
+    let port = parseInt(val, 10);
+    if (isNaN(port)) { return val; } // Named pipe
+    if (port >= 0) { return port; } // Port number
+    return false;
+};
+
 let { env } = process;
-let PORT = process.env.PORT || 3000;
 let root = path.join(__dirname, 'public');
+let PORT = normalizePort(process.env.PORT || 3000);
 let dev = 'dev' in env && env.dev.toString() == "true";
 
 let reloadTime = 29; // Set server reload time to 29 minutes
