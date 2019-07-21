@@ -42,6 +42,7 @@
     "jsdom": "^15.1.1",
     "mime-types": "^2.1.24",
     "nodemon": "^1.19.1",
+    "dotenv": "^8.0.0",
     "send": "^0.17.1"
   },
   "devDependencies": {
@@ -50,7 +51,6 @@
     "@fullhuman/postcss-purgecss": "^1.2.0",
     "autoprefixer": "^9.6.1",
     "cloudinary": "^1.14.0",
-    "dotenv": "^8.0.0",
     "gulp": "^4.0.2",
     "gulp-babel": "^8.0.0",
     "gulp-beautify": "^3.0.0",

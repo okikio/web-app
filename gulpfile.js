@@ -1,4 +1,4 @@
-if ('dev' in process.env) require('dotenv').config();
+if (!('dev' in process.env)) require('dotenv').config();
 const { src, task, series, parallel, dest, watch } = require('gulp');
 const purgecss = require('@fullhuman/postcss-purgecss');
 const { init, write } = require('gulp-sourcemaps');

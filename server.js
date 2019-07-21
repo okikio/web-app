@@ -1,4 +1,4 @@
-if ('dev' in process.env) require('dotenv').config();
+if (!('dev' in process.env)) require('dotenv').config();
 const compress = require("fastify-compress");
 const noIcon = require("fastify-no-icon");
 const helmet = require("fastify-helmet");

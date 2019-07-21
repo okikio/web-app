@@ -1,4 +1,4 @@
-if ('dev' in process.env) require('dotenv').config();
+if (!('dev' in process.env)) require('dotenv').config();
 const { statSync, createReadStream } = require("fs");
 const { PassThrough } = require("stream");
 const plugin = require("fastify-plugin");
