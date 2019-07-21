@@ -15,10 +15,10 @@ let PORT = process.env.PORT || 3000;
 let root = path.join(__dirname, 'public');
 let dev = 'dev' in env && env.dev.toString() == "true";
 
-let reloadTime = 0.5; // Half a minute
+let reloadTime = 29; // Set server reload time to 29 minutes
 let maxAge = (dev ? 0 : 1) * 1000 * 60 * 60 * 24 * 7;
 let app = fastify({
-    logger: dev && {
+    logger: {
         prettyPrint: { translateTime: "hh:MM:ss TT", }
     },
     ignoreTrailingSlash: true,
