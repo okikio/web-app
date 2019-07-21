@@ -1,6 +1,8 @@
 if (!('dev' in process.env)) require('dotenv').config();
-const { src, task, series, parallel, dest, watch } = require('gulp');
+const { src, task, series, dest, watch } = require('gulp');
+const UglifyJsPlugin = require('uglifyjs-webpack-plugin');
 const { init, write } = require('gulp-sourcemaps');
+const inlineSrc = require("gulp-inline-source");
 const webpackStream = require('webpack-stream');
 const replace = require('gulp-string-replace');
 const { html, js } = require('gulp-beautify');
@@ -14,7 +16,6 @@ const { obj } = require('through2');
 const babel = require('gulp-babel');
 const { writeFile } = require("fs");
 const config = require('./config');
-const webpack = require('webpack');
 const sass = require('gulp-sass');
 const pug = require('gulp-pug');
 
@@ -42,7 +43,23 @@ let publicDest = 'public';
 let webpackConfig = {
     mode: dev ? 'development' : 'production',
     devtool: dev ? "inline-cheap-source-map" : "source-map",
-    output: { filename: 'app.min.js' }
+    output: { filename: 'app.min.js' },
+    module: {
+        rules: [
+            {
+                test: /\.(js|jsx)$/,
+                exclude: /(node_modules)/,
+                use: "babel-loader"
+            }
+        ]
+    },
+    optimization: {
+        minimizer: [
+            new UglifyJsPlugin({
+                test: /\.js(\?.*)?$/i
+            })
+        ]
+    }
 };
 
 // Streamlines Gulp Tasks
@@ -157,17 +174,14 @@ task("js", () =>
         opts: { allowEmpty: true },
         pipes: [
             // Configure webpack sourcemaps
-            webpackStream(webpackConfig, webpack),
+            webpackStream(webpackConfig),
             // Push sourcemap to sourcemap.init
             obj(function (file, enc, cb) {
+                // Dont pipe through any source map files as it will be handled by gulp-sourcemaps
                 let isSourceMap = /\.map$/.test(file.path);
                 if (!isSourceMap) this.push(file);
                 cb();
-            }),
-            init({ loadMaps: true }), // Sourcemaps init
-            babel(), // ES5 file for uglifing
-            dev ? js({ indent_size: 4 }) : uglify(), // Minify or Beautify file
-            write('.') // Put sourcemap in public folder
+            })
         ],
         dest: `${publicDest}/js` // Output
     })
@@ -242,15 +256,25 @@ task("git", done => {
     execSeries(gitCommand, () => done());
 });
 
+task('inline', () =>
+    stream('public/*.html', {
+        pipes: [
+            // Inline external sources
+            inlineSrc({ compress: false })
+        ]
+    })
+);
+
 // Gulp task to minify all files
-task('default', parallel(series("update", "config", "server", "html", "css"), "js"));
+task('default', series("update", "config", "server", "html", "css", "js"/*,
+"inline"*/));
 
 // Gulp task to check to make sure a file has changed before minify that file files
 task('watch', () => {
     watch(['config.js', 'containers/*.js'], watchDelay, series('config:watch'));
     watch(['gulpfile.js', 'postcss.config.js'], watchDelay, series('gulpfile:watch', 'server'));
     watch(['server.js', 'plugin.js'], watchDelay, series('server'));
-    watch('views/**/*.pug', watchDelay, series('html', 'server'));
-    watch('src/**/*.scss', watchDelay, series('css', 'server'));
-    watch('src/**/*.js', watchDelay, series('js', 'server'));
+    watch('views/**/*.pug', watchDelay, series('html', 'server', 'css', 'inline'));
+    watch('src/**/*.scss', watchDelay, series('css', 'server', 'inline'));
+    watch('src/**/*.js', watchDelay, series('js', 'server', 'inline'));
 });
