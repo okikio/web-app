@@ -10,6 +10,10 @@ html(lang="en")
     link(rel='preconnect' href=`https://res.cloudinary.com/${cloud_name}/`)
 
     link(rel='stylesheet' href='./css/app.min.css' async)
+
+    link(rel='prefetch' href='https://polyfill.io/v3/polyfill.min.js?flags=gated&features=default,es6,es7,es5')
+    link(rel='prefetch' href='./js/app.min.js')
+
     style.
       /* fallback */
       @font-face {
@@ -281,5 +285,5 @@ html(lang="en")
                     +content(detail.section)
 
     +footer("2019 Okiki Ojo")
-    script(src='https://polyfill.io/v3/polyfill.min.js?flags=gated&features=default%2Ces6%2Ces7%2Ces5')
-    script(src='./js/app.min.js')
+    script(src='https://polyfill.io/v3/polyfill.min.js?flags=gated&features=default,es6,es7,es5' async)
+    script(src='./js/app.min.js' async)
