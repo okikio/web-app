@@ -4,7 +4,7 @@
   "description": "A fastify app.",
   "main": "./server.min",
   "scripts": {
-    "watch": "gulp watch --gulpfile ./gulpfile.min.js",
+    "watch": "gulp watch --gulpfile ./gulpfile.js",
     "build:dev": "gulp --gulpfile ./gulpfile.js",
     "build": "gulp --gulpfile ./gulpfile.min.js",
     "start": "nodemon ./server.min",

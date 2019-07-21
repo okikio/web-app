@@ -8,13 +8,14 @@ const path = require("path");
 
 // List of routes
 let { routes } = require("./config.min");
-let { _render, _static, _assets } = require("./plugin.min");
+let { _render, _static, _assets, _reload } = require("./plugin.min");
 
 let { env } = process;
 let PORT = process.env.PORT || 3000;
 let root = path.join(__dirname, 'public');
 let dev = 'dev' in env && env.dev.toString() == "true";
 
+let reloadTime = 0.5; // Half a minute
 let maxAge = (dev ? 0 : 1) * 1000 * 60 * 60 * 24 * 7;
 let app = fastify({
     logger: dev && {
@@ -29,6 +30,7 @@ app.register(compress) // Compress/GZIP/Brotil Server
    .register(noIcon) // Remove the no favicon error
    .register(_render) // Render Plugin
    .register(_assets, { maxAge }) // Assets Plugin
+   .register(_reload, { reloadTime }) // Server Reload Plugin (for Heroku)
 
    // Apply CORS
    .register(cors, {

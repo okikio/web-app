@@ -10,7 +10,7 @@ const glob = require("glob");
 const send = require("send");
 const url = require("url");
 
-const { cloud_name, imageURLConfig } = require('./config.min');
+const { websiteURL, cloud_name, imageURLConfig } = require('./config.min');
 assets.config({ cloud_name, secure: true });
 
 // For faster efficient page switching using partial output
@@ -289,6 +289,19 @@ module.exports._assets = plugin((app, opts, next) => {
                 });
         }
     });
+
+    next();
+});
+
+module.exports._reload = plugin((app, opts, next) => {
+    // Time till reload of website (in minutes)
+    let reloadTime = 1000 * 60 * (opts.reloadTime || 29);
+    app.reloadCount || app.decorate('reloadCount', 0); // Reload count
+
+    setInterval(() => {
+        axios.get(websiteURL)
+            .then(() => console.log(`The Heroku server has been reloaded ${ ++ app.reloadCount } times`)).catch(console.error);
+    }, reloadTime);
 
     next();
 });

@@ -2,6 +2,7 @@ let { values, title, tile, tabs, src, section, row, page, padding, margin, link,
 let { assign } = Object;
 let carImg = "/assets/white_car.webp?w=400&h=400";
 module.exports = {
+    "websiteURL": "https://app-fast.herokuapp.com/",
     "cloud_name": "okikio-assets",
     "imageURLConfig": {
         "crop": "scale",

@@ -1,4 +1,5 @@
 module.exports = {
+    "websiteURL": "https://app-fast.herokuapp.com/",
     "cloud_name": "okikio-assets",
     "imageURLConfig": {
         "crop": "scale",
