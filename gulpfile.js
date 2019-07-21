@@ -258,8 +258,7 @@ task('inline', () =>
 );
 
 // Gulp task to minify all files
-task('default', series("update", "config", "server", "html", "css", "js"/*,
-"inline"*/));
+task('default', series("update", "config", "server", "html", "css", "js", "inline"));
 
 // Gulp task to check to make sure a file has changed before minify that file files
 task('watch', () => {
