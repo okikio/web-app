@@ -1,6 +1,5 @@
 if (!('dev' in process.env)) require('dotenv').config();
 const { src, task, series, parallel, dest, watch } = require('gulp');
-const purgecss = require('@fullhuman/postcss-purgecss');
 const { init, write } = require('gulp-sourcemaps');
 const webpackStream = require('webpack-stream');
 const replace = require('gulp-string-replace');
