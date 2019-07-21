@@ -175,7 +175,7 @@ task("js", () =>
 );
 
 task("server", () =>
-    stream(["*.js", "!*.min.js", "!gulpfile.js", "!config.js", "!config-dev.js"], {
+    stream(["*.js", "!postcss.config.js", "!*.min.js", "!gulpfile.js", "!config.js", "!config-dev.js"], {
         opts: { allowEmpty: true },
         pipes: [
             babel(), // ES5 file for uglifing
