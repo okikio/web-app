@@ -12,7 +12,6 @@ const assets = require("cloudinary").v2;
 const postcss = require('gulp-postcss');
 const uglify = require('gulp-uglify');
 const rename = require('gulp-rename');
-const { obj } = require('through2');
 const babel = require('gulp-babel');
 const { writeFile } = require("fs");
 const config = require('./config');
@@ -174,14 +173,7 @@ task("js", () =>
         opts: { allowEmpty: true },
         pipes: [
             // Configure webpack sourcemaps
-            webpackStream(webpackConfig),
-            // Push sourcemap to sourcemap.init
-            obj(function (file, enc, cb) {
-                // Dont pipe through any source map files as it will be handled by gulp-sourcemaps
-                let isSourceMap = /\.map$/.test(file.path);
-                if (!isSourceMap) this.push(file);
-                cb();
-            })
+            webpackStream(webpackConfig)
         ],
         dest: `${publicDest}/js` // Output
     })
