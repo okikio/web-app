@@ -18,6 +18,7 @@ let normalizePort = val => {
     return false;
 };
 
+let HOST = '0.0.0.0';
 let { env } = process;
 let root = path.join(__dirname, 'public');
 let PORT = normalizePort(process.env.PORT || 3000);
@@ -75,7 +76,7 @@ app.setErrorHandler((err, req, res) => {
         .send(statusCode >= 500 ? "Internal server error" : err.message);
 });
 
-app.listen(PORT, err => {
+app.listen(PORT, HOST, err => {
     if (err) app.log.error(err);
     app.log.info("Server listening on port", PORT);
 });

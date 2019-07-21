@@ -1,1 +1,1 @@
-web: node ./server.min
+web: npm start
