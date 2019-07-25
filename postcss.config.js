@@ -1,4 +1,5 @@
 const purgecss = require('@fullhuman/postcss-purgecss');
+const { general } = require("./browserslist");
 const autoprefixer = require('autoprefixer');
 
 module.exports = {
@@ -8,6 +9,8 @@ module.exports = {
             keyframes: true,
             fontFace: true
         }),
-        autoprefixer
+        autoprefixer({
+            overrideBrowserslist: general
+        })
     ]
 };

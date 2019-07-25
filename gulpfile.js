@@ -1,11 +1,16 @@
-if (!('dev' in process.env)) require('dotenv').config();
+let { env } = process;
+if (!('dev' in env)) require('dotenv').config();
+let dev = 'dev' in env && env.dev.toString() == "true";
+
+const { babelConfig } = require(`./browserslist${dev ? '' : ".min"}`);
 const { src, task, series, dest, watch } = require('gulp');
-const UglifyJsPlugin = require('uglifyjs-webpack-plugin');
+const nodeResolve = require('rollup-plugin-node-resolve');
+const config = require(`./config${dev ? '' : ".min"}`);
 const { init, write } = require('gulp-sourcemaps');
 const inlineSrc = require("gulp-inline-source");
-const webpackStream = require('webpack-stream');
 const replace = require('gulp-string-replace');
 const { html, js } = require('gulp-beautify');
+const rollup = require('gulp-better-rollup');
 const { spawn } = require('child_process');
 const htmlmin = require('gulp-htmlmin');
 const assets = require("cloudinary").v2;
@@ -14,13 +19,10 @@ const uglify = require('gulp-uglify');
 const rename = require('gulp-rename');
 const babel = require('gulp-babel');
 const { writeFile } = require("fs");
-const config = require('./config');
 const sass = require('gulp-sass');
 const pug = require('gulp-pug');
 
-let { env } = process;
 let { pages, cloud_name, imageURLConfig } = config;
-let dev = 'dev' in env && env.dev.toString() == "true";
 let staticSite = 'staticSite' in env && env.staticSite == "true";
 
 let assetURL = `https://res.cloudinary.com/${cloud_name}/`;
@@ -39,27 +41,6 @@ let htmlMinOpts = {
 let minSuffix = { suffix: ".min" };
 let watchDelay = { delay: 500 };
 let publicDest = 'public';
-let webpackConfig = {
-    mode: dev ? 'development' : 'production',
-    devtool: dev ? "inline-cheap-source-map" : "source-map",
-    output: { filename: 'app.min.js' },
-    module: {
-        rules: [
-            {
-                test: /\.(js|jsx)$/,
-                exclude: /(node_modules)/,
-                use: "babel-loader"
-            }
-        ]
-    },
-    optimization: {
-        minimizer: [
-            new UglifyJsPlugin({
-                test: /\.js(\?.*)?$/i
-            })
-        ]
-    }
-};
 
 // Streamlines Gulp Tasks
 let stream = (_src, _opt = { pipes: [], dest: publicDest }, done) => {
@@ -162,28 +143,36 @@ task("css", () =>
             // Autoprefix &  Remove unused CSS
             postcss(), // Rest of code is in postcss.config.js
             rename(minSuffix), // Rename
-            write('.') // Put sourcemap in public folder
+            write('./') // Put sourcemap in public folder
         ],
         dest: `${publicDest}/css` // Output
     })
 );
 
-task("js", () =>
-    stream("src/js/app.js", {
-        opts: { allowEmpty: true },
-        pipes: [
-            // Configure webpack sourcemaps
-            webpackStream(webpackConfig)
-        ],
-        dest: `${publicDest}/js` // Output
-    })
-);
+task("js", done => {
+    ["modern", "general"].forEach(type => {
+        stream(`src/js/app.js`, {
+            opts: { allowEmpty: true },
+            pipes: [
+                init(), // Sourcemaps init
+                // Bundle Modules
+                rollup({ plugins: [nodeResolve()] }, 'es'),
+                babel(babelConfig[type]), // ES5 file for uglifing
+                dev ? js() : uglify(), // Minify the file
+                rename(`app${ type == 'general' ? '' : `-${type}`}.min.js`), // Rename
+                write('./') // Put sourcemap in public folder
+            ],
+            dest: `${publicDest}/js` // Output
+        });
+    });
+    done();
+});
 
 task("server", () =>
     stream(["*.js", "!postcss.config.js", "!*.min.js", "!gulpfile.js", "!config.js", "!config-dev.js"], {
         opts: { allowEmpty: true },
         pipes: [
-            babel(), // ES5 file for uglifing
+            babel(babelConfig.general), // ES5 file for uglifing
             uglify(), // Minify the file
             rename(minSuffix) // Rename
         ],
@@ -198,7 +187,7 @@ task("config", () => (
     stream("config.min.js", {
         opts: { allowEmpty: true },
         pipes: [
-            babel(), // ES5 file for uglifing
+            babel(babelConfig.general), // ES5 file for uglifing
             uglify() // Minify the file
         ],
         dest: '.' // Output
@@ -226,7 +215,7 @@ task("update", () =>
     stream("gulpfile.js", {
         opts: { allowEmpty: true },
         pipes: [
-            babel(), // ES5 file for uglifing
+            babel(babelConfig.general), // ES5 file for uglifing
             uglify(), // Minify the file
             rename(minSuffix) // Rename
         ],
@@ -235,7 +224,7 @@ task("update", () =>
 );
 
 task("gulpfile:watch", done => {
-    exec("gulp update", () => done());
+    execSeries(["gulp update", "gulp"], () => done());
 });
 
 task("git", done => {

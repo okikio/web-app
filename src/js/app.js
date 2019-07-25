@@ -1,6 +1,8 @@
+import "@babel/polyfill";
 /*
 // Feature detection
-// https://github.com/WICG/EventListenerOptions/blob/gh-pages/EventListenerOptions.polyfill.js
+//
+https://www.smashingmagazine.com/2018/10/smart-bundling-legacy-code-browsers/https://github.com/WICG/EventListenerOptions/blob/gh-pages/EventListenerOptions.polyfill.js
 var passiveIfSupported = false;
 
 try {
@@ -17,6 +19,8 @@ window.addEventListener('scroll', function(event) {
 import el from "./components/ele";
 let ele = new el("body");
 ele.set("style", { });
+fetch("/assets/raw/barba.js")
+    .then(console.log);
 
 console.log({
     message: "Hello"

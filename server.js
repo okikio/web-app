@@ -1,4 +1,8 @@
-if (!('dev' in process.env)) require('dotenv').config();
+let { env } = process;
+if (!('dev' in env)) require('dotenv').config();
+let dev = 'dev' in env && env.dev.toString() == "true";
+
+const { matchesUA } = require('browserslist-useragent');
 const compress = require("fastify-compress");
 const noIcon = require("fastify-no-icon");
 const helmet = require("fastify-helmet");
@@ -7,8 +11,8 @@ const fastify = require("fastify");
 const path = require("path");
 
 // List of routes
-let { routes } = require("./config.min");
-let { _render, _static, _assets, _reload } = require("./plugin.min");
+let { routes } = require(`./config${dev ? '' : ".min"}`);
+let { _render, _static, _assets, _reload } = require(`./plugin${dev ? '' : ".min"}`);
 
 // Normalize a port into a number, string, or false.
 let normalizePort = val => {
@@ -19,10 +23,8 @@ let normalizePort = val => {
 };
 
 let HOST = '0.0.0.0';
-let { env } = process;
 let root = path.join(__dirname, 'public');
 let PORT = normalizePort(process.env.PORT || 3000);
-let dev = 'dev' in env && env.dev.toString() == "true";
 
 let reloadTime = 29; // Set server reload time to 29 minutes
 let maxAge = (dev ? 0 : 1) * 1000 * 60 * 60 * 24 * 7;
