@@ -166,22 +166,12 @@ task("js", () =>
                 opts: { allowEmpty: true },
                 pipes: [
                     init(), // Sourcemaps init
+                    babel(babelConfig[type]), // ES5 file for uglifing
                     // Bundle Modules
                     rollup({ plugins: [nodeResolve()] }, 'es'),
-                    // babel(babelConfig[type]), // ES5 file for uglifing
-                    rename(`app${ type == 'general' ? '' : `-${type}`}.min.js`), // Rename
-                    write('./') // Put sourcemap in public folder
-                ],
-                dest: `${publicDest}/js` // Output
-            }],
-        
-            [`public/js/app${ type == 'general' ? '' : `-${type}`}.min.js`, {
-                pipes: [
-                    init({ loadMaps: true }), // Sourcemaps init
-                    // Bundle Modules
-                    // rollup({ plugins: [nodeResolve()] }, 'es'),
                     babel(babelConfig[type]), // ES5 file for uglifing
                     // dev ? js() : uglify(), // Minify the file
+                    rename(`app${ type == 'general' ? '' : `-${type}`}.min.js`), // Rename
                     write('./') // Put sourcemap in public folder
                 ],
                 dest: `${publicDest}/js` // Output
