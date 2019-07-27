@@ -1,7 +1,9 @@
 let { env } = process;
 if (!('dev' in env)) require('dotenv').config();
 let dev = 'dev' in env && env.dev.toString() == "true";
+let heroku = 'heroku' in env && env.heroku.toString() == "true";
 
+const { modern } = require(`./browserslist${dev ? '' : ".min"}`);
 const { matchesUA } = require('browserslist-useragent');
 const compress = require("fastify-compress");
 const noIcon = require("fastify-no-icon");
@@ -22,7 +24,7 @@ let normalizePort = val => {
     return false;
 };
 
-let HOST = '0.0.0.0';
+let HOST = heroku ? '0.0.0.0' : 'localhost';
 let root = path.join(__dirname, 'public');
 let PORT = normalizePort(process.env.PORT || 3000);
 
@@ -60,6 +62,16 @@ for (let i in routes)
         res.header("cache-control", `public, max-age=${maxAge}`);
         res.render(routes[i], req.headers["x-barba"]);
     });
+
+app.get('/js/app.min.js', (req, res) => { 
+    let useragent = req.headers['user-agent'];
+    let isModernUser = matchesUA(useragent, {
+        allowHigherVersions: true,
+        browsers: modern
+    });
+    
+    res.sendFile(`js/app${isModernUser ? `-modern` : ''}.min.js`);
+});
 
 // Error handling
 app.setNotFoundHandler((req, res) => {

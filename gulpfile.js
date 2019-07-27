@@ -9,6 +9,9 @@ const { babelConfig } = require(`./browserslist${dev ? '' : ".min"}`);
 const nodeResolve = require('rollup-plugin-node-resolve');
 const config = require(`./config${dev ? '' : ".min"}`);
 const { init, write } = require('gulp-sourcemaps');
+const commonJS = require('rollup-plugin-commonjs');
+const rollupBabel = require('rollup-plugin-babel');
+const uglify = require('gulp-uglify-es').default;
 const inlineSrc = require("gulp-inline-source");
 const replace = require('gulp-string-replace');
 const { html, js } = require('gulp-beautify');
@@ -17,7 +20,6 @@ const { spawn } = require('child_process');
 const htmlmin = require('gulp-htmlmin');
 const assets = require("cloudinary").v2;
 const postcss = require('gulp-postcss');
-const uglify = require('gulp-uglify');
 const rename = require('gulp-rename');
 const babel = require('gulp-babel');
 const { writeFile } = require("fs");
@@ -77,32 +79,21 @@ let stringify = obj => {
 };
 
 // Based on: [https://gist.github.com/millermedeiros/4724047]
-let exec = (cmd, cb) => {
-    var parts = cmd.split(/\s+/g);
-    return spawn(parts[0], parts.slice(1), { stdio: 'inherit' })
-        .on('data', data => process.stdout.write(data))
-        .on('exit', code => {
-            var err = null;
-            if (code) {
-                err = new Error('Command "'+ cmd +'" exited with wrong status code "'+ code +'"');
-                err.code = code;
-                err.cmd = cmd;
-            }
-            if (cb) { cb(err); }
-        });
+let exec = cmd => {
+    var parts = cmd.toString().split(/\s+/g);
+    console.log(`${cmd} - What is going on`)
+    return new Promise((resolve, reject) => {
+        spawn(parts[0], parts.slice(1), { stdio: 'inherit' })
+            .on('data', data => process.stdout.write(data))
+            .on('error', reject || function () {})
+            .on('exit', resolve || function () {});
+    });
 };
 
 // Execute multiple commands in series
-let execSeries = commands => {
+let execSeries = cmds => {
     return Promise.all(
-        commands.map(cmd => 
-            new Promise((resolve, reject) => {
-                exec(cmd, err => {
-                    if (err) { return reject(err); }
-                    resolve();
-                });
-            })    
-        )
+        cmds.map(cmd => exec(cmd)) 
     );
 };
 
@@ -138,7 +129,7 @@ task('html', () => {
                                     assets.url(url.replace(queryString, ''), imgURLConfig)
                                 ).replace("/assets/", "") : url;
                     })
-                ]
+                ].concat(staticSite ? replace(/\/js\/app.js/g, "./js/app.min.js") : [])
             }]
         )
     );
@@ -166,12 +157,16 @@ task("js", () =>
                 opts: { allowEmpty: true },
                 pipes: [
                     init(), // Sourcemaps init
-                    babel(babelConfig[type]), // ES5 file for uglifing
                     // Bundle Modules
-                    rollup({ plugins: [nodeResolve()] }, 'es'),
-                    babel(babelConfig[type]), // ES5 file for uglifing
-                    // dev ? js() : uglify(), // Minify the file
-                    rename(`app${ type == 'general' ? '' : `-${type}`}.min.js`), // Rename
+                    rollup({
+                        plugins: [
+                            commonJS(), // Use CommonJS to compile the program
+                            nodeResolve(), // Bundle all Modules
+                            rollupBabel(babelConfig[type]) // ES5 file for uglifing
+                        ] 
+                    }, type == 'general' ? 'umd' : 'es'),
+                    dev ? js() : uglify(), // Minify the file
+                    rename(`app${type == 'general' ? '' : `-${type}`}.min.js`), // Rename
                     write('./') // Put sourcemap in public folder
                 ],
                 dest: `${publicDest}/js` // Output
@@ -184,7 +179,7 @@ task("server", () =>
     stream(["*.js", "!postcss.config.js", "!*.min.js", "!gulpfile.js", "!config.js", "!config-dev.js"], {
         opts: { allowEmpty: true },
         pipes: [
-            babel(babelConfig.general), // ES5 file for uglifing
+            babel(babelConfig.node), // ES5 file for uglifing
             uglify(), // Minify the file
             rename(minSuffix) // Rename
         ],
@@ -207,7 +202,7 @@ task("config", () =>
         ["config.min.js", {
             opts: { allowEmpty: true },
             pipes: [
-                babel(babelConfig.general), // ES5 file for uglifing
+                babel(babelConfig.node), // ES5 file for uglifing
                 uglify() // Minify the file
             ],
             dest: '.' // Output
@@ -235,7 +230,7 @@ task("update", () =>
     stream("gulpfile.js", {
         opts: { allowEmpty: true },
         pipes: [
-            babel(babelConfig.general), // ES5 file for uglifing
+            babel(babelConfig.node), // ES5 file for uglifing
             uglify(), // Minify the file
             rename(minSuffix) // Rename
         ],
@@ -244,7 +239,7 @@ task("update", () =>
 );
 
 task("gulpfile:watch", () => 
-    execSeries(["gulp update", "gulp"])
+    execSeries(["gulp update", "gulp"]) 
 );
 
 task("git", () =>
@@ -266,6 +261,9 @@ task('inline', () =>
 
 // Gulp task to minify all files
 task('default', series("update", "config", "server", "html", "css", "js", "inline"));
+
+// Gulp task to minify all files without -js
+task('other', series("update", "config", "server", "html", "css", "inline"));
 
 // Gulp task to check to make sure a file has changed before minify that file files
 task('watch', () => {

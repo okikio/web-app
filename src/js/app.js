@@ -1,4 +1,3 @@
-// import "core-js/stable";
 /*
 // Feature detection
 //
