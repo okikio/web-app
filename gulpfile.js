@@ -7,10 +7,12 @@ const { src, task, series, dest, watch } = gulp;
 
 const { babelConfig } = require(`./browserslist${dev ? '' : ".min"}`);
 const nodeResolve = require('rollup-plugin-node-resolve');
+const builtins = require("rollup-plugin-node-builtins");
 const config = require(`./config${dev ? '' : ".min"}`);
 const { init, write } = require('gulp-sourcemaps');
 const commonJS = require('rollup-plugin-commonjs');
 const rollupBabel = require('rollup-plugin-babel');
+const rollupJSON = require("rollup-plugin-json");
 const uglify = require('gulp-uglify-es').default;
 const inlineSrc = require("gulp-inline-source");
 const replace = require('gulp-string-replace');
@@ -32,6 +34,7 @@ let staticSite = 'staticSite' in env && env.staticSite == "true";
 let assetURL = `https://res.cloudinary.com/${cloud_name}/`;
 assets.config({ cloud_name, secure: true });
 
+let srcMapsWrite = '.';
 let htmlMinOpts = {
     minifyJS: true,
     minifyCSS: true,
@@ -129,7 +132,7 @@ task('html', () => {
                                     assets.url(url.replace(queryString, ''), imgURLConfig)
                                 ).replace("/assets/", "") : url;
                     })
-                ].concat(staticSite ? replace(/\/js\/app.js/g, "./js/app.min.js") : [])
+                ]
             }]
         )
     );
@@ -144,14 +147,14 @@ task("css", () =>
             // Autoprefix &  Remove unused CSS
             postcss(), // Rest of code is in postcss.config.js
             rename(minSuffix), // Rename
-            write('./') // Put sourcemap in public folder
+            write(srcMapsWrite) // Put sourcemap in public folder
         ],
         dest: `${publicDest}/css` // Output
     })
 );
 
 task("js", () => 
-    streamList(
+    streamList(...[
         ...["modern", "general"].map(type => [
             ['src/js/app.js', {
                 opts: { allowEmpty: true },
@@ -160,19 +163,41 @@ task("js", () =>
                     // Bundle Modules
                     rollup({
                         plugins: [
+                            builtins(), // Access to builtin Modules
                             commonJS(), // Use CommonJS to compile the program
                             nodeResolve(), // Bundle all Modules
+                            rollupJSON(), // Parse JSON Exports
                             rollupBabel(babelConfig[type]) // ES5 file for uglifing
                         ] 
                     }, type == 'general' ? 'umd' : 'es'),
                     dev ? js() : uglify(), // Minify the file
                     rename(`app${type == 'general' ? '' : `-${type}`}.min.js`), // Rename
-                    write('./') // Put sourcemap in public folder
+                    write(srcMapsWrite) // Put sourcemap in public folder
                 ],
                 dest: `${publicDest}/js` // Output
             }]
-        ]).flat()
-    )
+        ]).flat(),
+        ['src/js/app.vendor.js', {
+            opts: { allowEmpty: true },
+            pipes: [
+                init(), // Sourcemaps init
+                // Bundle Modules
+                rollup({
+                    plugins: [
+                        builtins(), // Access to builtin Modules
+                        commonJS(), // Use CommonJS to compile the program
+                        nodeResolve(), // Bundle all Modules
+                        rollupJSON(), // Ability to Parse JSON
+                        rollupBabel(babelConfig.node) // ES5 file for uglifing
+                    ] 
+                }, 'umd'),
+                dev ? js() : uglify(), // Minify the file
+                rename(minSuffix), // Rename
+                write(srcMapsWrite) // Put sourcemap in public folder
+            ],
+            dest: `${publicDest}/js` // Output
+        }]
+    ])
 );
 
 task("server", () =>

@@ -3,8 +3,6 @@ if (!('dev' in env)) require('dotenv').config();
 let dev = 'dev' in env && env.dev.toString() == "true";
 let heroku = 'heroku' in env && env.heroku.toString() == "true";
 
-const { modern } = require(`./browserslist${dev ? '' : ".min"}`);
-const { matchesUA } = require('browserslist-useragent');
 const compress = require("fastify-compress");
 const noIcon = require("fastify-no-icon");
 const helmet = require("fastify-helmet");
@@ -31,7 +29,7 @@ let PORT = normalizePort(process.env.PORT || 3000);
 let reloadTime = 29; // Set server reload time to 29 minutes
 let maxAge = (dev ? 0 : 1) * 1000 * 60 * 60 * 24 * 7;
 let app = fastify({
-    logger: {
+    logger: false &&   {
         prettyPrint: { translateTime: "hh:MM:ss TT", }
     },
     ignoreTrailingSlash: true,
@@ -62,16 +60,6 @@ for (let i in routes)
         res.header("cache-control", `public, max-age=${maxAge}`);
         res.render(routes[i], req.headers["x-barba"]);
     });
-
-app.get('/js/app.min.js', (req, res) => { 
-    let useragent = req.headers['user-agent'];
-    let isModernUser = matchesUA(useragent, {
-        allowHigherVersions: true,
-        browsers: modern
-    });
-    
-    res.sendFile(`js/app${isModernUser ? `-modern` : ''}.min.js`);
-});
 
 // Error handling
 app.setNotFoundHandler((req, res) => {

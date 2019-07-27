@@ -5,7 +5,7 @@ html(lang="en")
     meta(name="viewport", content="width=device-width, initial-scale=1.0")
     meta(http-equiv="X-UA-Compatible", content="ie=edge")
 
-    link(rel='preconnect' href='https://polyfill.io/v3/')
+    //- link(rel='preconnect' href='https://polyfill.io/v3/')
     link(rel='preconnect' href='https://fonts.gstatic.com/')
     link(rel='preconnect' href=`https://res.cloudinary.com/${cloud_name}/`)
 
@@ -282,4 +282,4 @@ html(lang="en")
 
     +footer("2019 Okiki Ojo")
     //- script(src='https://polyfill.io/v3/polyfill.min.js?flags=gated&features=default,es6,es7,es5' async)
-    script(src='/js/app.min.js' defer)
+    script(src='./js/app.vendor.min.js' inline)

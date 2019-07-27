@@ -253,20 +253,14 @@ module.exports._assets = plugin((app, opts, next) => {
 
     // Load and cache assets
     app.get("/assets/:asset", (req, res) => {
+        console.info(`LOg ------ ++++ ====    ${req.raw.url}`);
         let URLObj = url.parse(req.raw.url, true);
         let asset = req.params.asset;
         let queryStr = URLObj.search;
         let query = URLObj.query;
+
         // https://3000-a3b2b5f7-b627-40f3-87c9-6330e4d9aefd.ws-us0.gitpod.io/assets/city.webp?w=100
 
-        let height = query.h;
-        let width = query.w || 'auto';
-        asset = asset.replace(queryStr, '');
-        let imgURLConfig = { ...imageURLConfig, width, height };
-        let _url = assets.url(asset, imgURLConfig);
-
-        var type = lookup(_url) || 'text/plain';
-        let media = /image|video/g.test(type);
         let key = `assets__${URLObj.path}__fastify`;
         res.header("cache-control", `public, max-age=${maxAge}`);
 
@@ -275,6 +269,15 @@ module.exports._assets = plugin((app, opts, next) => {
             if (val.type) { res.type(val.type).send(val.data); }
             else { res.send(val.data); }
         } else {
+            let height = query.h;
+            let width = query.w || 'auto';
+            asset = asset.replace(queryStr, '');
+            let imgURLConfig = { ...imageURLConfig, width, height };
+            let _url = assets.url(asset, imgURLConfig);
+
+            var type = lookup(_url) || 'text/plain';
+            let media = /image|video/g.test(type);
+
             if (/text|application/g.test(type)) _url = _url.replace("image", "raw");
             axios.get(_url, media ? { responseType: 'arraybuffer' } : undefined)
                 .then(val => {

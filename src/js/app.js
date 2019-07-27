@@ -18,7 +18,7 @@ window.addEventListener('scroll', function(event) {
 import el from "./components/ele";
 let ele = new el("body");
 ele.set("style", { });
-fetch("/assets/raw/barba.js")
+fetch("/assets/raw/upload/barba.js")
     .then(console.log);
 
 console.log({
