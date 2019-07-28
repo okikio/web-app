@@ -39,7 +39,7 @@ let app = fastify({
 app.register(compress) // Compress/GZIP/Brotil Server
    .register(helmet) // Protect server
    .register(noIcon) // Remove the no favicon error
-   .register(_render) // Render Plugin
+   .register(_render, { partial: "#swup" }) // Render Plugin
    .register(_assets, { maxAge }) // Assets Plugin
    .register(_reload, { reloadTime }) // Server Reload Plugin (for Heroku)
 
@@ -58,7 +58,7 @@ app.register(compress) // Compress/GZIP/Brotil Server
 for (let i in routes)
     app.get(i, (req, res) => {
         res.header("cache-control", `public, max-age=${maxAge}`);
-        res.render(routes[i], req.headers["x-barba"]);
+        res.render(routes[i], req.headers["x-partial"]);
     });
 
 // Error handling

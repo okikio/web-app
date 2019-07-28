@@ -18,6 +18,7 @@ window.addEventListener('scroll', function(event) {
 import el from "./components/ele";
 import swup from "swup";
 import slideTheme from '@swup/slide-theme';
+import preload from '@swup/preload-plugin';
 // import swupjs from "@swup/js-plugin"; '@swup/slide-theme'
 // import anime from "anime";
 
@@ -55,5 +56,9 @@ let options = [
     }
   ];new swupjs(options)*/
 new swup({
-    plugins: [new slideTheme()]
+    requestHeaders: {
+        "X-Requested-With": "swup", // So we can tell request comes from swup
+        "x-partial": "swup" // Request a partial html page
+    },
+    plugins: [new slideTheme(), new preload()]
 });

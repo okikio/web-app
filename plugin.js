@@ -17,8 +17,7 @@ const { websiteURL, cloud_name, imageURLConfig } = require(`./config${dev ? '' :
 assets.config({ cloud_name, secure: true });
 
 // For faster efficient page switching using partial output
-const jsdom = require("jsdom");
-const { JSDOM } = jsdom;
+const DOM = require("fast-html-parser");
 
 module.exports._render = plugin((app, opts, next) => {
     // Selector for the partial output
@@ -46,12 +45,9 @@ module.exports._render = plugin((app, opts, next) => {
                 .on("data", val => { data += val; })
                 .on("error", err => { res.log.error(err); })
                 .on("close", () => {
-                    dom = new JSDOM(data).window.document;
-                    dom = dom.querySelector(partialSel);
-                    data = dom.outerHTML;
-
-                    app.cache[key] = data;
-                    res.type("text/html").send(data);
+                    dom = DOM.parse(data).querySelector(partialSel);
+                    app.cache[key] = dom.outerHTML;
+                    res.type("text/html").send(app.cache[key]);
                 });
         }
 
@@ -253,7 +249,6 @@ module.exports._assets = plugin((app, opts, next) => {
 
     // Load and cache assets eg: /assets/city.webp?w=100 or /assets/app.js
     app.get("/assets/*", (req, res) => {
-        console.info(`LOg ------ ++++ ====    ${req.raw.url}`);
         let asset = req.raw.url.replace("/assets/", "");
         let URLObj = parse(req.raw.url, true);
         let queryStr = URLObj.search;

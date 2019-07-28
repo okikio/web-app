@@ -178,7 +178,7 @@ task("js", () =>
                         ] 
                     }, type == 'general' ? 'umd' : 'es'),
                     dev ? js() : uglify(), // Minify the file
-                    rename(`app${type == 'general' ? '' : `-${type}`}.min.js`), // Rename
+                    rename(`app${type == 'general' ? '' : '.modern'}.min.js`), // Rename
                     write(srcMapsWrite) // Put sourcemap in public folder
                 ],
                 dest: `${publicDest}/js` // Output
