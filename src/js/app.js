@@ -16,11 +16,43 @@ window.addEventListener('scroll', function(event) {
 
 
 import el from "./components/ele";
+import swup from "swup";
+import swupjs from "@swup/js-plugin";
+import anime from "anime";
+
 let ele = new el("body");
 ele.set("style", { });
-fetch("/assets/raw/upload/barba.js")
+fetch("/assets/app.js")
     .then(console.log);
 
 console.log({
     message: "Hello"
+});
+
+let options = [
+    {
+      from: '(.*)',
+      to: '(.*)',
+      in: function(next) {
+        document.querySelector('#swup').style.opacity = 0;
+        anime({
+            targets: "#swup",
+            duration: 500,
+            opacity: 1,
+            complete: next
+        });
+      },
+      out: (next) => {
+        document.querySelector('#swup').style.opacity = 1;
+        anime({
+            targets: "#swup",
+            duration: 500,
+            opacity: 0,
+            complete: next
+        });
+      }
+    }
+  ];
+new swup({
+    plugins: [new swupjs(options)]
 });

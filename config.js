@@ -10,6 +10,50 @@ module.exports = {
         "dpr": "auto"
     },
     "pages": {
+        "about": page(
+            title("The Sub Page"),
+            values(
+                // Hero Layer
+                layer(
+                    hero(
+                        img(carImg, "A city Image"),
+                        title("The Sub Page.")
+                    )
+                ),
+                // End Hero Layer
+
+                // Intro layer
+                layer(
+                    _class(
+                        padding("horz", "large-top")
+                    ),
+                    layout(
+                        _class("layout-shorten"),
+                        values(
+                            section(
+                                title("Lorem itpsuim"),
+                                values(
+                                    assign(
+                                        content(" "),
+                                        _class(
+                                            padding("top"),
+                                            margin("left-large"),
+                                            "layout-inline-block"
+                                        )
+                                    ),
+                                    content(`Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy text ever since the 1500s, when an unknown printer
+                                        took a galley of type and scrambled it to make a type specimen book. It has survived not only five centuries, but also the leap into electronic typesetting, remaining essentially unchanged.
+                                        It was popularised in the 1960s with the release of Letraset sheets
+                                        containing Lorem Ipsum passages, and more recently with desktop publishing software like Aldus PageMaker including versions of Lorem Ipsum, `),
+                                    link("home", "/")
+                                )
+                            )
+                        )
+                    )
+                )
+                // End Intro Layer
+            )
+        ),
         "index": page(
             title("Hello There"),
             values(
@@ -45,7 +89,7 @@ module.exports = {
                                         took a galley of type and scrambled it to make a type specimen book. It has survived not only five centuries, but also the leap into electronic typesetting, remaining essentially unchanged.
                                         It was popularised in the 1960s with the release of Letraset sheets
                                         containing Lorem Ipsum passages, and more recently with desktop publishing software like Aldus PageMaker including versions of Lorem Ipsum, `),
-                                    link("run", "/run")
+                                    link("run", "/about")
                                 )
                             )
                         )
@@ -278,6 +322,7 @@ module.exports = {
     },
     "routes": {
         "/": "index",
+        "/about": "about",
         "/run": "run"
     },
     "social_links": [{

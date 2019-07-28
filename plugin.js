@@ -7,11 +7,11 @@ const { PassThrough } = require("stream");
 const plugin = require("fastify-plugin");
 const { lookup } = require("mime-types");
 const assets = require("cloudinary").v2;
+const { parse } = require("url");
 const axios = require("axios");
 const path = require("path");
 const glob = require("glob");
 const send = require("send");
-const url = require("url");
 
 const { websiteURL, cloud_name, imageURLConfig } = require(`./config${dev ? '' : ".min"}`);
 assets.config({ cloud_name, secure: true });
@@ -170,7 +170,7 @@ module.exports._static = plugin((app, opts, next) => {
 
             if (opts.redirect == true) {
                 stream.on('directory', () => {
-                    let parsed = url.parse(req.raw.url);
+                    let parsed = parse(req.raw.url);
                     reply.redirect(301, parsed.pathname + '/' + (parsed.search || ''));
                 });
             }
@@ -200,7 +200,7 @@ module.exports._static = plugin((app, opts, next) => {
 
             if (opts.redirect && prefix != opts.prefix) {
                 app.get(opts.prefix, schema, (req, res) => {
-                    let parsed = url.parse(req.raw.url);
+                    let parsed = parse(req.raw.url);
                     res.redirect(301, parsed.pathname + '/' + (parsed.search || ''));
                 });
             }
@@ -251,15 +251,13 @@ module.exports._static = plugin((app, opts, next) => {
 module.exports._assets = plugin((app, opts, next) => {
     let maxAge = opts.maxAge;
 
-    // Load and cache assets
-    app.get("/assets/:asset", (req, res) => {
+    // Load and cache assets eg: /assets/city.webp?w=100 or /assets/app.js
+    app.get("/assets/*", (req, res) => {
         console.info(`LOg ------ ++++ ====    ${req.raw.url}`);
-        let URLObj = url.parse(req.raw.url, true);
-        let asset = req.params.asset;
+        let asset = req.raw.url.replace("/assets/", "");
+        let URLObj = parse(req.raw.url, true);
         let queryStr = URLObj.search;
         let query = URLObj.query;
-
-        // https://3000-a3b2b5f7-b627-40f3-87c9-6330e4d9aefd.ws-us0.gitpod.io/assets/city.webp?w=100
 
         let key = `assets__${URLObj.path}__fastify`;
         res.header("cache-control", `public, max-age=${maxAge}`);
@@ -269,16 +267,20 @@ module.exports._assets = plugin((app, opts, next) => {
             if (val.type) { res.type(val.type).send(val.data); }
             else { res.send(val.data); }
         } else {
-            let height = query.h;
-            let width = query.w || 'auto';
             asset = asset.replace(queryStr, '');
-            let imgURLConfig = { ...imageURLConfig, width, height };
-            let _url = assets.url(asset, imgURLConfig);
+            let type = lookup(asset) || 'text/plain';
+            let media = /image|video|audio/g.test(type);
+            let _url, height, width, imgURLConfig;
 
-            var type = lookup(_url) || 'text/plain';
-            let media = /image|video/g.test(type);
+            if (media) {
+                height = query.h;
+                width = query.w || 'auto';
+                imgURLConfig = { ...imageURLConfig, width, height };
+                _url = assets.url(asset, imgURLConfig);
+            } else { 
+                _url = assets.url(asset).replace("image", "raw"); 
+            }
 
-            if (/text|application/g.test(type)) _url = _url.replace("image", "raw");
             axios.get(_url, media ? { responseType: 'arraybuffer' } : undefined)
                 .then(val => {
                     if (media) {
@@ -287,7 +289,7 @@ module.exports._assets = plugin((app, opts, next) => {
                         return res.type(type).send(buf);
                     }
 
-                    app.cache[key] = { data: val.data };
+                    app.cache[key] = val;
                     return res.send(val.data);
                 }).catch(err => {
                     res.send(err.message);

@@ -7,6 +7,69 @@ module.exports = {
         "dpr": "auto"
     },
     "pages": {
+        "about": {
+            "title": "The Sub Page",
+            "tabs": {
+                "values": [{
+                        "a": {
+                            "href": "/about",
+                            "content": "ABOUT"
+                        }
+                    },
+                    {
+                        "a": {
+                            "href": "/projects",
+                            "content": "PROJECTS"
+                        }
+                    },
+                    {
+                        "a": {
+                            "href": "/contact",
+                            "content": "CONTACT"
+                        }
+                    }
+                ]
+            },
+            "values": [{
+                    "layer": {
+                        "hero": {
+                            "img": {
+                                "src": "/assets/white_car.webp?w=400&h=400",
+                                "alt": "A city Image"
+                            },
+                            "title": "The Sub Page."
+                        }
+                    }
+                },
+                {
+                    "layer": {
+                        "class": "layout-padding-horz layout-padding-large-top",
+                        "layout": {
+                            "class": "layout-shorten",
+                            "values": [{
+                                "section": {
+                                    "title": "Lorem itpsuim",
+                                    "values": [{
+                                            "content": " ",
+                                            "class": "layout-padding-top layout-margin-left-large layout-inline-block"
+                                        },
+                                        {
+                                            "content": "Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy text ever since the 1500s, when an unknown printer\n                                        took a galley of type and scrambled it to make a type specimen book. It has survived not only five centuries, but also the leap into electronic typesetting, remaining essentially unchanged.\n                                        It was popularised in the 1960s with the release of Letraset sheets\n                                        containing Lorem Ipsum passages, and more recently with desktop publishing software like Aldus PageMaker including versions of Lorem Ipsum, "
+                                        },
+                                        {
+                                            "a": {
+                                                "href": "/",
+                                                "content": "home"
+                                            }
+                                        }
+                                    ]
+                                }
+                            }]
+                        }
+                    }
+                }
+            ]
+        },
         "index": {
             "title": "Hello There",
             "tabs": {
@@ -58,7 +121,7 @@ module.exports = {
                                         },
                                         {
                                             "a": {
-                                                "href": "/run",
+                                                "href": "/about",
                                                 "content": "run"
                                             }
                                         }
@@ -219,6 +282,7 @@ module.exports = {
     },
     "routes": {
         "/": "index",
+        "/about": "about",
         "/run": "run"
     },
     "social_links": [{
