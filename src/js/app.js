@@ -17,8 +17,9 @@ window.addEventListener('scroll', function(event) {
 
 import el from "./components/ele";
 import swup from "swup";
-import swupjs from "@swup/js-plugin";
-import anime from "anime";
+import slideTheme from '@swup/slide-theme';
+// import swupjs from "@swup/js-plugin"; '@swup/slide-theme'
+// import anime from "anime";
 
 let ele = new el("body");
 ele.set("style", { });
@@ -28,7 +29,7 @@ fetch("/assets/app.js")
 console.log({
     message: "Hello"
 });
-
+/*
 let options = [
     {
       from: '(.*)',
@@ -52,7 +53,7 @@ let options = [
         });
       }
     }
-  ];
+  ];new swupjs(options)*/
 new swup({
-    plugins: [new swupjs(options)]
+    plugins: [new slideTheme()]
 });

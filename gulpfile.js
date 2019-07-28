@@ -263,9 +263,25 @@ task("update", () =>
     })
 );
 
-task("gulpfile:watch", () => 
-    execSeries(["gulp update", "gulp"]) 
-);
+task("gulpfile:watch", () => {
+    ///exec("gulp")// execSeries(["gulp update"]) // , "gulp"
+    var cmd = "gulp";
+    var parts = cmd.toString().split(/\s+/g);
+    var init = parts[0];
+    var args = parts.slice(1);
+    console.log(`${Array.isArray(args)} - What is going on`)
+    return new Promise((resolve, reject) => {
+        spawn("gulp", [], { stdio: 'inherit' })
+            .on('data', data => process.stdout.write(data))
+            .on('error', function () {
+                reject();
+            })
+            .on('exit',  function () {
+                resolve();
+            });
+            resolve();
+    });
+});
 
 task("git", () =>
     execSeries([
@@ -295,9 +311,7 @@ task('watch', () => {
     watch(['config.js', 'containers/*.js'], watchDelay, series('config:watch'));
     watch(['gulpfile.js', 'postcss.config.js'], watchDelay, series('gulpfile:watch', 'server'));
     watch(['server.js', 'plugin.js'], watchDelay, series('server'));
-    watch('views/**/*.pug', watchDelay, series('html', 'server', 'css', 'inline'));
-    watch('src/**/*.scss', watchDelay, series('css', 'server', 'inline'));
+    watch('views/** /*.pug', watchDelay, series('html', 'server', 'css', 'inline'));
+    watch('src/** /*.scss', watchDelay, series('css', 'server', 'inline'));
     watch('src/**/*.js', watchDelay, series('js', 'server', 'inline'));
 });
-
-module.exports = gulp;

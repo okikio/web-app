@@ -17,7 +17,7 @@ module.exports = {
                 layer(
                     hero(
                         img(carImg, "A city Image"),
-                        title("The Sub Page.")
+                        title("Subpage.")
                     )
                 ),
                 // End Hero Layer

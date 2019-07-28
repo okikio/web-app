@@ -97,7 +97,15 @@ $size: 25px;
 @import "./components/icon.scss";
 @import "./components/layout.scss";
 @import "./components/layer.scss";
+.transition-fade {
+    transition: 0.4s;
+    opacity: 1;
+}
 
+html.is-animating .transition-fade {
+    opacity: 0;
+}
+  
 // Pages (Style specific to pages seperate pages)
 // @import "./pages/about.scss";
 // @import "./pages/contact.scss";

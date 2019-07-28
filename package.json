@@ -54,6 +54,7 @@
     "@babel/preset-env": "^7.5.5",
     "@fullhuman/postcss-purgecss": "^1.2.0",
     "@swup/js-plugin": "^1.0.4",
+    "@swup/slide-theme": "^1.0.5",
     "anime": "^0.1.2",
     "autoprefixer": "^9.6.1",
     "core-js": "^3.1.4",
