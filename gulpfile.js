@@ -3,7 +3,7 @@ if (!('dev' in env)) require('dotenv').config();
 let dev = 'dev' in env && env.dev.toString() == "true";
 
 const gulp = require('gulp');
-const { src, task, series, dest, watch } = gulp;
+const { src, task, series, parallel, dest, watch } = gulp;
 
 const { babelConfig } = require(`./browserslist${dev ? '' : ".min"}`);
 const nodeResolve = require('rollup-plugin-node-resolve');
@@ -18,11 +18,13 @@ const inlineSrc = require("gulp-inline-source");
 const replace = require('gulp-string-replace');
 const { html, js } = require('gulp-beautify');
 const rollup = require('gulp-better-rollup');
+const newerSCSS = require("gulp-newer-sass");
 const { spawn } = require('child_process');
 const htmlmin = require('gulp-htmlmin');
 const assets = require("cloudinary").v2;
 const postcss = require('gulp-postcss');
 const rename = require('gulp-rename');
+const newer = require("gulp-newer");
 const babel = require('gulp-babel');
 const { writeFile } = require("fs");
 const sass = require('gulp-sass');
@@ -50,7 +52,7 @@ let watchDelay = { delay: 500 };
 let publicDest = 'public';
 
 // Streamlines Gulp Tasks
-let stream = (_src, _opt = { pipes: [], dest: publicDest }, done) => {
+let stream = (_src, _opt = { }, done) => {
     let host = src(_src, _opt.opts), _pipes = _opt.pipes || [], _dest = _opt.dest || publicDest;
     return new Promise((resolve, reject) => { 
         _pipes.forEach(val => { host = host.pipe(val).on('error', reject); });
@@ -82,21 +84,20 @@ let stringify = obj => {
 };
 
 // Based on: [https://gist.github.com/millermedeiros/4724047]
-let exec = cmd => {
+let _exec = cmd => {
     var parts = cmd.toString().split(/\s+/g);
-    console.log(`${cmd} - What is going on`)
-    return new Promise((resolve, reject) => {
-        spawn(parts[0], parts.slice(1), { stdio: 'inherit' })
+    return new Promise((resolve = () => {}) => {
+        spawn(parts[0], parts.slice(1), { shell: true, stdio: 'inherit' })
             .on('data', data => process.stdout.write(data))
-            .on('error', reject || function () {})
-            .on('exit', resolve || function () {});
+            .on('error', err => console.error(err))
+            .on('close', () => (resolve || function () {}) ());
     });
 };
 
 // Execute multiple commands in series
-let execSeries = cmds => {
+let _execSeries = (...cmds) => {
     return Promise.all(
-        cmds.map(cmd => exec(cmd)) 
+        cmds.map(cmd => typeof cmd == "string" ? _exec(cmd) : cmd) 
     );
 };
 
@@ -107,6 +108,8 @@ task('html', () => {
         ...pageValues.map((page, i) => 
             ['views/app.pug', {
                 pipes: [
+                    // Only update when there is something to update
+                    newer(`${publicDest}/${pageNames[i]}.html`),
                     // Rename
                     rename({
                         basename: pageNames[i],
@@ -139,8 +142,10 @@ task('html', () => {
 });
 
 task("css", () =>
-    stream('src/scss/app.scss', {
+    stream('src/scss/*.scss', {
         pipes: [
+            // Only update when there is something to update (supports imports as well)
+            newerSCSS({ dest: `${publicDest}/css` }),
             init(), // Sourcemaps init
             // Minify scss to css
             sass({ outputStyle: dev ? 'expanded' : 'compressed' }).on('error', sass.logError),
@@ -159,6 +164,8 @@ task("js", () =>
             ['src/js/app.js', {
                 opts: { allowEmpty: true },
                 pipes: [
+                    // Only update when there is something to update
+                    newer(`${publicDest}/js/app${type == 'general' ? '' : '.modern'}.min.js`),
                     init(), // Sourcemaps init
                     // Bundle Modules
                     rollup({
@@ -180,6 +187,8 @@ task("js", () =>
         ['src/js/app.vendor.js', {
             opts: { allowEmpty: true },
             pipes: [
+                // Only update when there is something to update
+                newer(`${publicDest}/js/app.vendor.min.js`),
                 init(), // Sourcemaps init
                 // Bundle Modules
                 rollup({
@@ -204,6 +213,8 @@ task("server", () =>
     stream(["*.js", "!postcss.config.js", "!*.min.js", "!gulpfile.js", "!config.js", "!config-dev.js"], {
         opts: { allowEmpty: true },
         pipes: [
+            // Only update when there is something to update
+            newer(`./*.min.js`),
             babel(babelConfig.node), // ES5 file for uglifing
             uglify(), // Minify the file
             rename(minSuffix) // Rename
@@ -227,6 +238,8 @@ task("config", () =>
         ["config.min.js", {
             opts: { allowEmpty: true },
             pipes: [
+                // Only update when there is something to update
+                newer(`./config.min.js`),
                 babel(babelConfig.node), // ES5 file for uglifing
                 uglify() // Minify the file
             ],
@@ -235,6 +248,8 @@ task("config", () =>
         ["config.min.js", {
             opts: { allowEmpty: true },
             pipes: [
+                // Only update when there is something to update
+                newer(`./config-dev.js`),
                 js({ indent_size: 4 }), // Beautify the file
                 // Rename
                 rename({
@@ -248,13 +263,15 @@ task("config", () =>
 );
 
 task("config:watch", () => 
-    exec("gulp config server html --gulpfile ./gulpfile.min.js")
+    _exec("gulp config server html --gulpfile ./gulpfile.min.js")
 );
 
 task("update", () =>
     stream("gulpfile.js", {
         opts: { allowEmpty: true },
         pipes: [
+            // Only update when there is something to update
+            newer(`./gulpfile.min.js`),
             babel(babelConfig.node), // ES5 file for uglifing
             uglify(), // Minify the file
             rename(minSuffix) // Rename
@@ -263,37 +280,23 @@ task("update", () =>
     })
 );
 
-task("gulpfile:watch", () => {
-    ///exec("gulp")// execSeries(["gulp update"]) // , "gulp"
-    var cmd = "gulp";
-    var parts = cmd.toString().split(/\s+/g);
-    var init = parts[0];
-    var args = parts.slice(1);
-    console.log(`${Array.isArray(args)} - What is going on`)
-    return new Promise((resolve, reject) => {
-        spawn("gulp", [], { stdio: 'inherit' })
-            .on('data', data => process.stdout.write(data))
-            .on('error', function () {
-                reject();
-            })
-            .on('exit',  function () {
-                resolve();
-            });
-            resolve();
-    });
-});
+task("gulpfile:watch", () =>
+    _execSeries("gulp update", "gulp")
+);
 
 task("git", () =>
-    execSeries([
+    _execSeries(
         "git add .",
         "git commit -m 'Upgrade'",
         "git push -u origin master"
-    ])
+    )
 );
 
 task('inline', () =>
     stream('public/*.html', {
         pipes: [
+            // Only update when there is something to update
+            newer(publicDest),
             // Inline external sources
             inlineSrc({ compress: false })
         ]
@@ -301,10 +304,10 @@ task('inline', () =>
 );
 
 // Gulp task to minify all files
-task('default', series("update", "config", "server", "html", "css", "js", "inline"));
+task('default', series("update", "config", parallel("server", "html", "js"), "css", "inline"));
 
 // Gulp task to minify all files without -js
-task('other', series("update", "config", "server", "html", "css", "inline"));
+task('other', series("update", "config", parallel("server", "html"), "css", "inline"));
 
 // Gulp task to check to make sure a file has changed before minify that file files
 task('watch', () => {

@@ -5,7 +5,7 @@ try {
     let script = document.createElement("script");
     let isModern = fetch && Promise;
 
-    let src = `./js/app${isModern ? `-modern` : ''}.min.js`;
+    let src = `./js/app${isModern ? `.modern` : ''}.min.js`;
     script.setAttribute("src", src);
     if (isModern) {
         fetch(src)
