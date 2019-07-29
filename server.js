@@ -29,7 +29,7 @@ let PORT = normalizePort(process.env.PORT || 3000);
 let reloadTime = 29; // Set server reload time to 29 minutes
 let maxAge = (dev ? 0 : 1) * 1000 * 60 * 60 * 24 * 7;
 let app = fastify({
-    logger: false &&   {
+    logger: {
         prettyPrint: { translateTime: "hh:MM:ss TT", }
     },
     ignoreTrailingSlash: true,

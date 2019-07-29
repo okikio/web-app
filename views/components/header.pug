@@ -3,10 +3,10 @@ mixin header(tabs, title)
     nav.navbar.navbar-fixed
       article.layout-contain.navbar-layout
         section.navbar-header
-          span.style-16.style-bolder.style-letter-spacing-small.layout-padding-horz-small.layout-padding-left JOSEPH!
+          a(href="/").style-16.style-bolder.style-letter-spacing-small.layout-padding-horz-small.layout-padding-left JOSEPH!
         section.layout-spacer
         section.navbar-main
           ul.navbar-list
             each tab in tabs.values
               li
-                a.navbar-link(href=tab.a.href class=`${title.toLowerCase() == tab.a.content && "navbar-link-focus"}`)= tab.a.content
+                a.navbar-link(href=tab.a.href class=`${title.toLowerCase() == tab.a.content && "navbar-link-focus"}` data-swup-preload)= tab.a.content

@@ -18,7 +18,6 @@ const inlineSrc = require("gulp-inline-source");
 const replace = require('gulp-string-replace');
 const { html, js } = require('gulp-beautify');
 const rollup = require('gulp-better-rollup');
-const newerSCSS = require("gulp-newer-sass");
 const { spawn } = require('child_process');
 const htmlmin = require('gulp-htmlmin');
 const assets = require("cloudinary").v2;
@@ -108,8 +107,6 @@ task('html', () => {
         ...pageValues.map((page, i) => 
             ['views/app.pug', {
                 pipes: [
-                    // Only update when there is something to update
-                    newer(`${publicDest}/${pageNames[i]}.html`),
                     // Rename
                     rename({
                         basename: pageNames[i],
@@ -144,8 +141,6 @@ task('html', () => {
 task("css", () =>
     stream('src/scss/*.scss', {
         pipes: [
-            // Only update when there is something to update (supports imports as well)
-            newerSCSS({ dest: `${publicDest}/css` }),
             init(), // Sourcemaps init
             // Minify scss to css
             sass({ outputStyle: dev ? 'expanded' : 'compressed' }).on('error', sass.logError),
@@ -295,8 +290,6 @@ task("git", () =>
 task('inline', () =>
     stream('public/*.html', {
         pipes: [
-            // Only update when there is something to update
-            newer(publicDest),
             // Inline external sources
             inlineSrc({ compress: false })
         ]
@@ -314,7 +307,7 @@ task('watch', () => {
     watch(['config.js', 'containers/*.js'], watchDelay, series('config:watch'));
     watch(['gulpfile.js', 'postcss.config.js'], watchDelay, series('gulpfile:watch', 'server'));
     watch(['server.js', 'plugin.js'], watchDelay, series('server'));
-    watch('views/** /*.pug', watchDelay, series('html', 'server', 'css', 'inline'));
-    watch('src/** /*.scss', watchDelay, series('css', 'server', 'inline'));
+    watch('views/**/*.pug', watchDelay, series('html', 'server', 'css', 'inline'));
+    watch('src/**/*.scss', watchDelay, series('css', 'server', 'inline'));
     watch('src/**/*.js', watchDelay, series('js', 'server', 'inline'));
 });

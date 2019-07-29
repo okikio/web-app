@@ -5,60 +5,33 @@ https://www.smashingmagazine.com/2018/10/smart-bundling-legacy-code-browsers/htt
 var passiveIfSupported = false;
 
 try {
-  window.addEventListener("test", null, Object.defineProperty({}, "passive", { get: function() { passiveIfSupported = { passive: true }; } }));
+	window.addEventListener("test", null, Object.defineProperty({}, "passive", { get: function() { passiveIfSupported = { passive: true }; } }));
 } catch(err) {}
 
 window.addEventListener('scroll', function(event) {
-  // do something
-  // can't use event.preventDefault();
+	// do something
+	// can't use event.preventDefault();
 }, passiveIfSupported ); */
-
-
 
 import el from "./components/ele";
 import swup from "swup";
-import slideTheme from '@swup/slide-theme';
-import preload from '@swup/preload-plugin';
-// import swupjs from "@swup/js-plugin"; '@swup/slide-theme'
+// import scrollPlugin from "@swup/scroll-plugin";
+// import slideTheme from '@swup/slide-theme';
+// import preload from '@swup/preload-plugin';
 // import anime from "anime";
 
 let ele = new el("body");
-ele.set("style", { });
+ele.set("style", {});
 fetch("/assets/app.js")
-    .then(console.log);
+	.then(console.log);
 
 console.log({
-    message: "Hello"
+	message: "Hello"
 });
-/*
-let options = [
-    {
-      from: '(.*)',
-      to: '(.*)',
-      in: function(next) {
-        document.querySelector('#swup').style.opacity = 0;
-        anime({
-            targets: "#swup",
-            duration: 500,
-            opacity: 1,
-            complete: next
-        });
-      },
-      out: (next) => {
-        document.querySelector('#swup').style.opacity = 1;
-        anime({
-            targets: "#swup",
-            duration: 500,
-            opacity: 0,
-            complete: next
-        });
-      }
-    }
-  ];new swupjs(options)*/
+
 new swup({
-    requestHeaders: {
-        "X-Requested-With": "swup", // So we can tell request comes from swup
-        "x-partial": "swup" // Request a partial html page
-    },
-    plugins: [new slideTheme(), new preload()]
+	requestHeaders: {
+		"X-Requested-With": "swup", // So we can tell request comes from swup
+		"x-partial": "swup" // Request a partial html page
+	}
 });

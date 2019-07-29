@@ -55,7 +55,7 @@ module.exports._render = plugin((app, opts, next) => {
     });
 
     // HTML Render
-    app.decorateReply('html',function (filePath) {
+    app.decorateReply('html', function (filePath) {
         let file = app.path(filePath, root);
         let key = `${file}__fastify`;
         let data = "", res = this;
