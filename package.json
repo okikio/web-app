@@ -34,7 +34,6 @@
   "homepage": "https://github.com/okikio/fastify-app#readme",
   "dependencies": {
     "axios": "^0.19.0",
-    "browserslist-useragent": "^3.0.0",
     "cloudinary": "^1.14.0",
     "dotenv": "^8.0.0",
     "fast-html-parser": "^1.0.1",
@@ -56,7 +55,7 @@
     "@swup/preload-plugin": "^1.0.3",
     "@swup/scroll-plugin": "^1.0.6",
     "@swup/slide-theme": "^1.0.5",
-    "anime": "^0.1.2",
+    "animejs": "^3.1.0",
     "autoprefixer": "^9.6.1",
     "core-js": "^3.1.4",
     "eslint": "^6.1.0",

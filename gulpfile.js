@@ -155,7 +155,7 @@ task("css", () =>
 
 task("js", () => 
     streamList(...[
-        ...["modern", "general"].map(type => [
+        ...["modern"].concat(dev ? "general" : []).map(type => [
             ['src/js/app.js', {
                 opts: { allowEmpty: true },
                 pipes: [
