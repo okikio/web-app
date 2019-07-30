@@ -164,11 +164,12 @@ let _new = (ctor, args) => {
     return new F();
 };
 
+// All properties combined
 let _class, props = { _is, _fnval, _argNames, _method, _static, _path, _attr, _alias, _configAttr, _get, _set, _new };
 
-aliasMethods = _alias(props, {
-    thisArg: ["_attr", "_path", "_method", "_static"],
-    chain: []
+// Properties methods with Class support
+let aliasMethods = _alias(props, {
+    thisArg: ["_new", "_attr", "_path", "_method", "_static", "_argNames", "_fnval", "_is"]
 });
 
 // Create classes
@@ -210,10 +211,10 @@ _class = function (...args) {
     assign(Class.prototype, Class, aliasMethods);
 
     // Add Methods to Class
-    Class._method.apply(Class, args);
+    _method(Class, ...args);
 
     // Set Current class type
-    if (!Class.prototype._class) { Class.prototype._class = "Object"; }
+    if (!Class.prototype._class) { Class.prototype._class = "New Class"; }
 
     // Set Class constructor
     Class.prototype.constructor = Class;
@@ -225,27 +226,29 @@ _class = function (...args) {
     }
 
     // Call Super Class Methods
-    Class.prototype.callSsper = function (method) {
-        var _Parent = null, $ = this, arg = args(arguments, 1),
-            _const = $, _super = _const.SuperClass;
+    _attr(Class.prototype, ["$Super", "CallSuper"], function (method, ...args) {
+        var _parent = null, $ = this, _const = $, _super = _const.SuperClass;
+
         // Climb prototype chain to find method not equal to callee's method
         while (_super) {
             if ($[method] !== _super.prototype[method]) {
-                _Parent = _super.prototype[method];
+                _parent = _super.prototype[method];
                 break;
             }
+
             $ = _super.prototype;
             _const = $.constructor;
             _super = _const.SuperClass;
         }
 
-        if (!_Parent) {
-            println(method + ', method not found in prototype chain.');
+        if (!_parent) {
+            console.error(`${method} method not found in prototype chain.`);
             return;
         }
-        return (arg.length > 0) ?
-            _Parent.apply(this, arg) : _Parent.bind(this)();
-    };
+        return (args.length > 0) ?
+            _parent.apply(this, args) : _parent.call(this);
+    });
+
     return Class;
 };
 
