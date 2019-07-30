@@ -164,23 +164,47 @@ let _new = (ctor, args) => {
     return new F();
 };
 
+// Call the parent version of a method
+let _callsuper = function (obj, method, ...args) {
+    let _prototype = obj.prototype; // Only static methods have access to the prototype Object
+    let _parent = null, $ = obj, _const = $, _super = _const.SuperClass;
+
+    // Climb prototype chain to find method not equal to callee's method
+    while (_super) {
+        _super = (_prototype ? _super : _super.prototype);
+        if ($[method] != _super[method]) 
+            { _parent = _super[method]; break; }
+
+        $ = _super;
+        _const = $.constructor;
+        _super = _const.SuperClass;
+    }
+
+    if (!_parent) {
+        console.error(`${method} method not found in prototype chain.`);
+        return;
+    }
+    return (args.length > 0) ?
+        _parent.apply(obj, args) : _parent.call(obj);
+};
+
 // All properties combined
-let _class, props = { _is, _fnval, _argNames, _method, _static, _path, _attr, _alias, _configAttr, _get, _set, _new };
+let props = { _is, _fnval, _argNames, _method, _static, _path, _attr, _alias, _configAttr, _get, _set, _new, _callsuper };
 
 // Properties methods with Class support
 let aliasMethods = _alias(props, {
-    thisArg: ["_new", "_attr", "_path", "_method", "_static", "_argNames", "_fnval", "_is"]
+    thisArg: ["_new", "_attr", "_path", "_method", "_static", "_callsuper"]
 });
 
 // Create classes
-_class = function (...args) {
+let _class = function (...args) {
     let Class, SubClass, Parent;
 
     // SubClass constructor
     SubClass = function () { };
 
     // Set parent constructor
-    if (args[0] && _is(args[0], "function") || isArray(this.SubClasses)) {
+    if (_is(args[0], "function") || isArray(this.SubClasses)) {
         if (isArray(this.SubClasses)) { Parent = this; }
         else { Parent = args.shift(); }
     }
@@ -207,8 +231,11 @@ _class = function (...args) {
     Class.SubClasses = []; // List of SubClasses
 
     // Extend Class
-    assign(Class, props);
-    assign(Class.prototype, Class, aliasMethods);
+    assign(Class, aliasMethods);
+    assign(Class.prototype, aliasMethods, { 
+        SuperClass: Class.SuperClass, 
+        SubClasses: Class.SubClasses 
+    });
 
     // Add Methods to Class
     _method(Class, ...args);
@@ -225,42 +252,8 @@ _class = function (...args) {
         Class.toValue = Class.prototype.init.toValue;
     }
 
-    // Call Super Class Methods
-    _attr(Class.prototype, ["$Super", "CallSuper"], function (method, ...args) {
-        var _parent = null, $ = this, _const = $, _super = _const.SuperClass;
-
-        // Climb prototype chain to find method not equal to callee's method
-        while (_super) {
-            if ($[method] !== _super.prototype[method]) {
-                _parent = _super.prototype[method];
-                break;
-            }
-
-            $ = _super.prototype;
-            _const = $.constructor;
-            _super = _const.SuperClass;
-        }
-
-        if (!_parent) {
-            console.error(`${method} method not found in prototype chain.`);
-            return;
-        }
-        return (args.length > 0) ?
-            _parent.apply(this, args) : _parent.call(this);
-    });
-
     return Class;
 };
 
-// Alias Methods
-_.extend(Static, {
-    Extends: Static.Create, // Extend from another Class
-    // Add Prototype Methods to Class
-    Method: Static.Method,
-    AddTo: Static.Method,
-    Prop: Static.Method,
-});
-
-let Class = Static.Create;
-_.extend(Class, Static);
-return Class;
+assign(_class, props); // Extend _class
+export default _class;

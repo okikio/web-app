@@ -16,6 +16,7 @@ const rollupJSON = require("rollup-plugin-json");
 const uglify = require('gulp-uglify-es').default;
 const inlineSrc = require("gulp-inline-source");
 const replace = require('gulp-string-replace');
+const stringify = require("./util/stringify");
 const { html, js } = require('gulp-beautify');
 const rollup = require('gulp-better-rollup');
 const { spawn } = require('child_process');
@@ -67,20 +68,6 @@ let streamList = (...args) => {
         )
     );
 }; 
-
-// Stringify
-let stringify = obj => {
-    let fns = [];
-    let json = JSON.stringify(obj, (key, val) => {
-        if (typeof val == "function") {
-            fns.push(val.toString());
-            return "_";
-        }
-        return val;
-    }, 4);
-
-    return json.replace(/\"_\"/g, () => fns.shift());
-};
 
 // Based on: [https://gist.github.com/millermedeiros/4724047]
 let _exec = cmd => {
