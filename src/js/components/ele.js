@@ -1,5 +1,6 @@
 import _class, { _get, _is } from "./class"; 
 import { assign } from "./util";
+import _global from './global';
 import _event from './event';
 import anime from "animejs";
 
@@ -46,39 +47,19 @@ let _elem = sel => {
 // Element Object
 let Ele = _class(_event, arrProto, {
     init(sel = '', opts = {}) {
-        let $this = this;
         this.sel = _is.inst(sel, Ele) ? sel.ele : sel; // Selector
         this.ele = _elem(sel); // Element
         this.opts = opts; // Options
 
         for (let i = 0; i < this.len; i ++) 
             { this[i] = this.ele[i]; }
-        
-        /* 
-        // Checking the document.readyState property. If it contains the string in (as in uninitialized and loading) set a timeout and check again. Otherwise, execute function. [stackoverflow.com/a/30319853]
-        if (/in/.test(document.readyState)) {
-            window.setTimeout(() => { this.ready(fn); }, 9);
-        } else { fn.call(this); }
-            setTimeout((() => { 
-                this.emit("ready load".split(/\s/g), this) 
-            }).bind(this), 0); */
-        if (document.readyState == "complete" ||
-            (document.readyState !== "loading" && 
-            !document.documentElement.doScroll)) { 
-            setTimeout((() => { 
-                this.emit("ready load".split(/\s/g), this) 
-            }).bind(this), 0); 
-        } else {
-            var handler = function() {
-            document.removeEventListener("DOMContentLoaded", handler, false)
-            window.removeEventListener("load", handler, false)
-            callback($)
-            }
-            document.addEventListener("DOMContentLoaded", handler, false)
-            window.addEventListener("load", handler, false)
-        }
+            
+        _global.on("ready load", () => {
+            this.emit("ready load", Ele);
+        }, this);
+
     },
-    ready(fn) { return this.on(["ready", "load"], fn, this); },
+    ready(fn) { return this.on("ready load", fn, this); },
     len: _get("ele.length"),
     x(el) { return this.clientRect(el).x; },
     y(el) { return this.clientRect(el).y; },

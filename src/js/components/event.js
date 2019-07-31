@@ -33,6 +33,7 @@ let _event = _class({
     on: function (evt, callback, scope) {
         let $Evt;
         if (_is.undef(evt)) { return; } // If there is no event break
+        if (_is.str(evt)) { evt = evt.split(/\s/g); }
         if (_is.not("arr", evt) && _is.not("obj", evt)) { evt = [evt]; } // Set evt to an array
 
         // Loop through the list of events 
@@ -52,6 +53,7 @@ let _event = _class({
     emit: function (evt, ...args) {
         let $Evt, $args = args;
         if (_is.undef(evt)) { return; } // If there is no event break
+        if (_is.str(evt)) { evt = evt.split(/\s/g); }
         if (_is.not("arr", evt)) { evt = [evt]; } // Set evt to an array
 
         // Loop through the list of events 
@@ -74,6 +76,7 @@ let _event = _class({
     off: function (evt, callback, scope) {
         let $evt;
         if (_is.undef(evt)) { return; } // If there is no event break
+        if (_is.str(evt)) { evt = evt.split(/\s/g); }
         if (_is.not("arr", evt) && _is.not("obj", evt)) { evt = [evt]; } // Set evt to an array
 
         let _off = (($evt, callback, scope) => {
@@ -102,6 +105,7 @@ let _event = _class({
     // Adds a one time event listener for a given event
     once: function (evt, callback, scope) {
         if (_is.undef(evt)) { return; } // If there is no event break
+        if (_is.str(evt)) { evt = evt.split(/\s/g); }
         if (_is.not("arr", evt) && _is.not("obj", evt)) { evt = [evt]; } // Set evt to an array
 
         let $Fn = function (...args) {
