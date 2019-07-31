@@ -1,8 +1,5 @@
-import _class, { _get, _is, _argNames } from "./class";
+import _class, { _get, _is, _argNames, keys } from "./class";
 import stringify from "../../../util/stringify";
-
-let { isArray } = Array;
-let { keys } = Object;
 
 // Event class
 let _event = _class({
@@ -35,12 +32,12 @@ let _event = _class({
     // Add a listener for a given event
     on: function (evt, callback, scope) {
         let $Evt;
-        if (_is(evt, "undefined")) { return; } // If there is no event break
-        if (!isArray(evt) && !_is(evt, "object")) { evt = [evt]; } // Set evt to an array
+        if (_is.undef(evt)) { return; } // If there is no event break
+        if (_is.not("arr", evt) && _is.not("obj", evt)) { evt = [evt]; } // Set evt to an array
 
         // Loop through the list of events 
         evt.forEach(($evt, key) => {
-            if (_is(evt, "object") && !isArray(evt)) {
+            if (_is.obj(evt) && _is.not("arr", evt)) {
                 $Evt = this._eventApp($evt, callback || this, key);
                 this._preEvent(key).push($Evt); // Set event list
             } else {
@@ -54,8 +51,8 @@ let _event = _class({
     // Call all function(s) within an event
     emit: function (evt, ...args) {
         let $Evt, $args = args;
-        if (_is(evt, "undefined")) { return; } // If there is no event break
-        if (!isArray(evt)) { evt = [evt]; } // Set evt to an array
+        if (_is.undef(evt)) { return; } // If there is no event break
+        if (_is.not("arr", evt)) { evt = [evt]; } // Set evt to an array
 
         // Loop through the list of events 
         evt.forEach($evt => {
@@ -76,8 +73,8 @@ let _event = _class({
     // Removes a listener for a given event
     off: function (evt, callback, scope) {
         let $evt;
-        if (_is(evt, "undefined")) { return; } // If there is no event break
-        if (!isArray(evt) && !_is(evt, "object")) { evt = [evt]; } // Set evt to an array
+        if (_is.undef(evt)) { return; } // If there is no event break
+        if (_is.not("arr", evt) && _is.not("obj", evt)) { evt = [evt]; } // Set evt to an array
 
         let _off = (($evt, callback, scope) => {
             let _Evt = this._preEvent($evt);
@@ -95,7 +92,7 @@ let _event = _class({
 
         keys(evt).forEach((key) => {
             $evt = evt[key];
-            if (_is(evt, "object") && !isArray(evt)) {
+            if (_is.obj(evt) && _is.not("obj", evt)) {
                 _off(key, $evt, scope);
             } else { _off($evt, callback, scope); }
         }, this);
@@ -104,8 +101,8 @@ let _event = _class({
 
     // Adds a one time event listener for a given event
     once: function (evt, callback, scope) {
-        if (_is(evt, "undefined")) { return; } // If there is no event break
-        if (!isArray(evt) && !_is(evt, "object")) { evt = [evt]; } // Set evt to an array
+        if (_is.undef(evt)) { return; } // If there is no event break
+        if (_is.not("arr", evt) && _is.not("obj", evt)) { evt = [evt]; } // Set evt to an array
 
         let $Fn = function (...args) {
             this.off(evt, $Fn, scope);
@@ -121,6 +118,13 @@ let _event = _class({
         let $Evt = this._preEvent(evt);
         if (!$Evt.length) { return []; }
         return $Evt.map(val => val.callback);
+    },
+
+    // List's all listener values for a given event
+    listenerValues: function (evt, ...args) {
+        let $Evt = this._preEvent(evt);
+        if (!$Evt.length) { return []; }
+        return $Evt.map(val => val.callback.call(val.scope, ...args));
     },
 
     // Clear all events
@@ -144,7 +148,7 @@ let _event = _class({
     trigger: _get("emit"),
 
     // Alias for the `listeners` method
-    callbacks: _get("listeners"),
+    callbacks: _get("listeners")
 });
     
 export default _event;

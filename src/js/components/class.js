@@ -1,29 +1,4 @@
-let { assign, keys } = Object;
-let { isArray } = Array;
-
-// Test the type of a value
-let _is = (val, type) => (typeof val == type);
-
-/**
- * @param  {Function} fn
- * @param  {Array<any>} args
- * @param  {Object} ctxt
- */
-let _fnval = (fn, args, ctxt) => {
-    if (!_is(fn, "function") || 
-        keys(fn.prototype || {}).length > 0) 
-        { return fn; }
-    return fn.apply(ctxt, args);
-};
-
-// Argument names
-let _argNames = fn => {
-    let args = fn.toString()
-        .match(/^[\s\(]*function[^(]*\(([^)]*)\)/)[1]
-        .replace(/\/\/.*?[\r\n]|\/\*(?:.|[\r\n])*?\*\//g, '')
-        .replace(/\s+/g, '').split(',');
-    return args.length === 1 && !args[0] ? [] : args;
-};
+import { _is, _fnval, _argNames, _path, _attr, _new, assign, keys } from "./util";
 
 // Attach properties to class prototype or the class itself
 let _attachProp = where => {
@@ -42,11 +17,12 @@ let _attachProp = where => {
                 let _val = obj[i], preVal = _val;
 
                 // If a Parent Class is Present, Set any argument/params named `$super` to the `Parent`
-                if (_is(_val, "function")) {
+                if (_is.fn(_val)) {
                     if (parent && _argNames(_val)[0] == "$super") {
                         // Let the first argument be the original value
                         _val = function (...args) {
-                            return parent[i].apply(_obj, [preVal, ...args]);
+                            let parentFn = parent[i].bind(_obj);
+                            return preVal.apply(_obj, [parentFn, ...args]);
                         };
                     }
                     
@@ -61,11 +37,11 @@ let _attachProp = where => {
                     Allows the use of `Object.defineProperty`, if an Object has any of these 
                     { $$prop: true, get: function () { ... }, set: function () { ... } } 
                 */
-                if (_is(_val, "object") && _val !== undefined &&
-                    _val !== null && (_val.$$prop || 
-                        _val.get && _is(_val.get, "function") || 
-                        _val.set && _is(_val.set, "function")) &&
-                    !_val._class) {
+                if (_is.def(_val) && _is.obj(_val) && 
+                    _is.not("nul", _val) && (_val.$$prop || 
+                        _val.get && _is.fn(_val.get) || 
+                        _val.set && _is.fn(_val.set)
+                    ) && !_val._class) {
                     Object.defineProperty(_prototype ? _obj.prototype : _obj, i, _val);
                 }
             }, _obj);
@@ -80,39 +56,6 @@ let _method = _attachProp("prototype");
 // Set static properties and methods
 let _static = _attachProp("static");
 
-// Get or set a value in an Object, based on it's path
-let _path = (obj, path, val) => {
-    path = path.toString().split(/[\.\,]/g);
-    if (!_is(val, "undefined")) {
-        if (path.length > 1) {
-            _path(obj[path.shift()], path, val);
-        } else { obj[path[0]] = val; }
-        return val;
-    } else {
-        path.forEach(_val => { obj = obj[_val]; });
-    }
-    return obj;
-};
-
-/* 
-    Builds on path and adds more power, 
-    * Allows for multiple paths one value
-    * Using Objects as paths and setting the values individually
-    * Access values as an Array, from multiple paths
-*/
-let _attr = (obj, path, val) => {
-    if (_is(path, "object") && !isArray(path)) 
-        { return assign(obj, path); }
-    else if (isArray(path)) {
-        if (_is(val, "undefined")) {
-            return path.map(_key => _path(obj, _key));
-        } else {
-            path.forEach(_key => { _path(obj, _key, val); });
-        }
-    } else { return _path(obj, path, val); }
-    return obj;
-};
-
 // Create a copy of static methods that can function as prototype methods
 let _alias = (props, opts = {}) => {
     let thisArg = opts.thisArg || []; // This as first argument
@@ -122,7 +65,7 @@ let _alias = (props, opts = {}) => {
     for (let i in props) {
         val = props[i];
 
-        if (_is(val, "function")) {
+        if (_is.fn(val)) {
             result[i] = (...args) => {
                 let _args = thisArg.includes(i) ?  [this, ...args] : args;
                 if (chain.includes(i)) {
@@ -156,13 +99,6 @@ let _configAttr = (attr = "get", type = "function") => {
 // Get and set property attributes
 let _get = _configAttr("get", "function");
 let _set = _configAttr("set", "function");
-
-// A more efficient `new` keyword that allows for arrays to be passed as arguments
-let _new = (ctor, args) => {
-    let F = function () { return ctor.apply(this, args); };
-    F.prototype = ctor.prototype;
-    return new F();
-};
 
 // Call the parent version of a method
 let _callsuper = function (obj, method, ...args) {
@@ -204,15 +140,15 @@ let _class = function (...args) {
     SubClass = function () { };
 
     // Set parent constructor
-    if (_is(args[0], "function") || isArray(this.SubClasses)) {
-        if (isArray(this.SubClasses)) { Parent = this; }
+    if (_is.fn(args[0]) || _is.arr(this.SubClasses)) {
+        if (_is.arr(this.SubClasses)) { Parent = this; }
         else { Parent = args.shift(); }
     }
 
     // Class Object
     Class = function (..._args) {
         // Current Class
-        if (!(this instanceof Class)) { return _new(Class, _args); }
+        if (_is.not("inst", this, Class)) { return _new(Class, _args); }
         this._args = _args; // Arguments
 
         // Initialize Class
