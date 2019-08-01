@@ -20,11 +20,13 @@ let _attachProp = where => {
                 if (_is.fn(_val)) {
                     if (parent && _argNames(_val)[0] == "$super") {
                         // Let the first argument be the original value
-                        _val = function (...args) {
+                        _val = (...args) => {
                             let parentFn = parent[i].bind(_obj);
                             return preVal.apply(_obj, [parentFn, ...args]);
                         };
                     }
+
+                    _val = _val.bind(_obj);
                     
                     // For debugging purposes
                     _val.valueOf = preVal.valueOf.bind(preVal);
@@ -57,22 +59,27 @@ let _method = _attachProp("prototype");
 let _static = _attachProp("static");
 
 // Create a copy of static methods that can function as prototype methods
-let _alias = (props, opts = {}) => {
-    let thisArg = opts.thisArg || []; // This as first argument
-    let chain = opts.chain || [], toStr;
-    let result = {}, val;
+let _alias = (props, opts) => {
+    let thisArg = opts && opts.thisArg || []; // This as first argument
+    let chain = opts && opts.chain || [], toStr;
+    let result = {}, val, _args;
 
     for (let i in props) {
         val = props[i];
 
         if (_is.fn(val)) {
             result[i] = (...args) => {
-                let _args = thisArg.includes(i) ?  [this, ...args] : args;
-                if (chain.includes(i)) {
-                    val.apply(this, _args);
-                    return this;
+                if (_is.fn(opts)) {
+                    return opts.call(this, val, ...args);
+                } else {
+                    _args = thisArg.includes(i) ?  [this, ...args] : args;
+                    if (chain.includes(i)) {
+                        val.apply(this, _args);
+                        return this;
+                    }
+
+                    return val.apply(this, _args);
                 }
-                return val.apply(this, _args);
             };
 
             toStr = val.toString.bind(val);

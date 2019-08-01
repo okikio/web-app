@@ -12,10 +12,15 @@ let _type = type => { // Tweak of _is
 
 assign(_is, {
     el: el => _isInst(el, Element) || _isInst(el, Document),
+    arrlike (obj) {
+        let len = _is(obj.length, "number") && obj.length;
+        return len == 0 || len > 0 && (len - 1) in obj;
+    },
     class: obj => obj && obj._method && obj._class,
     not: (type, ...args) => !_is[type](...args),
     def: val => !_is(val, "undefined"),
     undef: _type("undefined"),
+    bool: _type("boolean"),
     fn: _type("function"),
     obj: _type("object"),
     num: _type("number"),
