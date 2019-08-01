@@ -54,6 +54,7 @@ let _partial = _class(_event, {
                 }
             } else { $super(...args); }
         }, this);
+        return this;
     }
 });
     

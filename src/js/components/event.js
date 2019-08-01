@@ -31,19 +31,20 @@ let _event = _class({
 
     // Add a listener for a given event
     on: function (evt, callback, scope) {
-        let $Evt;
+        let $EvtApp, $evt;
         if (_is.undef(evt)) { return; } // If there is no event break
         if (_is.str(evt)) { evt = evt.split(/\s/g); }
         if (_is.not("arr", evt) && _is.not("obj", evt)) { evt = [evt]; } // Set evt to an array
 
         // Loop through the list of events 
-        evt.forEach(($evt, key) => {
+        keys(evt).forEach(key => {
+            $evt = evt[key];
             if (_is.obj(evt) && _is.not("arr", evt)) {
-                $Evt = this._eventApp($evt, callback || this, key);
-                this._preEvent(key).push($Evt); // Set event list
+                $EvtApp = this._eventApp($evt, callback || this, key);
+                this._preEvent(key).push($EvtApp); // Set event list
             } else {
-                $Evt = this._eventApp(callback, scope, $evt);
-                this._preEvent($evt).push($Evt); // Set event list
+                $EvtApp = this._eventApp(callback, scope, $evt);
+                this._preEvent($evt).push($EvtApp); // Set event list
             }
         }, this);
         return this;

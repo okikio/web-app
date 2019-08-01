@@ -18,6 +18,7 @@ assign(_is, {
     },
     class: obj => obj && obj._method && obj._class,
     not: (type, ...args) => !_is[type](...args),
+    doc: ctor => _isInst(ctor, Document),
     def: val => !_is(val, "undefined"),
     undef: _type("undefined"),
     bool: _type("boolean"),
