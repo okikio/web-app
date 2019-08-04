@@ -1,6 +1,7 @@
 import _class, { _get } from "./class";
 import { _is, keys, assign } from "./util";
 import _event from "./event";
+import _global from "./global";
 
 let { state, replaceState, pushState } = window.history;
 let { href, origin } = window.location;
@@ -35,8 +36,12 @@ let _partial = _class(_event, {
         // Added support pjax:events, and history:events
         evt.forEach($evt => {
             if (/pjax:/i.test($evt)) { 
-                window.addEventListener($evt.replace(/pjax:/i, ""), () => {
-                    $super($evt, ...args); 
+                _global.on($evt.replace(/pjax:/i, ""), e => {
+                    $super($evt, e, ...args); 
+                });
+            } else if (/global:/i.test($evt)) { 
+                _global.on($evt.replace(/pjax:/i, ""), e => {
+                    $super($evt, e, ...args); 
                 });
             } else if (/history:/i.test($evt)) { 
                 $evt = $evt.toLowerCase();

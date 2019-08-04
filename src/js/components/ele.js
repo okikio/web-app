@@ -440,7 +440,7 @@ Ele = _class(_event, arrProto, {
         }
     });
 }, () => {
-
+    /*
     // Generate the `width` and `height` functions
     ['width', 'height'].forEach(function (dimension) {
         var dimensionProperty =
@@ -522,14 +522,13 @@ Ele = _class(_event, arrProto, {
         $.fn[inside ? operator + 'To' : 'insert' + (operatorIndex ? 'Before' : 'After')] = function (html) {
             $(html)[operator](this)
             return this
-        }
+        }*/
     return ["before"].reduce(() => {
 
     })
 });
-
-export default Ele;
-/*export default class El {
+/*
+export default class El {
     constructor(el) {
         this.el = (el instanceof El) ? el.el : [...document.querySelectorAll(el)];
     }
@@ -555,3 +554,5 @@ export default Ele;
         });
     }
 };*/
+
+export default Ele;
