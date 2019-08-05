@@ -93,4 +93,4 @@ let _new = (ctor, args) => {
     return new F();
 };
 
-export default { _is, _fnval, _argNames, _path, _attr, _new, assign, keys, values, from, of };
+export { _is, _fnval, _argNames, _path, _attr, _new, assign, keys, values, from, of };

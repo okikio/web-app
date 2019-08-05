@@ -40,7 +40,7 @@ let _partial = _class(_event, {
                     $super($evt, e, ...args); 
                 });
             } else if (/global:/i.test($evt)) { 
-                _global.on($evt.replace(/pjax:/i, ""), e => {
+                _global.on($evt.replace(/global:/i, ""), e => {
                     $super($evt, e, ...args); 
                 });
             } else if (/history:/i.test($evt)) { 
