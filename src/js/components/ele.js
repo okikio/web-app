@@ -1,6 +1,7 @@
-import _class, { _get, _is, _alias } from "./class";
-import { _path, keys } from "./util";
-import _global from './global';
+import _class, { _get, _alias } from "./class";
+import { _is, assign, _path, keys } from "./util";
+
+/*import _global from './global';
 import _event from './event';
 import anime from "animejs";
 const { createElement, documentElement } = document;
@@ -260,24 +261,14 @@ Ele = _class(_event, arrProto, {
     },
     attr(name, val) {
         let result;
-        
-        if (_is.obj(path) && _is.not("arr", path)) 
-            { return assign(obj, path); }
-        else if (_is.arr(path)) {
-            if (_is.undef(val)) {
-                return path.map(_key => _path(obj, _key));
-            } else {
-                path.forEach(_key => { _path(obj, _key, val); });
-            }
-        } else { return _path(obj, path, val); }
-        return obj;
         return (_is.str(name) && _is.undef(val)) ?
-            (this.length && this.get(0).nodeType == 1 && (result = this.get(0).getAttribute(name)) != null ? result : undefined) :
-            this.each(function (idx) {
-                if (this.nodeType !== 1) return
-                if (isObject(name)) for (key in name) setAttribute(this, key, name[key])
-                else setAttribute(this, name, funcArg(this, val, idx, this.getAttribute(name)))
-            })
+            (this.length && this.get(0).nodeType == 1 && 
+                (result = this.get(0).getAttribute(name)) != null ? result : undefined) :
+            this.each((el, idx) => {
+                if (el.nodeType !== 1) return
+                if (_is.obj(name)) for (key in name) setAttribute(el, key, name[key])
+                else setAttribute(el, name, funcArg(el, val, idx, el.getAttribute(name)))
+            });
     },
     removeAttr: function (name) {
         return this.each(function () {
@@ -344,38 +335,40 @@ Ele = _class(_event, arrProto, {
             height: Math.round(obj.height)
         }
     },
-    css: function (property, value) {
-        if (arguments.length < 2) {
-            let element = this[0]
-            if (typeof property == 'string') {
-                if (!element) return
-                return element.style[camelize(property)] || getComputedStyle(element, '').getPropertyValue(property)
-            } else if (isArray(property)) {
-                if (!element) return
-                let props = {}
-                let computedStyle = getComputedStyle(element, '')
-                $.each(property, function (_, prop) {
-                    props[prop] = (element.style[camelize(prop)] || computedStyle.getPropertyValue(prop))
-                })
-                return props
+    css (...args) {
+        let [prop, val] = args, css = '', key;
+        if (args.length < 2) {
+            let el = this.get(0);
+            if (!el) return;
+            if (_is.str(prop)) {
+                return el.style[camelize(prop)] || window.getComputedStyle(el, '').getPropertyValue(prop)
+            } else if (_is.arr(prop)) {
+                let props = {};
+                let computedStyle = window.getComputedStyle(el, '')
+                prop.forEach(_prop => {
+                    props[_prop] = (el.style[camelize(_prop)] || computedStyle.getPropertyValue(_prop))
+                });
+                return props;
             }
         }
 
-        var css = ''
-        if (type(property) == 'string') {
-            if (!value && value !== 0)
-                this.each(function () { this.style.removeProperty(dasherize(property)) })
-            else
-                css = dasherize(property) + ":" + maybeAddPx(property, value)
+        if (_is.str(prop)) {
+            if (!val && val != 0) {
+                this.each(el => { el.style.removeProperty(dasherize(prop)) })
+            } else {
+                css = dasherize(prop) + ":" + maybeAddPx(prop, val);
+            }
         } else {
-            for (key in property)
-                if (!property[key] && property[key] !== 0)
-                    this.each(function () { this.style.removeProperty(dasherize(key)) })
-                else
-                    css += dasherize(key) + ':' + maybeAddPx(key, property[key]) + ';'
+            for (key in prop) {
+                if (!prop[key] && prop[key] != 0) {
+                    this.each(el => { el.style.removeProperty(dasherize(key)); });
+                } else {
+                    css += dasherize(key) + ':' + maybeAddPx(key, prop[key]) + ';';
+                }
+            }
         }
 
-        return this.each(function () { this.style.cssText += ';' + css })
+        return this.each(el => { el.style.cssText += ';' + css; });
     },
 
     show: () => this.style("display", ""),
@@ -522,12 +515,12 @@ Ele = _class(_event, arrProto, {
         $.fn[inside ? operator + 'To' : 'insert' + (operatorIndex ? 'Before' : 'After')] = function (html) {
             $(html)[operator](this)
             return this
-        }*/
+        }
     return ["before"].reduce(() => {
 
     })
-});
-/*
+});*/
+
 export default class El {
     constructor(el) {
         this.el = (el instanceof El) ? el.el : [...document.querySelectorAll(el)];
@@ -553,6 +546,6 @@ export default class El {
             }
         });
     }
-};*/
+};
 
-export default Ele;
+// export default Ele;

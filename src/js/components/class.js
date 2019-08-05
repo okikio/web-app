@@ -199,3 +199,4 @@ export let _class = function (...args) {
 };
 
 assign(_class, props); // Extend _class
+export default props;

@@ -1,4 +1,4 @@
-let pick = require("../util/pick");
+let pick = require(`../util/pick${dev ? '' : ".min"}`);
 
 // Attributes for components
 module.exports = (attr, defaults, list) => (...vals) => {

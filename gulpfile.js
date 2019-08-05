@@ -6,6 +6,7 @@ const gulp = require('gulp');
 const { src, task, series, parallel, dest, watch } = gulp;
 
 const { babelConfig } = require(`./browserslist${dev ? '' : ".min"}`);
+const stringify = require(`./util/stringify${dev ? '' : ".min"}`);
 const nodeResolve = require('rollup-plugin-node-resolve');
 const builtins = require("rollup-plugin-node-builtins");
 const config = require(`./config${dev ? '' : ".min"}`);
@@ -16,7 +17,6 @@ const rollupJSON = require("rollup-plugin-json");
 const uglify = require('gulp-uglify-es').default;
 const inlineSrc = require("gulp-inline-source");
 const replace = require('gulp-string-replace');
-const stringify = require("./util/stringify");
 const { html, js } = require('gulp-beautify');
 const rollup = require('gulp-better-rollup');
 const { spawn } = require('child_process');
@@ -191,6 +191,20 @@ task("js", () =>
     ])
 );
 
+task("util", () =>
+    stream(["util/*.js", "!util/*.min.js"], {
+        opts: { allowEmpty: true },
+        pipes: [
+            // Only update when there is something to update
+            newer(`./*.min.js`),
+            babel(babelConfig.node), // ES5 file for uglifing
+            uglify(), // Minify the file
+            rename(minSuffix) // Rename
+        ],
+        dest: '.' // Output
+    })
+);
+
 task("server", () =>
     stream(["*.js", "!postcss.config.js", "!*.min.js", "!gulpfile.js", "!config.js", "!config-dev.js"], {
         opts: { allowEmpty: true },
@@ -284,15 +298,15 @@ task('inline', () =>
 );
 
 // Gulp task to minify all files
-task('default', series("update", "config", parallel("server", "html", "js"), "css", "inline"));
+task('default', series("util", "update", "config", parallel("server", "html", "js"), "css", "inline"));
 
 // Gulp task to minify all files without -js
-task('other', series("update", "config", parallel("server", "html"), "css", "inline"));
+task('other', series("util", "update", "config", parallel("server", "html"), "css", "inline"));
 
 // Gulp task to check to make sure a file has changed before minify that file files
 task('watch', () => {
     watch(['config.js', 'containers/*.js'], watchDelay, series('config:watch'));
-    watch(['gulpfile.js', 'postcss.config.js'], watchDelay, series('gulpfile:watch', 'server'));
+    watch(['gulpfile.js', 'postcss.config.js', 'util/*.js', '!util/*.min.js'], watchDelay, series('util', 'gulpfile:watch', 'server'));
     watch(['server.js', 'plugin.js'], watchDelay, series('server'));
     watch('views/**/*.pug', watchDelay, series('html', 'server', 'css', 'inline'));
     watch('src/**/*.scss', watchDelay, series('css', 'server', 'inline'));
