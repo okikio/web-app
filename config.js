@@ -1,6 +1,11 @@
-let { values, title, tile, tabs, src, section, row, page, padding, margin, link, layout, layer, img, href, hero, font, content, component, color, col, _class, class_add, background, attr, alt } = require("./containers/page");
-let { assign } = Object;
+let { env } = process;
+if (!('dev' in env)) require('dotenv').config();
+let dev = 'dev' in env && env.dev.toString() == "true";
+
+let { values, title, _tile, _tabs, src, section, row, page, padding, margin, _link, layout, layer, _img, href, hero, _hero, font, content, color, col, _class, background, alt } = require(`./containers${dev ? '' : ".min"}`);
 let carImg = "/assets/white_car.webp?w=400&h=400";
+let { assign } = Object;
+
 module.exports = {
     "websiteURL": "https://app-fast.herokuapp.com/",
     "cloud_name": "okikio-assets",
@@ -19,7 +24,7 @@ module.exports = {
                 // Hero Layer
                 layer(
                     hero(
-                        img(carImg, "A city Image"),
+                        _img(carImg, "A city Image"),
                         title("Subpage.")
                     )
                 ),
@@ -48,7 +53,7 @@ module.exports = {
                                         took a galley of type and scrambled it to make a type specimen book. It has survived not only five centuries, but also the leap into electronic typesetting, remaining essentially unchanged.
                                         It was popularised in the 1960s with the release of Letraset sheets
                                         containing Lorem Ipsum passages, and more recently with desktop publishing software like Aldus PageMaker including versions of Lorem Ipsum, `),
-                                    link("home", "/")
+                                    _link("home", "/")
                                 )
                             )
                         )
@@ -63,7 +68,7 @@ module.exports = {
                 // Hero Layer
                 layer(
                     hero(
-                        img(carImg, "A city Image"),
+                        _img(carImg, "A city Image"),
                         title("Relax.")
                     )
                 ),
@@ -92,7 +97,7 @@ module.exports = {
                                         took a galley of type and scrambled it to make a type specimen book. It has survived not only five centuries, but also the leap into electronic typesetting, remaining essentially unchanged.
                                         It was popularised in the 1960s with the release of Letraset sheets
                                         containing Lorem Ipsum passages, and more recently with desktop publishing software like Aldus PageMaker including versions of Lorem Ipsum, `),
-                                    link("run", "/about")
+                                    _link("run", "/about")
                                 )
                             )
                         )
@@ -295,7 +300,7 @@ module.exports = {
                                                 ),
                                                 values(
                                                     assign(
-                                                        img("/assets/city.webp?w=250"),
+                                                        _img("/assets/city.webp?w=250"),
                                                         _class(
                                                             "layout-block",
                                                             "layer-box",

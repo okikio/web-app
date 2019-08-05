@@ -2,6 +2,8 @@ module.exports = {
     "websiteURL": "https://app-fast.herokuapp.com/",
     "cloud_name": "okikio-assets",
     "imageURLConfig": {
+        "fetch_format": "auto",
+        "client_hints": true,
         "crop": "scale",
         "quality": 30,
         "dpr": "auto"
@@ -37,7 +39,7 @@ module.exports = {
                                 "src": "/assets/white_car.webp?w=400&h=400",
                                 "alt": "A city Image"
                             },
-                            "title": "The Sub Page."
+                            "title": "Subpage."
                         }
                     }
                 },
@@ -257,7 +259,7 @@ module.exports = {
                                                             "values": [{
                                                                 "img": {
                                                                     "src": "/assets/city.webp?w=250",
-                                                                    "alt": "A city Image"
+                                                                    "alt": "An iamge of a bustling city."
                                                                 },
                                                                 "class": "layout-block layer-box layer-surface layer-shadow"
                                                             }]

@@ -6,7 +6,6 @@ const gulp = require('gulp');
 const { src, task, series, parallel, dest, watch } = gulp;
 
 const { babelConfig } = require(`./browserslist${dev ? '' : ".min"}`);
-const stringify = require(`./util/stringify${dev ? '' : ".min"}`);
 const nodeResolve = require('rollup-plugin-node-resolve');
 const builtins = require("rollup-plugin-node-builtins");
 const config = require(`./config${dev ? '' : ".min"}`);
@@ -18,6 +17,7 @@ const uglify = require('gulp-uglify-es').default;
 const inlineSrc = require("gulp-inline-source");
 const replace = require('gulp-string-replace');
 const { html, js } = require('gulp-beautify');
+const stringify = require(`./util/stringify`);
 const rollup = require('gulp-better-rollup');
 const { spawn } = require('child_process');
 const htmlmin = require('gulp-htmlmin');
@@ -142,7 +142,7 @@ task("css", () =>
 
 task("js", () => 
     streamList(...[
-        ...["modern"].concat(dev ? "general" : []).map(type => [
+        ...["modern"].concat(!dev ? "general" : []).map(type => [
             ['src/js/app.js', {
                 opts: { allowEmpty: true },
                 pipes: [
