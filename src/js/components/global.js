@@ -2,7 +2,7 @@ import _event from "./event";
 const { readyState } = document;
 
 // Global event Object
-let _global = _event();
+export let _global = _event();
 (() => {
 	let passive = false, opts = {}, noop = () => { };
 	let _emit = () => { _global.emit("ready load"); };
@@ -36,6 +36,3 @@ let _global = _event();
 		_global.emit("scroll", e); 
 	}, passive);
 })();
-
-
-export default _global;

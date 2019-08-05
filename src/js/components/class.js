@@ -140,7 +140,7 @@ let aliasMethods = _alias(props, {
 });
 
 // Create classes
-let _class = function (...args) {
+export let _class = function (...args) {
     let Class, SubClass, Parent;
 
     // SubClass constructor
@@ -199,4 +199,3 @@ let _class = function (...args) {
 };
 
 assign(_class, props); // Extend _class
-export default _class;
