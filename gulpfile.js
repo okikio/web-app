@@ -104,7 +104,7 @@ task('html', () => {
                     // Minify or Beautify html
                     dev ? html({ indent_size: 4 }) : htmlmin(htmlMinOpts),
                     // Replace /assets/... URLs
-                    replace(/\/assets\/[^\s\"\']+/g, url => {
+                    replace(/\/assets\/[^\s"']+/g, url => {
                         let URLObj = new URL(`${assetURL + url}`.replace("/assets/", ""));
                         let query = URLObj.searchParams;
                         let queryString = URLObj.search;
@@ -114,7 +114,7 @@ task('html', () => {
                         let imgURLConfig = { ...imageURLConfig, width, height };
 
                         return staticSite ?
-                                (/\/raw\/[^\s\"\']+/.test(url) ?
+                                (/\/raw\/[^\s"']+/.test(url) ?
                                     `${assetURL + url.replace(queryString, '')}` :
                                     assets.url(url.replace(queryString, ''), imgURLConfig)
                                 ).replace("/assets/", "") : url;

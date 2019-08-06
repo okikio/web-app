@@ -18,24 +18,24 @@ module.exports = {
         "dpr": "auto"
     },
     "pages": {
-        "about": page(
+        "about": page([
             title("The Sub Page"),
-            values(
+            values([
                 // Hero Layer
-                layer(
-                    hero(
+                layer([
+                    hero([
                         _img(carImg, "A city Image"),
                         title("Subpage.")
-                    )
-                ),
+                    ])
+                ]),
                 // End Hero Layer
 
                 // Intro layer
-                layer(
+                layer([
                     _class(
                         padding("horz", "large-top")
                     ),
-                    layout(
+                    layout([
                         _class("layout-shorten"),
                         values(
                             section(
@@ -57,11 +57,11 @@ module.exports = {
                                 )
                             )
                         )
-                    )
-                )
+                    ])
+                ])
                 // End Intro Layer
-            )
-        ),
+            ])
+        ]),
         "index": page(
             title("Hello There"),
             values(

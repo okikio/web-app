@@ -13,8 +13,8 @@ window.addEventListener('scroll', function(event) {
 	// can't use event.preventDefault();
 }, passiveIfSupported ); */
 
-import el from "./components/ele";
 import swup from "swup";
+import el from "./components/ele";
 // import scrollPlugin from "@swup/scroll-plugin";
 // import slideTheme from '@swup/slide-theme';
 // import preload from '@swup/preload-plugin';

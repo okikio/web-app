@@ -1,6 +1,6 @@
-import _class, { _get, _alias } from "./class";
+// import _class from "./class";
 import { _is, assign, _path, keys } from "./util";
-
+// const { _get, _alias } = _class;
 /*import _global from './global';
 import _event from './event';
 import anime from "animejs";

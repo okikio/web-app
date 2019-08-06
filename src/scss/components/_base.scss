@@ -91,7 +91,6 @@ load-img {
 
 load-img {
    animation: load 0.5s ease infinite alternate;
-   will-change: background;
    background: $mid-light;
    min-height: 300px;
 }
@@ -106,14 +105,14 @@ a {
    transition: color 0.25s ease;
    text-decoration: none;
    display: inline-block;
-   will-change: color;
+   color: $secondary;
    overflow: hidden;
    cursor: pointer;
-   color: $secondary-dark;
 
    :hover,
    :focus {
-       text-decoration: underline;
+      text-decoration: underline;
+      color: $secondary-dark;
    }
 }
 

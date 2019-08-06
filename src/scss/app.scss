@@ -1,4 +1,4 @@
-/*!
+/*! 
     -- TABLE OF CONTENTS --
      * External Imports
          * Fonts
@@ -38,8 +38,10 @@
 // Variables
 $primary: #4500ff;
 $primary-dark: #2d22ca;
-$secondary: #3bff00;
+$secondary: #ff0266;
 $secondary-dark: #0ccc00;
+$tertiary: #ffde03;
+$tertiary-dark: #ffde03;
 $background: #f5f8fc;
 $surface: #fff;
 
@@ -58,6 +60,8 @@ $colors: (
    "primary-dark": $primary-dark,
    "secondary": $secondary,
    "secondary-dark": $secondary-dark,
+   "tertiary": $tertiary,
+   "tertiary-dark": $tertiary-dark,
    "background": $background,
    "surface": $surface,
    "transparent": transparent,
@@ -74,13 +78,13 @@ $colors: (
 
 $light-font: "Varela Round", sans-serif;
 $icon-font: "Material Icons", sans-serif;
-$bold-font: 'Montserrat', sans-serif;
 $regular-font: "Roboto", sans-serif;
+$bold-font: 'Montserrat', sans-serif;
 
 $size-large: 50px;
-$size-small: 15px;
-$size-mid: 20px;
-$size: 25px;
+$size-small: 15px; 
+$size-mid: 20px; 
+$size: 25px; 
 
 @mixin colorList($property) {
    @each $colorName, $value in $colors {
