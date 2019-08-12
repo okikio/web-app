@@ -9,12 +9,11 @@ const path = require("path");
 const glob = require("glob");
 const send = require("send");
 
-const { websiteURL, cloud_name, imageURLConfig } = require('./config');
+const { websiteURL, cloud_name, imageURLConfig } = require('./config.min');
 assets.config({ cloud_name, secure: true });
 
 // For faster efficient page switching using partial output
 const DOM = require("fast-html-parser");
-
 module.exports._render = plugin((app, opts, next) => {
     // Selector for the partial output
     let partialSel = opts.partial || '[data-barba="container"]';

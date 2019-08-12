@@ -13,7 +13,6 @@ const rollupBabel = require('rollup-plugin-babel');
 const { stringify } = require('./util/stringify');
 const { babelConfig } = require("./browserlist");
 const rollupJSON = require("rollup-plugin-json");
-const uglify = require('gulp-uglify-es').default;
 const inlineSrc = require("gulp-inline-source");
 const replace = require('gulp-string-replace');
 const { html, js } = require('gulp-beautify');
@@ -23,6 +22,7 @@ const uglifyES5 = require("gulp-uglify");
 const htmlmin = require('gulp-htmlmin');
 const assets = require("cloudinary").v2;
 const postcss = require('gulp-postcss');
+const minify = require('gulp-minify');
 const rename = require('gulp-rename');
 const newer = require("gulp-newer");
 const { writeFile } = require("fs");
@@ -47,6 +47,7 @@ let htmlMinOpts = {
     processScripts: ["application/ld+json"]
 };
 
+let minifyOpts = { noSource: true, ext: { min: ".min.js" } };
 let minSuffix = { suffix: ".min" };
 let watchDelay = { delay: 500 };
 let publicDest = 'public';
@@ -153,7 +154,7 @@ task("js", () =>
                     opts: { allowEmpty: true },
                     pipes: [
                         // Only update when there is something to update
-                        newer(`${publicDest}/js/app${gen ? '' : '.modern'}.min.js`),
+                        dev ? newer(`${publicDest}/js/app${suffix}.min.js`) : null,
                         init(), // Sourcemaps init
                         // Bundle Modules
                         rollup({
@@ -165,7 +166,7 @@ task("js", () =>
                                 rollupBabel(babelConfig[type]) // Babelify file for uglifing
                             ] 
                         }, type == 'general' ? 'umd' : 'es'),
-                        dev ? js() : (gen ? uglifyES5() : uglify()), // Minify the file
+                        dev ? js() : (gen ? uglifyES5() : minify(minifyOpts)), // Minify the file
                         rename(`app${suffix}.min.js`), // Rename
                         write(srcMapsWrite) // Put sourcemap in public folder
                     ],
@@ -176,7 +177,7 @@ task("js", () =>
             opts: { allowEmpty: true },
             pipes: [
                 // Only update when there is something to update
-                newer(`${publicDest}/js/app.vendor.min.js`),
+                dev ? newer(`${publicDest}/js/app.vendor.min.js`) : null,
                 init(), // Sourcemaps init
                 // Bundle Modules
                 rollup({
@@ -188,8 +189,8 @@ task("js", () =>
                         rollupBabel(babelConfig.node) // ES5 file for uglifing
                     ] 
                 }, 'umd'),
-                dev ? js() : uglify(), // Minify the file
-                rename(minSuffix), // Rename
+                dev ? js() : minify(minifyOpts), // Minify the file
+                dev ? rename(minSuffix) : null, // Rename
                 write(srcMapsWrite) // Put sourcemap in public folder
             ],
             dest: `${publicDest}/js` // Output
@@ -212,7 +213,7 @@ task("server", () =>
                         rollupBabel(babelConfig.node) // ES5 file for uglifing
                     ] 
                 }, 'es'),
-                uglify(), // Minify the file
+                uglifyES5(), // Minify the file
                 rename(minSuffix) // Rename
             ],
             dest: '.' // Output
@@ -236,8 +237,8 @@ task("config", () =>
             opts: { allowEmpty: true },
             pipes: [
                 // Only update when there is something to update
-                newer(`./config.min.js`),
-                uglify() // Minify the file
+                dev ? newer(`./config.min.js`) : null,
+                uglifyES5() // Minify the file
             ],
             dest: '.' // Output
         }],
@@ -273,7 +274,7 @@ task("update", () =>
                     rollupBabel(babelConfig.node) // ES5 file for uglifing
                 ] 
             }, 'es'),
-            uglify(), // Minify the file
+            uglifyES5(), // Minify the file
             rename(minSuffix) // Rename
         ],
         dest: '.' // Output
