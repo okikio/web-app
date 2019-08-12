@@ -1,0 +1,110 @@
+/*! 
+    -- TABLE OF CONTENTS --
+     * External Imports
+         * Fonts
+     * Presets & Resets
+         * Elements
+     * Styles & Font
+     * Icons
+     * Header
+         * Navbar
+     * Main Content
+     * Layout
+         * Base Layouts
+         * Position
+         * Container
+         * Margins
+             * Dull Margin
+             * Horizontal Margin
+             * Vertical Margin
+         * Paddings
+             * Padding Margin
+             * Horizontal Padding
+             * Vertical Padding
+         * Clearfix
+         * Rows & Columns
+     * Layer
+     * ETC...
+*/
+
+/*! -- Fonts -- */
+/*!
+    * font-family: 'Montserrat', sans-serif;
+    * font-family: 'Varela Round', sans-serif;
+    * font-family: 'Material Icons', sans-serif;
+    * font-family: 'Roboto', sans-serif;
+*/
+
+// Variables
+$primary: #4500ff;
+$primary-dark: #2d22ca;
+$secondary: #ff0266;
+$secondary-dark: #0ccc00;
+$tertiary: #ffde03;
+$tertiary-dark: #ffde03;
+$background: #f5f8fc;
+$surface: #fff;
+
+$white: #fff;
+$black: #000;
+
+$light: #eee;
+$mid-light: #ddd;
+$mid: #ccc;
+$mid-dark: #bbb;
+$dark: #222;
+
+// --google-blue: #3367d6
+$colors: (
+   "primary": $primary,
+   "primary-dark": $primary-dark,
+   "secondary": $secondary,
+   "secondary-dark": $secondary-dark,
+   "tertiary": $tertiary,
+   "tertiary-dark": $tertiary-dark,
+   "background": $background,
+   "surface": $surface,
+   "transparent": transparent,
+
+   "white": $white,
+   "black": $black,
+
+   "light": $light,
+   "mid-light": $mid-light,
+   "mid": $mid,
+   "mid-dark": $mid-dark,
+   "dark": $dark
+);
+
+$light-font: "Varela Round", sans-serif;
+$icon-font: "Material Icons", sans-serif;
+$regular-font: "Roboto", sans-serif;
+$bold-font: 'Montserrat', sans-serif;
+
+$size-large: 50px;
+$size-small: 15px; 
+$size-mid: 20px; 
+$size: 25px; 
+
+@mixin colorList($property) {
+   @each $colorName, $value in $colors {
+      &-#{$colorName},
+      &-color-#{$colorName} {
+         #{$property}: $value;
+      }
+   }
+}
+
+@import "./components/base.scss";
+@import "./components/header.scss";
+@import "./components/style.scss";
+@import "./components/icon.scss";
+@import "./components/layout.scss";
+@import "./components/layer.scss";
+@import "./components/transition.scss";
+
+// Pages (Style specific to pages seperate pages)
+// @import "./pages/about.scss";
+// @import "./pages/contact.scss";
+// @import "./pages/project.scss";
+// @import "./pages/project-list.scss";

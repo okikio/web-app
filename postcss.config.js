@@ -1,5 +1,5 @@
 const purgecss = require('@fullhuman/postcss-purgecss');
-const { general } = require("./browserslist");
+const { general } = require("./browserlist");
 const autoprefixer = require('autoprefixer');
 
 module.exports = {

@@ -1,7 +1,9 @@
+const stringify = require('fast-stringify');
+
 // Stringify
-let stringify = obj => {
+let _stringify = obj => {
     let fns = [];
-    let json = JSON.stringify(obj, (key, val) => {
+    let json = stringify(obj, (key, val) => {
         if (typeof val == "function") {
             fns.push(val.toString());
             return "_";
@@ -9,7 +11,7 @@ let stringify = obj => {
         return val;
     }, 4);
 
-    return json.replace(/\"_\"/g, () => fns.shift());
+    return json.replace(/"_"/g, () => fns.shift());
 };
 
-module.exports = stringify;
+module.exports = { stringify, _stringify };

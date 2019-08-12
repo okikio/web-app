@@ -1,7 +1,3 @@
-let { env } = process;
-if (!('dev' in env)) require('dotenv').config();
-let dev = 'dev' in env && env.dev.toString() == "true";
-
 const { statSync, createReadStream } = require("fs");
 const { PassThrough } = require("stream");
 const plugin = require("fastify-plugin");
@@ -13,7 +9,7 @@ const path = require("path");
 const glob = require("glob");
 const send = require("send");
 
-const { websiteURL, cloud_name, imageURLConfig } = require(`./config${dev ? '' : ".min"}`);
+const { websiteURL, cloud_name, imageURLConfig } = require('./config');
 assets.config({ cloud_name, secure: true });
 
 // For faster efficient page switching using partial output

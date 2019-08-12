@@ -11,8 +11,9 @@ const fastify = require("fastify");
 const path = require("path");
 
 // List of routes
-let { routes } = require(`./config${dev ? '' : ".min"}`);
-let { _render, _static, _assets, _reload } = require(`./plugin${dev ? '' : ".min"}`);
+let { routes } = require('./config.min');
+let { _render, _static, _assets } = require('./plugin');
+// Possibly faster: https://nanoexpress.js.org/middlewares.html
 
 // Normalize a port into a number, string, or false.
 let normalizePort = val => {
@@ -26,7 +27,6 @@ let HOST = heroku ? '0.0.0.0' : 'localhost';
 let root = path.join(__dirname, 'public');
 let PORT = normalizePort(process.env.PORT || 3000);
 
-let reloadTime = 29; // Set server reload time to 29 minutes
 let maxAge = (dev ? 0 : 1) * 1000 * 60 * 60 * 24 * 7;
 let app = fastify({
     logger: {
@@ -41,7 +41,6 @@ app.register(compress) // Compress/GZIP/Brotil Server
    .register(noIcon) // Remove the no favicon error
    .register(_render, { partial: "#swup" }) // Render Plugin
    .register(_assets, { maxAge }) // Assets Plugin
-   .register(_reload, { reloadTime }) // Server Reload Plugin (for Heroku)
 
    // Apply CORS
    .register(cors, {

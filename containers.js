@@ -1,8 +1,4 @@
-let { env } = process;
-if (!('dev' in env)) require('dotenv').config();
-let dev = 'dev' in env && env.dev.toString() == "true";
-
-let pick = require(`./util/pick${dev ? '' : ".min"}`);
+let pick = require('./util/pick');
 let { isArray } = Array;
 let { assign } = Object;
 

@@ -1,5 +1,5 @@
 import _class, { _get, _is, _argNames, keys } from "./class";
-import stringify from "../../../util/stringify";
+import { _stringify } from "../../../util/stringify";
 
 // Event class
 let _event = _class({
@@ -87,7 +87,7 @@ let _event = _class({
                 let i, app = this._eventApp(callback, scope || this, $evt);
 
                 _Evt.forEach((val, _i) => {
-                    if (stringify(val) == stringify(app)) { i = _i; }
+                    if (_stringify(val) == _stringify(app)) { i = _i; }
                 }, this);
 
                 if (i > - 1) { _Evt.splice(i, 1); }
