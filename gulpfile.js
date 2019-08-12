@@ -24,7 +24,6 @@ const assets = require("cloudinary").v2;
 const postcss = require('gulp-postcss');
 const minify = require('gulp-minify');
 const rename = require('gulp-rename');
-const babel = require('gulp-babel');
 const newer = require("gulp-newer");
 const { writeFile } = require("fs");
 const config = require('./config');
