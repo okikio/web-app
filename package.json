@@ -61,6 +61,7 @@
     "eslint": "^6.1.0",
     "fast-stringify": "^2.0.0",
     "gulp": "^4.0.2",
+    "gulp-babel": "^8.0.0",
     "gulp-beautify": "^3.0.0",
     "gulp-better-rollup": "^4.0.1",
     "gulp-htmlmin": "^5.0.1",

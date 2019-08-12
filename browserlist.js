@@ -1,7 +1,12 @@
-let babelConfig = {};
 let browserlist = {
     "modern": ["> 10%"],
     "general": ["defaults, IE 8"]
+};
+
+let babelConfig = {
+    "node": {
+        "presets": ["@babel/preset-env"]
+    }
 };
 
 ["modern", "general"].forEach(function (type) {

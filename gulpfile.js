@@ -24,6 +24,7 @@ const assets = require("cloudinary").v2;
 const postcss = require('gulp-postcss');
 const minify = require('gulp-minify');
 const rename = require('gulp-rename');
+const babel = require('gulp-babel');
 const newer = require("gulp-newer");
 const { writeFile } = require("fs");
 const config = require('./config');
@@ -203,18 +204,13 @@ task("server", () =>
         ["server.js", {
             opts: { allowEmpty: true },
             pipes: [
-                // Only update when there is something to update
-                dev ? newer(`./server.min.js`) : undefined,
                 // Bundle Modules
                 rollup({
                     plugins: [
-                        commonJS(), // Use CommonJS to compile the program
-                        rollupJSON(), // Parse JSON Exports
-                        rollupBabel(babelConfig.node) // ES5 file for uglifing
+                        rollupJSON() // Parse JSON Exports
                     ] 
                 }, 'es'),
-                uglifyES5(), // Minify the file
-                rename(minSuffix) // Rename
+                minify(minifyOpts) // Minify the file
             ],
             dest: '.' // Output
         }]
@@ -270,12 +266,10 @@ task("update", () =>
             // Bundle Modules
             rollup({
                 plugins: [ 
-                    rollupJSON(), // Parse JSON Exports
-                    rollupBabel(babelConfig.node) // ES5 file for uglifing
+                    rollupJSON() // Parse JSON Exports
                 ] 
             }, 'es'),
-            uglifyES5(), // Minify the file
-            rename(minSuffix) // Rename
+            minify(minifyOpts) // Minify the file
         ],
         dest: '.' // Output
     })
