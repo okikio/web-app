@@ -8,7 +8,10 @@
     "watch": "gulp watch --gulpfile ./gulpfile.js",
     "build:dev": "gulp --gulpfile ./gulpfile.js",
     "build": "gulp --gulpfile ./gulpfile.min.js",
-    "start": "pm2 start ./server.min.js",
+    "start": "pm2 start ecosystem.config.js --env production",
+    "logs": "pm2 logs fastify-app",
+    "stop": "pm2 stop all",
+    "pm2-start": "pm2 start ./server.min.js",
     "dev": "nodemon ./server"
   },
   "engines": {
@@ -44,6 +47,7 @@
     "fastify-no-icon": "^3.0.0",
     "glob": "^7.1.4",
     "mime-types": "^2.1.24",
+    "morgan": "^1.9.1",
     "pino-pretty": "^3.2.0",
     "pm2": "^3.5.1",
     "send": "^0.17.1"

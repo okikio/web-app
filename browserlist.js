@@ -14,7 +14,7 @@ let babelConfig = {
         "presets": [
             ["@babel/preset-env", {
                 "useBuiltIns": "usage",
-                "corejs": "3.1.4",
+                "corejs": "3.2.0",
                 "targets": {
                     "browsers": browserlist[type]
                 }
@@ -23,4 +23,5 @@ let babelConfig = {
     };
 });
 
-module.exports = { ...browserlist, babelConfig };
+let _export = { babelConfig, ...browserlist };
+module.exports = _export;

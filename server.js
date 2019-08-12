@@ -8,6 +8,7 @@ const noIcon = require("fastify-no-icon");
 const helmet = require("fastify-helmet");
 const cors = require("fastify-cors");
 const fastify = require("fastify");
+const logger = require('morgan');
 const path = require("path");
 
 // List of routes
@@ -29,14 +30,18 @@ let PORT = normalizePort(process.env.PORT || 3000);
 
 let maxAge = (dev ? 0 : 1) * 1000 * 60 * 60 * 24 * 7;
 let app = fastify({
-    logger: {
-        prettyPrint: { translateTime: "hh:MM:ss TT", }
+    logger: dev && {
+        prettyPrint: { 
+            translateTime: "hh:MM:ss TT",
+            ignore: 'pid,hostname,reqId' // --ignore
+        }
     },
     ignoreTrailingSlash: true,
     caseSensitive: false
 });
 
-app.register(compress) // Compress/GZIP/Brotil Server
+app.use(logger('dev')) // Simple HTTP Logging
+   .register(compress) // Compress/GZIP/Brotil Server
    .register(helmet) // Protect server
    .register(noIcon) // Remove the no favicon error
    .register(_render, { partial: "#swup" }) // Render Plugin

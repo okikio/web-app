@@ -11,8 +11,8 @@ const { init, write } = require('gulp-sourcemaps');
 const commonJS = require('rollup-plugin-commonjs');
 const rollupBabel = require('rollup-plugin-babel');
 const { stringify } = require('./util/stringify');
-const { babelConfig } = require("./browserlist");
 const rollupJSON = require("rollup-plugin-json");
+const { babelConfig } = require("./browserlist");
 const inlineSrc = require("gulp-inline-source");
 const replace = require('gulp-string-replace');
 const { html, js } = require('gulp-beautify');
@@ -36,7 +36,7 @@ let staticSite = 'staticSite' in env && env.staticSite == "true";
 let assetURL = `https://res.cloudinary.com/${cloud_name}/`;
 assets.config({ cloud_name, secure: true });
 
-let srcMapsWrite = '.';
+let srcMapsWrite = '../maps';
 let htmlMinOpts = {
     minifyJS: true,
     minifyCSS: true,
@@ -47,7 +47,11 @@ let htmlMinOpts = {
     processScripts: ["application/ld+json"]
 };
 
-let minifyOpts = { noSource: true, ext: { min: ".min.js" } };
+let minifyOpts = { 
+    noSource: true, 
+    mangle: { toplevel: true },
+    ext: { min: ".min.js" } 
+};
 let minSuffix = { suffix: ".min" };
 let watchDelay = { delay: 500 };
 let publicDest = 'public';
@@ -65,6 +69,7 @@ let stream = (_src, _opt = { }, done) => {
     });
 };
 
+// A list of streams
 let streamList = (...args) => {
     return Promise.all(
         (Array.isArray(args[0]) ? args[0] : args).map(_stream => 
@@ -206,9 +211,11 @@ task("server", () =>
                 // Bundle Modules
                 rollup({
                     plugins: [
-                        rollupJSON() // Parse JSON Exports
+                        commonJS(), // Use CommonJS to compile file
+                        rollupJSON(), // Parse JSON Exports
+                        rollupBabel(babelConfig.node) // Babelify file for minifing
                     ] 
-                }, 'es'),
+                }, 'cjs'),
                 minify(minifyOpts) // Minify the file
             ],
             dest: '.' // Output
@@ -265,9 +272,11 @@ task("update", () =>
             // Bundle Modules
             rollup({
                 plugins: [ 
-                    rollupJSON() // Parse JSON Exports
+                    commonJS(), // Use CommonJS to compile file
+                    rollupJSON(), // Parse JSON Exports
+                    rollupBabel(babelConfig.node) // Babelify file for minifing
                 ] 
-            }, 'es'),
+            }, 'cjs'),
             minify(minifyOpts) // Minify the file
         ],
         dest: '.' // Output
@@ -304,7 +313,7 @@ task('other', series("update", "config", parallel("server", "html"), "css", "inl
 // Gulp task to check to make sure a file has changed before minify that file files
 task('watch', () => {
     watch(['config.js', 'containers/*.js'], watchDelay, series('config:watch'));
-    watch(['gulpfile.js', 'postcss.config.js', 'util/*.js', '!util/*.min.js'], watchDelay, series('util', 'gulpfile:watch', 'server'));
+    watch(['gulpfile.js', 'postcss.config.js', 'util/*.js'], watchDelay, series('gulpfile:watch', 'server'));
     watch(['server.js', 'plugin.js'], watchDelay, series('server'));
     watch('views/**/*.pug', watchDelay, series('html', 'server', 'css', 'inline'));
     watch('src/**/*.scss', watchDelay, series('css', 'server', 'inline'));
