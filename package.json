@@ -61,6 +61,7 @@
     "@swup/slide-theme": "^1.0.5",
     "animejs": "^3.1.0",
     "autoprefixer": "^9.6.1",
+    "browser-sync": "^2.26.7",
     "core-js": "^3.2.0",
     "eslint": "^6.1.0",
     "fast-stringify": "^2.0.0",

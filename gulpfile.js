@@ -7,6 +7,7 @@ const { src, task, series, parallel, dest, watch } = gulp;
 
 const nodeResolve = require('rollup-plugin-node-resolve');
 const builtins = require("rollup-plugin-node-builtins");
+const browserSync = require('browser-sync').create();
 const { init, write } = require('gulp-sourcemaps');
 const commonJS = require('rollup-plugin-commonjs');
 const rollupBabel = require('rollup-plugin-babel');
@@ -58,14 +59,21 @@ let publicDest = 'public';
 
 // Streamline Gulp Tasks
 let stream = (_src, _opt = { }, done) => {
+    let _end = _opt.end || [];
     let host = src(_src, _opt.opts), _pipes = _opt.pipes || [], _dest = _opt.dest || publicDest;
     return new Promise((resolve, reject) => { 
         _pipes.forEach(val => { 
             if (val != undefined && val != null) 
                 { host = host.pipe(val).on('error', reject); }
         });
+
         host = host.pipe(dest(_dest))
-                   .on('end', typeof done == 'function' ? done : resolve); // Output
+                   .on('end', typeof done == 'function' ? done : resolve); // Output  
+
+        _end.forEach(val => { 
+            if (val != undefined && val != null) 
+                { host = host.pipe(val).on('error', reject); }
+        });
     });
 };
 
@@ -312,10 +320,17 @@ task('other', series("update", "config", parallel("server", "html"), "css", "inl
 
 // Gulp task to check to make sure a file has changed before minify that file files
 task('watch', () => {
-    watch(['config.js', 'containers/*.js'], watchDelay, series('config:watch'));
+    browserSync.init({
+        server: "./public"
+    });
+
+    watch(['config.js', 'containers/*.js'], watchDelay, series('config:watch'))
+        .on('change', browserSync.reload);
     watch(['gulpfile.js', 'postcss.config.js', 'util/*.js'], watchDelay, series('gulpfile:watch', 'server'));
     watch(['server.js', 'plugin.js'], watchDelay, series('server'));
-    watch('views/**/*.pug', watchDelay, series('html', 'server', 'css', 'inline'));
+    watch('views/**/*.pug', watchDelay, series('html', 'server', 'css', 'inline'))
+        .on('change', browserSync.reload);
     watch('src/**/*.scss', watchDelay, series('css', 'server', 'inline'));
-    watch('src/**/*.js', watchDelay, series('js', 'server', 'inline'));
+    watch('src/**/*.js', watchDelay, series('js', 'server', 'inline'))
+        .on('change', browserSync.reload);
 });
