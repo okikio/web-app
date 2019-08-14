@@ -6,8 +6,8 @@ module.exports = {
     plugins: [
         purgecss({
             content: ['public/**/*.html'],
-            keyframes: true,
-            fontFace: true
+            keyframes: false,
+            fontFace: false
         }),
         autoprefixer({
             overrideBrowserslist: general

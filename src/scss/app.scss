@@ -97,7 +97,7 @@ $size: 25px;
 }
 
 @import "./components/base.scss";
-// @import "./components/fonts.scss";
+@import "./components/fonts.scss";
 @import "./components/header.scss";
 @import "./components/style.scss";
 @import "./components/icon.scss";
