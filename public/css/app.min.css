@@ -443,13 +443,12 @@ li {
 }
 
 .header-top-spot {
-  height: 60px;
+  height: 85px;
 }
 
 .header .navbar {
   justify-content: flex-start;
   flex-direction: column;
-  line-height: 60px;
   position: relative;
   flex-wrap: nowrap;
   height: 60px;
@@ -459,6 +458,11 @@ li {
 }
 
 .header .navbar-layout {
+  box-shadow: 0 5px 25px rgba(0, 0, 50, 0.12);
+  border-radius: 0 0 18px 18px;
+  background: #fff;
+  padding: 0 25px;
+  height: 60px;
   display: flex;
 }
 
@@ -466,6 +470,17 @@ li {
   position: fixed;
   left: 0;
   top: 0;
+}
+
+.header .navbar-title {
+  font-family: "Bungee Inline", sans-serif;
+  letter-spacing: 0.05em;
+  text-decoration: none;
+  line-height: 60px;
+  padding-left: 25px;
+  position: relative;
+  font-size: 17px;
+  flex-shrink: 0;
 }
 
 .header .navbar-list {
@@ -480,8 +495,9 @@ li {
 .header .navbar-link {
   font-family: "Montserrat", sans-serif;
   text-transform: uppercase;
+  line-height: 60px;
   letter-spacing: 1px;
-  font-weight: 600;
+  font-weight: 300;
   padding: 0 28px;
   font-size: 14px;
   display: block;
@@ -505,7 +521,7 @@ li {
   font-family: Montserrat, sans-serif;
 }
 
-.style-16, .style-font-16 {
+ .style-font-16 {
   font-size: 16px;
 }
 
@@ -513,7 +529,7 @@ li {
   font-weight: 700;
 }
 
-.style-spaceout-small, .style-letter-spacing-small {
+.style-spaceout-small {
   letter-spacing: 1px;
 }
 
@@ -856,10 +872,6 @@ li {
 .layout-padding-large {
   padding-right: 50px;
   padding-left: 50px;
-}
-
-.layout-padding-left {
-  padding-left: 25px;
 }
 
 .layout-padding-right-large {
