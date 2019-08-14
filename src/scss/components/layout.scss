@@ -12,16 +12,16 @@
    &,
    &-vert {
       padding: {
-         bottom: 100px;
-         top: 100px;
+         bottom: $size-extra-xl;
+         top: $size-extra-xl;
       }
    }
 
    &,
    &-horz {
       padding: {
-         right: 80px;
-         left: 80px;
+         right: $size-sub-extra-large;
+         left: $size-sub-extra-large;
       }
    }
 
@@ -32,16 +32,16 @@
       &,
       &-vert {
          padding: {
-            bottom: 180px;
-            top: 180px;
+            bottom: $size-gigantic;
+            top: $size-gigantic;
          }
       }
 
       &,
       &-horz {
          padding: {
-            right: 120px;
-            left: 120px;
+            right: $size-huge;
+            left: $size-huge;
          }
       }
    }
@@ -50,25 +50,17 @@
       &,
       &-vert {
          padding: {
-            bottom: 50px;
-            top: 50px;
+            bottom: $size-sub-large;
+            top: $size-sub-large;
          }
       }
 
       &,
       &-horz {
          padding: {
-            right: 50px;
-            left: 50px;
+            right: $size-sub-large;
+            left: $size-sub-large;
          }
-      }
-
-      &,
-      &-vert,
-      &-horz {
-         position: relative;
-         margin: 0 auto;
-         width: 100%;
       }
    }
 
@@ -76,16 +68,16 @@
       &,
       &-vert {
          padding: {
-            bottom: 50px;
-            top: 50px;
+            bottom: $size-sub-large;
+            top: $size-sub-large;
          }
       }
 
       &,
       &-horz {
          padding: {
-            right: 40px;
-            left: 40px;
+            right: $size-sub-large;
+            left: $size-sub-large;
          }
       }
 
@@ -93,16 +85,16 @@
          &,
          &-vert {
             padding: {
-               bottom: 90px;
-               top: 90px;
+               bottom: $size-extra-large;
+               top: $size-extra-large;
             }
          }
 
          &,
          &-horz {
             padding: {
-               right: 60px;
-               left: 60px;
+               right: $size-larger;
+               left: $size-larger;
             }
          }
       }
@@ -111,16 +103,16 @@
          &,
          &-vert {
             padding: {
-               bottom: 25px;
-               top: 25px;
+               bottom: $size;
+               top: $size;
             }
          }
 
          &,
          &-horz {
             padding: {
-               right: 25px;
-               left: 25px;
+               right: $size;
+               left: $size;
             }
          }
       }
@@ -129,16 +121,16 @@
          &,
          &-vert {
             padding: {
-               bottom: 50px !important;
-               top: 50px !important;
+               bottom: $size-sub-large !important;
+               top: $size-sub-large !important;
             }
          }
 
          &,
          &-horz {
             padding: {
-               right: 40px !important;
-               left: 40px !important;
+               right: $size-sub-large !important;
+               left: $size-sub-large !important;
             }
          }
 
@@ -146,16 +138,16 @@
             &,
             &-vert {
                padding: {
-                  bottom: 25px !important;
-                  top: 25px !important;
+                  bottom: $size !important;
+                  top: $size !important;
                }
             }
 
             &,
             &-horz {
                padding: {
-                  right: 25px !important;
-                  left: 25px !important;
+                  right: $size !important;
+                  left: $size !important;
                }
             }
          }
@@ -164,16 +156,16 @@
             &,
             &-vert {
                padding: {
-                  bottom: 15px !important;
-                  top: 15px !important;
+                  bottom: $size-small !important;
+                  top: $size-small !important;
                }
             }
 
             &,
             &-horz {
                padding: {
-                  right: 15px !important;
-                  left: 15px !important;
+                  right: $size-small !important;
+                  left: $size-small !important;
                }
             }
          }
@@ -187,9 +179,6 @@
 
    &-flex {
       display: flex !important;
-      display: -webkit-flex;
-      display: -webkit-box;
-      display: -ms-flexbox;
 
       &-center {
          justify-content: center;
@@ -295,8 +284,8 @@
       @media (min-width: 650px) {
          .layout-row {
             margin: {
-               right: -15px;
-               left: -15px;
+               right: -$size-small;
+               left: -$size-small;
             }
          }
       }
@@ -542,8 +531,8 @@
          width: 100%;
 
          @media (min-width: 550px) {
-            padding-right: 15px;
-            padding-left: 15px;
+            padding-right: $size-small;
+            padding-left: $size-small;
          }
       }
 
@@ -561,10 +550,14 @@
                   }
                }
 
-               @media (max-width: 550px) {
+               @media (max-width: 750px) {
                   @if $i < 6 {
                      max-width: 50%;
                   }
+               }
+
+               @media (max-width: 550px) {
+                  max-width: 100%;
                }
             }
          }

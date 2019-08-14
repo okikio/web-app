@@ -1,4 +1,4 @@
-let { values, title, _tile, src, section, row, page, padding, margin, _link, layout, layer, _img, href, hero, _hero, font, content, color, col, _class, background, alt } = require('./containers');
+let { _header, _main, _footer, values, title, _tile, section, row, page, padding, margin, _link, layout, layer, _img, href, hero, _hero, font, content, color, col, _class, background, alt } = require('./containers');
 let carImg = "/assets/white_car.webp?w=400&h=400";
 let { assign } = Object;
 
@@ -14,15 +14,13 @@ module.exports = {
         "dpr": "auto"
     },
     "pages": {
-        "about": page(
+        "about": page([
             title("The Sub Page"),
             values([
                 // Hero Layer
-                layer([
-                    hero([
-                        _img(carImg, "A city Image"),
-                        title("Subpage.")
-                    ])
+                _hero([
+                    _img(carImg, "A city Image"),
+                    title("Subpage.")
                 ]),
                 // End Hero Layer
 
@@ -57,16 +55,14 @@ module.exports = {
                 ])
                 // End Intro Layer
             ])
-        ),
-        "index": page(
+        ]),
+        "index": page([
             title("Hello There"),
             values([
                 // Hero Layer
-                layer([
-                    hero(
-                        _img(carImg, "A city Image"),
-                        title("Relax.")
-                    )
+                _hero([
+                    _img(carImg, "A city Image"),
+                    title("Relax.")
                 ]),
                 // End Hero Layer
 
@@ -322,7 +318,7 @@ module.exports = {
                 ])
                 // End Image Column Layer
             ])
-        )
+        ])
     },
     "routes": {
         "/": "index",

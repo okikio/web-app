@@ -1,0 +1,6 @@
+mixin sectionHeader(_title)
+  - _title = _title || { class: "style-primary-dark style-center" };
+  section.layer-header
+    h4.style-bold(class=val.class)= val.title
+
+

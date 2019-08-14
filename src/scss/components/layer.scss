@@ -107,6 +107,22 @@
       @include colorList(background-color);
    }
    
+   &-tile {
+      min-height: 300px;
+      overflow: hidden;
+      cursor: pointer;
+      display: block;
+      width: 100%;
+      border: 0;
+      
+      &-footer {
+         position: absolute;
+         color: $white;
+         margin: 20px 25px;
+         bottom: 0;
+      }
+   }
+   
    &-box {
       border-radius: 8px;
       min-height: 400px;

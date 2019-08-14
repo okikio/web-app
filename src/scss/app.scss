@@ -60,10 +60,17 @@ $icon-font: "Material Icons", sans-serif;
 $regular-font: "Roboto", sans-serif;
 $bold-font: 'Montserrat', sans-serif;
 
+$size-gigantic: 180px;
+$size-huge: 120px;
+$size-extra-xl: 100px;
+$size-extra-large: 90px;
+$size-sub-extra-large: 80px;
+$size-larger: 60px;
 $size-large: 50px;
-$size-small: 15px;
-$size-mid: 20px;
+$size-sub-large: 40px;
 $size: 25px;
+$size-mid: 20px;
+$size-small: 15px;
 
 // --google-blue: #3367d6
 $colors: (
@@ -96,10 +103,17 @@ $fonts: (
 );
 
 $sizes: (
+    "gigantic": $size-gigantic,
+    "huge": $size-huge,
+    "extra-xl": $size-extra-xl,
+    "extra-large": $size-extra-large,
+    "sub-extra-large": $size-sub-extra-large,
+    "larger": $size-larger,
     "large": $size-large,
-    "small": $size-small,
+    "sub-large": $size-sub-large,
     "default": $size,
-    "mid": $size-mid
+    "mid": $size-mid,
+    "small": $size-small
 );
 
 @mixin propertyList($property, $prefix, $list) {

@@ -22,36 +22,47 @@ html(lang="en")
     //- link(rel='dns-prefetch' href='https://fonts.googleapis.com')
     //- link(rel='stylesheet' async href='https://fonts.googleapis.com/css?family=Bungee+Inline|Roboto+Slab:300|Montserrat:700,800|Roboto:400,600|Material+Icons&display=swap')
 
-    title= title
+    title= page.title
 
     include ./components/header.pug
     include ./components/layer.pug
     include ./components/layout.pug
-    include ./components/title.pug
+    include ./components/section.pug
     include ./components/content.pug
     include ./components/hero.pug
     include ./components/footer.pug
   body
-    +header(tabs, title)
+    //- Navbar etc...
+    +header(page.tabs, page.title)
 
     .header-top-spot
     main.main#swup.transition-fade
-      if self
-        +doc(self, false)
-      if values
-        each val in values
-          +doc(val, false)
-        each val in values
-          if val.layer
-            +layer(val.layer)
-              if val.layer.hero
-                +hero(val.layer.hero)
-              if val.layer.layout
-                +layout(val.layer.layout)
-                  each detail in val.layer.layout.values
-                    if detail.section.title
-                      +title(detail.section)
-                    +content(detail.section)
+      - let layerLists = page.values;
+
+      //- Page Layers
+      if layerLists
+        each layers in layerLists
+          - let layer = layers.layer;  //- Display Custom Layer if it exists
+          - let hero = layers.hero; //- Display Hero Layer if it exists
+          if hero
+            +hero(hero)
+
+          if layer
+          - let layout = layer.layout;
+            +layer(layer)
+
+              if layout
+                - let sectionList = layout.values;
+                +layout(layout)
+                  
+                  if sectionList
+                    each sections in sectionList
+                      - let section = sections.section;
+                      - let title = section.title;
+
+                      if title
+                        +title(section)
+                      +content(section)
 
     +footer("2019 Okiki Ojo")
     script(src=`${dev ? './js/app.modern.min.js' : './js/app.vendor.min.js'}` inline defer)

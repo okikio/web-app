@@ -3,6 +3,50 @@ if (!('dev' in env)) require('dotenv').config();
 let dev = 'dev' in env && env.dev.toString() == "true";
 let staticSite = 'staticSite' in env && env.staticSite == "true";
 
+/*
+    -- Rules --
+    General rules to use the containers.
+
+    Containers are functions that return JSON Objects, these combine together to make a huge JSON Object tree. 
+    Pug takes the JSON and renders it for each page of the site allowing for granular control.
+    Containers are used in the `./config.js` file, along with other info. to create pages.
+    Container functions support Arrays as well as Arguments.
+
+    There are 3 major type of containers:
+    * Components
+    * Attributes
+    * Class Attributes
+    
+    ---
+
+    - Components represent HTML elements, sections, layers, etc...
+    - Attributes give a component basic data to use to be display, or to be used in displaying a component, eg. img (it requires src, and href attributes).
+    - Class Attributes are specific attributes that give a component its style, font, color, etc...
+
+
+    -- Beware --
+    Many components require certain components be bundled together to work properly.
+    * class_add(...) only work in _class(...) functions 
+        eg. layer(
+            ...,
+            _class([
+                padding(["horz", "vert", ...]), // Returns "layout-padding-horz layout-padding-vert ..."
+                class_add("layout-margin") ("horz", "vert", ...), // Returns "layout-margin-horz layout-margin-vert ...", the same as `margin(...)`
+                "random-string-property-class"
+            ])
+        )
+
+    * tabs(...) requires the link(...) function
+        eg. layer(
+            ...,
+            _class([
+                padding("horz", "vert", ...), // Returns "layout-padding-horz layout-padding-vert ..."
+                class_add("layout-margin") ("horz", "vert", ...), // Returns "layout-margin-horz layout-margin-vert ...", the same as `margin(...)`
+                "random-string-property-class"
+            ])
+        )
+*/
+
 let pick = require('./util/pick');
 let { isArray } = Array;
 let { assign } = Object;
@@ -61,6 +105,15 @@ let _link = (_content, _href) => link([
     href(_href + (dev && staticSite ? ".html" : (_href == "/" ? "index.html" : ""))), content(_content)
 ]);
 
+// Allows a user to set specific types of sections (eg. header, main, footer, etc...)
+let _section = type => { 
+    return (...args) => section(...anyArgs(args), { "type": type }); 
+};
+
+let _header = _section("header"); // The section header component
+let _main = _section("main"); // The section main component
+let _footer = _section("footer"); // The section footer component
+
 let _tabs = (...args) => tabs([
     values(
         ...anyArgs(args).map(val => _link(val.toUpperCase(), `/${val}`))
@@ -78,55 +131,11 @@ let _hero = (...args) => hero([
     ...anyArgs(args)
 ]);
 
-/*
-    -- Rules --
-    General rules to use the containers.
-
-    Containers are functions that return JSON Objects, these combine together to make a huge JSON Object tree. 
-    Pug takes the JSON and renders it for each page of the site allowing for granular control.
-    Containers are used in the `./config.js` file, along with other info. to create pages.
-    Container functions support Arrays as well as Arguments.
-
-    There are 3 major type of containers:
-    * Components
-    * Attributes
-    * Class Attributes
-    
-    ---
-
-    - Components represent HTML elements, sections, layers, etc...
-    - Attributes give a component basic data to use to be display, or to be used in displaying a component, eg. img (it requires src, and href attributes).
-    - Class Attributes are specific attributes that give a component its style, font, color, etc...
-
-
-    -- Beware --
-    Many components require certain components be bundled together to work properly.
-    * class_add(...) only work in _class(...) functions 
-        eg. layer(
-            ...,
-            _class([
-                padding(["horz", "vert", ...]), // Returns "layout-padding-horz layout-padding-vert ..."
-                class_add("layout-margin") ("horz", "vert", ...), // Returns "layout-margin-horz layout-margin-vert ...", the same as `margin(...)`
-                "random-string-property-class"
-            ])
-        )
-
-    * tabs(...) requires the link(...) function
-        eg. layer(
-            ...,
-            _class([
-                padding("horz", "vert", ...), // Returns "layout-padding-horz layout-padding-vert ..."
-                class_add("layout-margin") ("horz", "vert", ...), // Returns "layout-margin-horz layout-margin-vert ...", the same as `margin(...)`
-                "random-string-property-class"
-            ])
-        )
-*/
-
 // Shared similarites between page containers
 let page = (...args) => {
     let defaults = [title("Page"), _tabs("about", "projects", "contact")];
-    return assign(assign(...defaults), ...anyArgs(args));
+    return component("page") (assign(assign(...defaults), ...anyArgs(args)));
 };
 
-assign(page, { _link, _tabs, _tile, _img, _hero, values, title, tile, tabs, src, section, row, page, padding, margin, link, layout, layer, img, href, hero, font, content, component, color, col, _class, class_add, background, attr, alt });
+assign(page, { _header, _main, _footer, _link, _tabs, _tile, _img, _hero, values, title, tile, tabs, src, section, row, page, padding, margin, link, layout, layer, img, href, hero, font, content, component, color, col, _class, class_add, background, attr, alt });
 module.exports = page;
