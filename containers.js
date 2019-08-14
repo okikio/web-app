@@ -58,7 +58,7 @@ let section = component("section"); // The section component
 
 // -- Shortform Components --
 let _link = (_content, _href) => link([
-    href(_href == "/" ? "/index.html" : _href + (dev && staticSite ? ".html" : "")), content(_content)
+    href(_href + (dev && staticSite ? ".html" : (_href == "/" ? "index.html" : ""))), content(_content)
 ]);
 
 let _tabs = (...args) => tabs([
