@@ -501,8 +501,15 @@ li {
 }
 
 /* -- Styles (only affect text) -- */
+ .style-font-title {
+  font-family: Roboto Slab, sans-serif;
+}
 
-.style-light-font {
+ .style-light-font {
+  font-family: Montserrat, sans-serif;
+}
+
+.style-bold {
   font-family: Montserrat, sans-serif;
 }
 
