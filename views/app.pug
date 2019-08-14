@@ -58,11 +58,8 @@ html(lang="en")
                   if sectionList
                     each sections in sectionList
                       - let section = sections.section;
-                      - let title = section.title;
-
-                      if title
-                        +title(section)
-                      +content(section)
+                      if section
+                        +section(section)
 
     +footer("2019 Okiki Ojo")
     script(src=`${dev ? './js/app.modern.min.js' : './js/app.vendor.min.js'}` inline defer)
