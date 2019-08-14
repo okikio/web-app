@@ -10,9 +10,22 @@
    display: block;
    width: 100%;
    z-index: 0;
-
-   .layer-image {
+   
+   // /* &-title {
+   //    // overflow-wrap: break-word;
+   // } */
+      
+   &-content {
+      position: relative;
+      z-index: 25;
+   }
+      
+   &-image {
       position: absolute;
+      overflow: hidden;
+      display: block;
+      height: 100%;
+      width: 100%;
       z-index: 0;
       left: 0;
       top: 0;
@@ -29,71 +42,86 @@
           left: 0;
           top: 0;
       }
-
+      
       &-blur {
          filter: blur(3px);
       }
    }
 
-
+   
    &-shadow,
    %shadow {
-      box-shadow: 0 20px 85px rgba(0, 0, 40, 0.3);
-
+      box-shadow: 0 40px 85px rgba(0, 0, 40, 0.3);
+      
       &--1 {
          box-shadow: 0 20px 65px rgba(0, 0, 40, 0.12);
       }
    }
-
+   
    &-hero {
-      @extend %shadow;
-      background: $surface;
-      border-radius: 25px;
+      // @extend %shadow;
+      // background: $surface; 
       position: relative;
       max-height: 700px;
-      overflow: hidden;
       z-index: 125;
-
-      & .layer-content {
-         position: relative;
-         z-index: 25;
+      
+      .layer-image {
+         border-radius: 25px; 
       }
-
-      & img.load-img {
-          width: 100vmax;
-      }
-
+      
       &-scroll-down {
          background: $white;
          position: relative;
          margin-bottom: -150px;
          z-index: 250;
-
+         
          :hover {
             color: $primary-dark !important;
          }
       }
+      
+      @media (max-width: 500px) {
+         .layer-title {
+            font-size: 10vmax;
+         }
+         
+         .layer-image img {
+            min-width: 500px;
+         }
+      }
+      
+      @media (min-width: 700px) {
+         .layer-title {
+            font-size: 18vmax;
+         }
+      }
+      
+      @media (min-width: 1000px) {
+         .layer-title {
+            font-size: 155px;
+         }
+      }
    }
-
+   
    &, &-bkg {
       @include colorList(background-color);
    }
-
+   
    &-box {
       border-radius: 8px;
       min-height: 400px;
       width: 100%;
       height: auto;
-
+      
       &-flat {
          border-radius: 0 !important;
       }
-
+      
       &-tall {
          min-height: 800px;
       }
    }
-
+   
    &-main {
       line-height: 2em;
       z-index: 25;

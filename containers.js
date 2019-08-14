@@ -7,7 +7,7 @@ let anyArgs = args => isArray(args[0]) ? args[0] : args;
 
 // Attributes for components
 let attr = (attr, defaults, list) => (...vals) => {
-    let val = list ? vals : vals[0];
+    let val = list ? anyArgs(vals) : vals[0];
     return { [attr]: pick(val, defaults) };
 };
 

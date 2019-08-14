@@ -5,8 +5,8 @@
   "main": "./server.min",
   "scripts": {
     "test": "npm run build",
-    "watch": "gulp watch --gulpfile ./gulpfile.js",
-    "build:dev": "gulp --gulpfile ./gulpfile.js",
+    "watch": "gulp watch",
+    "build:dev": "gulp",
     "build": "gulp --gulpfile ./gulpfile.min.js",
     "start": "pm2 start ecosystem.config.js --env production",
     "logs": "pm2 logs fastify-app",
@@ -71,7 +71,6 @@
     "gulp-htmlmin": "^5.0.1",
     "gulp-inline-source": "^4.0.0",
     "gulp-minify": "^3.1.0",
-    "gulp-newer": "^1.4.0",
     "gulp-postcss": "^8.0.0",
     "gulp-pug": "^4.0.1",
     "gulp-rename": "^1.4.0",

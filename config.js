@@ -14,7 +14,7 @@ module.exports = {
         "dpr": "auto"
     },
     "pages": {
-        "about": page([
+        "about": page(
             title("The Sub Page"),
             values([
                 // Hero Layer
@@ -33,10 +33,10 @@ module.exports = {
                     ),
                     layout([
                         _class("layout-shorten"),
-                        values(
-                            section(
+                        values([
+                            section([
                                 title("Lorem itpsuim"),
-                                values(
+                                values([
                                     assign(
                                         content(" "),
                                         _class(
@@ -50,37 +50,37 @@ module.exports = {
                                         It was popularised in the 1960s with the release of Letraset sheets
                                         containing Lorem Ipsum passages, and more recently with desktop publishing software like Aldus PageMaker including versions of Lorem Ipsum, `),
                                     _link("home", "/")
-                                )
-                            )
-                        )
+                                ])
+                            ])
+                        ])
                     ])
                 ])
                 // End Intro Layer
             ])
-        ]),
+        ),
         "index": page(
             title("Hello There"),
-            values(
+            values([
                 // Hero Layer
-                layer(
+                layer([
                     hero(
                         _img(carImg, "A city Image"),
                         title("Relax.")
                     )
-                ),
+                ]),
                 // End Hero Layer
 
                 // Intro layer
-                layer(
+                layer([
                     _class(
                         padding("horz", "large-top")
                     ),
-                    layout(
+                    layout([
                         _class("layout-shorten"),
-                        values(
-                            section(
+                        values([
+                            section([
                                 title("Lorem itpsuim"),
-                                values(
+                                values([
                                     assign(
                                         content(" "),
                                         _class(
@@ -94,36 +94,36 @@ module.exports = {
                                         It was popularised in the 1960s with the release of Letraset sheets
                                         containing Lorem Ipsum passages, and more recently with desktop publishing software like Aldus PageMaker including versions of Lorem Ipsum, `),
                                     _link("run", "/about")
-                                )
-                            )
-                        )
-                    )
-                ),
+                                ])
+                            ])
+                        ])
+                    ])
+                ]),
                 // End Intro Layer
 
                 // Listings layer
-                layer(
+                layer([
                     _class(
                         padding("horz", "large-top")
                     ),
-                    layout(
+                    layout([
                         _class("layout-shorten"),
-                        values(
-                            section(
+                        values([
+                            section([
                                 title("Listings"),
                                 _class(
                                     padding("top"),
                                     "style-line-height-double"
                                 ),
-                                values(
-                                    row(
-                                        values(
-                                            col(
+                                values([
+                                    row([
+                                        values([
+                                            col([
                                                 _class(
                                                     "layout-col-2",
                                                     padding("bottom-small")
                                                 ),
-                                                values(
+                                                values([
                                                     assign(
                                                         content(`03/03`),
                                                         _class(
@@ -131,15 +131,15 @@ module.exports = {
                                                             font("16")
                                                         )
                                                     )
-                                                )
-                                            ),
+                                                ])
+                                            ]),
 
-                                            col(
+                                            col([
                                                 _class(
                                                     "layout-col-3",
                                                     padding("bottom")
                                                 ),
-                                                values(
+                                                values([
                                                     assign(
                                                         content(`2018`),
                                                         _class(
@@ -165,14 +165,14 @@ module.exports = {
                                                             font("16")
                                                         )
                                                     )
-                                                )
-                                            ),
+                                                ])
+                                            ]),
 
-                                            col(
+                                            col([
                                                 _class(
                                                     "layout-col-7"
                                                 ),
-                                                values(
+                                                values([
                                                     assign(
                                                         _class(
                                                             "style-line-height-double",
@@ -182,36 +182,36 @@ module.exports = {
                                                         Lorem Ipsum has been the industry's standard dummy text ever since the 1500s, when an
                                                         unknown printer took a galley of type and scrambled it to make a type specimen book.`)
                                                     )
-                                                )
-                                            )
-                                        )
-                                    )
-                                )
-                            )
-                        )
-                    )
-                ),
+                                                ])
+                                            ])
+                                        ])
+                                    ])
+                                ])
+                            ])
+                        ])
+                    ])
+                ]),
                 // End Listings Layer
 
                 // Breakthrough layer
-                layer(
-                    layout(
+                layer([
+                    layout([
                         _class(
                             "layout-contain-large",
                             padding("horz", "large")
                         ),
-                        values(
-                            section(
+                        values([
+                            section([
                                 _class( "layout-vert" ),
-                                values(
-                                    row(
-                                        values(
-                                            col(
+                                values([
+                                    row([
+                                        values([
+                                            col([
                                                 _class(
                                                     "layout-col-6",
                                                     padding("bottom-small", "right-large")
                                                 ),
-                                                values(
+                                                values([
                                                     assign(
                                                         content(`Breakthrough<br>Limits!`),
                                                         _class(
@@ -221,12 +221,12 @@ module.exports = {
                                                             color("primary")
                                                         )
                                                     )
-                                                )
-                                            ),
+                                                ])
+                                            ]),
 
-                                            col(
+                                            col([
                                                 _class( "layout-col-6" ),
-                                                values(
+                                                values([
                                                     assign(
                                                         content(`Lorem Ipsum is simply dummy text of the printing and typesetting industry.
                                                         Lorem Ipsum has been the industry's standard dummy text ever since the 1500s, when an
@@ -237,41 +237,41 @@ module.exports = {
                                                             font("16")
                                                         )
                                                     )
-                                                )
-                                            )
-                                        )
-                                    )
-                                )
-                            )
-                        )
-                    )
-                ),
+                                                ])
+                                            ])
+                                        ])
+                                    ])
+                                ])
+                            ])
+                        ])
+                    ])
+                ]),
                 // End Breakthrough Layer
 
                 // Image Column layer
-                layer(
-                    layout(
+                layer([
+                    layout([
                         _class( "layout-contain-large" ),
-                        values(
-                            section(
+                        values([
+                            section([
                                 _class( "layout-shorten-vert" ),
-                                values(
-                                    row(
+                                values([
+                                    row([
                                         _class( margin("dull") ),
-                                        values(
-                                            col(
+                                        values([
+                                            col([
                                                 _class(
                                                     "layout-block",
                                                     "layout-col-3"
                                                 )
-                                            ),
+                                            ]),
 
-                                            col(
+                                            col([
                                                 _class(
                                                     "layout-col-9",
                                                     padding("small")
                                                 ),
-                                                values(
+                                                values([
                                                     assign(
                                                         content(` `),
                                                         _class(
@@ -281,20 +281,20 @@ module.exports = {
                                                             "layer-shadow--1"
                                                         )
                                                     )
-                                                )
-                                            )
-                                        )
-                                    ),
+                                                ])
+                                            ])
+                                        ])
+                                    ]),
 
-                                    row(
+                                    row([
                                         _class( margin("dull") ),
-                                        values(
-                                            col(
+                                        values([
+                                            col([
                                                 _class(
                                                     "layout-col-9",
                                                     padding("small", "vert-large")
                                                 ),
-                                                values(
+                                                values([
                                                     assign(
                                                         _img("/assets/city.webp?w=250"),
                                                         _class(
@@ -304,24 +304,24 @@ module.exports = {
                                                             "layer-shadow"
                                                         )
                                                     )
-                                                )
-                                            ),
+                                                ])
+                                            ]),
 
-                                            col(
+                                            col([
                                                 _class(
                                                     "layout-col-3",
                                                     "layout-block"
                                                 )
-                                            )
-                                        )
-                                    )
-                                )
-                            )
-                        )
-                    )
-                )
+                                            ])
+                                        ])
+                                    ])
+                                ])
+                            ])
+                        ])
+                    ])
+                ])
                 // End Image Column Layer
-            )
+            ])
         )
     },
     "routes": {
@@ -329,7 +329,8 @@ module.exports = {
         "/about": "about",
         "/run": "run"
     },
-    "social_links": [{
+    "social_links": [
+        {
             "name": [
                 "Twitter",
                 "Tw"
@@ -365,7 +366,8 @@ module.exports = {
             "href": "mailto:okikio.dev@gmail.com"
         }
     ],
-    "projects": [{
+    "projects": [
+        {
             "name": "Leader",
             "url": "leader",
             "detail": "Lorem itpsim",

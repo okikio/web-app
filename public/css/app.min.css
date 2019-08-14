@@ -35,9 +35,7 @@
 */
 /* -- Presets & Resets -- */
 /* -- Elements -- */
-*,
-* :before,
-* :after {
+*, *:before, *:after {
   box-sizing: border-box;
   font-size: 100%;
   outline: none;
@@ -56,6 +54,20 @@ body {
   font-weight: 400;
   font-size: 15px;
   color: #222;
+}
+
+@media (min-width: 300px) {
+  html,
+  body {
+    word-wrap: break-word;
+  }
+}
+
+@media (max-width: 300px) {
+  html,
+  body {
+    word-break: break-all;
+  }
 }
 
 h1,
@@ -250,7 +262,7 @@ li {
   text-align: center;
 }
 
-.style-primary, .style-color-primary {
+ .style-color-primary {
   color: #4500ff;
 }
 
@@ -639,12 +651,6 @@ li {
   }
 }
 
-.layout-row .layout-col {
-  max-width: 100%;
-  flex-basis: 0;
-  flex-grow: 1;
-}
-
 .layout-row .layout-col-2 {
   max-width: 16.66667%;
 }
@@ -709,14 +715,23 @@ li {
   z-index: 0;
 }
 
-.layer .layer-image {
+.layer-content {
+  position: relative;
+  z-index: 25;
+}
+
+.layer-image {
   position: absolute;
+  overflow: hidden;
+  display: block;
+  height: 100%;
+  width: 100%;
   z-index: 0;
   left: 0;
   top: 0;
 }
 
-.layer .layer-image-overlay {
+.layer-image-overlay {
   background: #222;
   background: #252b33;
   position: absolute;
@@ -729,9 +744,8 @@ li {
   top: 0;
 }
 
-.layer-shadow,
-.layer .layer-hero {
-  box-shadow: 0 20px 85px rgba(0, 0, 40, 0.3);
+.layer-shadow {
+  box-shadow: 0 40px 85px rgba(0, 0, 40, 0.3);
 }
 
 .layer-shadow--1 {
@@ -739,21 +753,13 @@ li {
 }
 
 .layer-hero {
-  background: #fff;
-  border-radius: 25px;
   position: relative;
   max-height: 700px;
-  overflow: hidden;
   z-index: 125;
 }
 
-.layer-hero .layer-content {
-  position: relative;
-  z-index: 25;
-}
-
-.layer-hero img.load-img {
-  width: 100vmax;
+.layer-hero .layer-image {
+  border-radius: 25px;
 }
 
 .layer-hero-scroll-down {
@@ -765,6 +771,12 @@ li {
 
 .layer-hero-scroll-down :hover {
   color: #2d22ca !important;
+}
+
+@media (max-width: 500px) {
+  .layer-hero .layer-image img {
+    min-width: 500px;
+  }
 }
 
 .layer-surface {

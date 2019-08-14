@@ -25,7 +25,6 @@ const assets = require("cloudinary").v2;
 const postcss = require('gulp-postcss');
 const minify = require('gulp-minify');
 const rename = require('gulp-rename');
-const newer = require("gulp-newer");
 const { writeFile } = require("fs");
 const config = require('./config');
 const sass = require('gulp-sass');
@@ -53,6 +52,7 @@ let minifyOpts = {
     mangle: { toplevel: true },
     ext: { min: ".min.js" } 
 };
+
 let minSuffix = { suffix: ".min" };
 let watchDelay = { delay: 500 };
 let publicDest = 'public';
@@ -100,7 +100,11 @@ let _exec = cmd => {
 // Execute multiple commands in series
 let _execSeries = (...cmds) => {
     return Promise.all(
-        cmds.map(cmd => typeof cmd == "string" ? _exec(cmd) : cmd) 
+        cmds.reduce((acc, cmd, i) => {
+            if (cmd != null && cmd != undefined)
+                acc[i] = typeof cmd == "string" ? _exec(cmd) : cmd;
+            return acc;
+        }, []) 
     );
 };
 
@@ -117,7 +121,7 @@ task('html', () => {
                         extname: ".html"
                     }),
                     // Pug compiler
-                    pug({ locals: { ...page, cloud_name } }),
+                    pug({ locals: { ...page, cloud_name, dev } }),
                     // Minify or Beautify html
                     dev ? html({ indent_size: 4 }) : htmlmin(htmlMinOpts),
                     // Replace /assets/... URLs
@@ -153,7 +157,8 @@ task("css", () =>
             rename(minSuffix), // Rename
             write(srcMapsWrite) // Put sourcemap in public folder
         ],
-        dest: `${publicDest}/css` // Output
+        dest: `${publicDest}/css`, // Output
+        end: [browserSync.stream()]
     })
 );
 
@@ -162,12 +167,10 @@ task("js", () =>
         ...["modern"].concat(!dev ? "general" : [])
             .map(type => {
                 let gen = type == 'general';
-                let suffix = type == 'general' ? '' : '.modern';
+                let suffix = gen ? '' : '.modern';
                 return ['src/js/app.js', {
                     opts: { allowEmpty: true },
                     pipes: [
-                        // Only update when there is something to update
-                        dev ? newer(`${publicDest}/js/app${suffix}.min.js`) : null,
                         init(), // Sourcemaps init
                         // Bundle Modules
                         rollup({
@@ -179,18 +182,16 @@ task("js", () =>
                                 rollupBabel(babelConfig[type]) // Babelify file for uglifing
                             ] 
                         }, type == 'general' ? 'umd' : 'es'),
-                        dev ? js() : (gen ? uglifyES5() : minify(minifyOpts)), // Minify the file
-                        rename(`app${suffix}.min.js`), // Rename
+                        gen ? uglifyES5() : minify(minifyOpts), // Minify the file
+                        gen ? rename(`app${suffix}.min.js`) : null, // Rename
                         write(srcMapsWrite) // Put sourcemap in public folder
                     ],
                     dest: `${publicDest}/js` // Output
                 }];
             }),
-        ['src/js/app.vendor.js', {
+            dev ? null : ['src/js/app.vendor.js', {
             opts: { allowEmpty: true },
             pipes: [
-                // Only update when there is something to update
-                dev ? newer(`${publicDest}/js/app.vendor.min.js`) : null,
                 init(), // Sourcemaps init
                 // Bundle Modules
                 rollup({
@@ -202,8 +203,7 @@ task("js", () =>
                         rollupBabel(babelConfig.node) // ES5 file for uglifing
                     ] 
                 }, 'umd'),
-                dev ? js() : minify(minifyOpts), // Minify the file
-                dev ? rename(minSuffix) : null, // Rename
+                minify(minifyOpts), // Minify the file
                 write(srcMapsWrite) // Put sourcemap in public folder
             ],
             dest: `${publicDest}/js` // Output
@@ -246,8 +246,6 @@ task("config", () =>
         ["config.min.js", {
             opts: { allowEmpty: true },
             pipes: [
-                // Only update when there is something to update
-                dev ? newer(`./config.min.js`) : null,
                 uglifyES5() // Minify the file
             ],
             dest: '.' // Output
@@ -255,8 +253,6 @@ task("config", () =>
         ["config.min.js", {
             opts: { allowEmpty: true },
             pipes: [
-                // Only update when there is something to update
-                newer(`./config-dev.js`),
                 js({ indent_size: 4 }), // Beautify the file
                 // Rename
                 rename({
@@ -270,7 +266,7 @@ task("config", () =>
 );
 
 task("config:watch", () => 
-    _exec("gulp config server html --gulpfile ./gulpfile.min.js")
+    _exec("gulp config server html")
 );
 
 task("update", () =>
@@ -313,24 +309,29 @@ task('inline', () =>
 );
 
 // Gulp task to minify all files
-task('default', series("update", "config", parallel("server", "html", "js"), "css", "inline"));
+task('dev', series("update", "config", parallel("server", "html", "js"), "css"));
+
+// Gulp task to minify all files, and inline them in the pages
+task('default', series("dev", "inline"));
 
 // Gulp task to minify all files without -js
 task('other', series("update", "config", parallel("server", "html"), "css", "inline"));
 
 // Gulp task to check to make sure a file has changed before minify that file files
 task('watch', () => {
-    browserSync.init({
-        server: "./public"
-    });
+    watch(['server.js', 'plugin.js'], watchDelay, series('server'));
 
     watch(['config.js', 'containers/*.js'], watchDelay, series('config:watch'))
         .on('change', browserSync.reload);
-    watch(['gulpfile.js', 'postcss.config.js', 'util/*.js'], watchDelay, series('gulpfile:watch', 'server'));
-    watch(['server.js', 'plugin.js'], watchDelay, series('server'));
-    watch('views/**/*.pug', watchDelay, series('html', 'server', 'css', 'inline'))
+    watch(['gulpfile.js', 'postcss.config.js', 'util/*.js'], watchDelay, series('gulpfile:watch'))
         .on('change', browserSync.reload);
-    watch('src/**/*.scss', watchDelay, series('css', 'server', 'inline'));
-    watch('src/**/*.js', watchDelay, series('js', 'server', 'inline'))
+
+    watch('views/**/*.pug', watchDelay, series('html'))
         .on('change', browserSync.reload);
+    watch('src/**/*.scss', watchDelay, series('css'));
+    watch(['src/**/*.js', '!src/**/app.vendor.js'], watchDelay, series('js'))
+        .on('change', browserSync.reload);
+        
+    watch('src/**/app.vendor.js', watchDelay, series('js'));
+    browserSync.init({ server: "./public" });
 });
