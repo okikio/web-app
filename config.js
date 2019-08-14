@@ -1,4 +1,4 @@
-let { values, title, _tile, _tabs, src, section, row, page, padding, margin, _link, layout, layer, _img, href, hero, _hero, font, content, color, col, _class, background, alt } = require('./containers');
+let { values, title, _tile, src, section, row, page, padding, margin, _link, layout, layer, _img, href, hero, _hero, font, content, color, col, _class, background, alt } = require('./containers');
 let carImg = "/assets/white_car.webp?w=400&h=400";
 let { assign } = Object;
 

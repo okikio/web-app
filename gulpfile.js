@@ -1,6 +1,7 @@
 let { env } = process;
 if (!('dev' in env)) require('dotenv').config();
 let dev = 'dev' in env && env.dev.toString() == "true";
+let staticSite = 'staticSite' in env && env.staticSite == "true";
 
 const gulp = require('gulp');
 const { src, task, series, parallel, dest, watch } = gulp;
@@ -31,8 +32,6 @@ const sass = require('gulp-sass');
 const pug = require('gulp-pug');
 
 let { pages, cloud_name, imageURLConfig } = config;
-let staticSite = 'staticSite' in env && env.staticSite == "true";
-
 let assetURL = `https://res.cloudinary.com/${cloud_name}/`;
 assets.config({ cloud_name, secure: true });
 
@@ -121,7 +120,7 @@ task('html', () => {
                         extname: ".html"
                     }),
                     // Pug compiler
-                    pug({ locals: { ...page, cloud_name, dev } }),
+                    pug({ locals: { ...page, cloud_name, dev, staticSite } }),
                     // Minify or Beautify html
                     dev ? html({ indent_size: 4 }) : htmlmin(htmlMinOpts),
                     // Replace /assets/... URLs

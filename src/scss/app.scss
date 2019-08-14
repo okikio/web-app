@@ -76,7 +76,8 @@ $colors: (
    "dark": $dark
 );
 
-$light-font: "Varela Round", sans-serif;
+$title-font: 'Roboto Slab', sans-serif;
+$light-font: 'Montserrat', sans-serif;
 $icon-font: "Material Icons", sans-serif;
 $regular-font: "Roboto", sans-serif;
 $bold-font: 'Montserrat', sans-serif;
@@ -95,6 +96,7 @@ $size: 25px;
    }
 }
 
+@import "./components/fonts.scss";
 @import "./components/base.scss";
 @import "./components/header.scss";
 @import "./components/style.scss";

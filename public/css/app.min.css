@@ -33,6 +33,74 @@
     * font-family: 'Material Icons', sans-serif;
     * font-family: 'Roboto', sans-serif;
 */
+/* latin-ext */
+
+/* latin */
+
+/* fallback */
+
+/* cyrillic-ext */
+
+/* cyrillic */
+
+/* vietnamese */
+
+/* latin-ext */
+
+/* latin */
+
+/* cyrillic-ext */
+
+/* cyrillic */
+
+/* vietnamese */
+
+/* latin-ext */
+
+/* latin */
+
+/* cyrillic-ext */
+
+/* cyrillic */
+
+/* greek-ext */
+
+/* greek */
+
+/* vietnamese */
+
+/* latin-ext */
+
+/* latin */
+
+/* cyrillic-ext */
+
+/* cyrillic */
+
+/* greek-ext */
+
+/* greek */
+
+/* vietnamese */
+
+/* latin-ext */
+
+/* latin */
+
+/* cyrillic-ext */
+
+/* cyrillic */
+
+/* greek-ext */
+
+/* greek */
+
+/* vietnamese */
+
+/* latin-ext */
+
+/* latin */
+
 /* -- Presets & Resets -- */
 /* -- Elements -- */
 *, *:before, *:after {
@@ -199,7 +267,7 @@ li {
 }
 
 .header .navbar-link {
-  font-family: "Varela Round", sans-serif;
+  font-family: "Montserrat", sans-serif;
   text-transform: uppercase;
   letter-spacing: 1px;
   font-weight: 600;
@@ -215,10 +283,6 @@ li {
 
 /* -- Styles (only affect text) -- */
  .style-light-font {
-  font-family: Varela Round, sans-serif;
-}
-
-.style-bolder {
   font-family: Montserrat, sans-serif;
 }
 
@@ -226,20 +290,8 @@ li {
   font-family: Montserrat, sans-serif;
 }
 
-.style {
-  font-size: 14px;
-}
-
 .style-16, .style-font-16 {
   font-size: 16px;
-}
-
-.style {
-  font-weight: 400;
-}
-
-.style-bolder {
-  font-weight: 900;
 }
 
 .style-bold {
@@ -786,8 +838,9 @@ li {
 .layer-box {
   border-radius: 8px;
   min-height: 400px;
-  width: 100%;
+  max-height: 600px;
   height: auto;
+  width: 100%;
 }
 
 .layer-main {
