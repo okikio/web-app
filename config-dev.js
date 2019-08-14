@@ -14,17 +14,17 @@ module.exports = {
             "tabs": {
                 "values": [{
                     "a": {
-                        "href": "/about",
+                        "href": "/about.html",
                         "content": "ABOUT"
                     }
                 }, {
                     "a": {
-                        "href": "/projects",
+                        "href": "/projects.html",
                         "content": "PROJECTS"
                     }
                 }, {
                     "a": {
-                        "href": "/contact",
+                        "href": "/contact.html",
                         "content": "CONTACT"
                     }
                 }]
@@ -54,7 +54,7 @@ module.exports = {
                                     "content": "Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy text ever since the 1500s, when an unknown printer\n                                        took a galley of type and scrambled it to make a type specimen book. It has survived not only five centuries, but also the leap into electronic typesetting, remaining essentially unchanged.\n                                        It was popularised in the 1960s with the release of Letraset sheets\n                                        containing Lorem Ipsum passages, and more recently with desktop publishing software like Aldus PageMaker including versions of Lorem Ipsum, "
                                 }, {
                                     "a": {
-                                        "href": "/",
+                                        "href": "/index.html",
                                         "content": "home"
                                     }
                                 }]
@@ -69,17 +69,17 @@ module.exports = {
             "tabs": {
                 "values": [{
                     "a": {
-                        "href": "/about",
+                        "href": "/about.html",
                         "content": "ABOUT"
                     }
                 }, {
                     "a": {
-                        "href": "/projects",
+                        "href": "/projects.html",
                         "content": "PROJECTS"
                     }
                 }, {
                     "a": {
-                        "href": "/contact",
+                        "href": "/contact.html",
                         "content": "CONTACT"
                     }
                 }]
@@ -109,7 +109,7 @@ module.exports = {
                                     "content": "Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy text ever since the 1500s, when an unknown printer\n                                        took a galley of type and scrambled it to make a type specimen book. It has survived not only five centuries, but also the leap into electronic typesetting, remaining essentially unchanged.\n                                        It was popularised in the 1960s with the release of Letraset sheets\n                                        containing Lorem Ipsum passages, and more recently with desktop publishing software like Aldus PageMaker including versions of Lorem Ipsum, "
                                 }, {
                                     "a": {
-                                        "href": "/about",
+                                        "href": "/about.html",
                                         "content": "run"
                                     }
                                 }]

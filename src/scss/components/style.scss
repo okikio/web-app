@@ -16,6 +16,22 @@
                font-size: #{$sz}px;
             }
          }
+
+         &-larger {
+            font-size: 35px;
+         }
+   
+         &-large {
+            font-size: 18px;
+         }
+   
+         &-normal {
+            font-size: 15px;
+         }
+   
+         &-small {
+            font-size: 12px;
+         }
          
          @include propertyList(font-size, "-font", $sizes);
       }
@@ -29,6 +45,26 @@
                font-weight: #{$weight};
             }
          }
+
+         &-bolder {
+            font-weight: 900;
+         }
+   
+         &-bold {
+            font-weight: 700;
+         }
+   
+         &-regular {
+            font-weight: 600;
+         }
+   
+         &-thin {
+            font-weight: 300;
+         }
+   
+         &-thiner {
+            font-weight: 100;
+         }
       }
 
       &-italic {
@@ -37,42 +73,6 @@
 
       &-underline {
          text-decoration: underline;
-      }
-
-      &-larger {
-         font-size: 35px;
-      }
-
-      &-large {
-         font-size: 18px;
-      }
-
-      &-normal {
-         font-size: 15px;
-      }
-
-      &-small {
-         font-size: 12px;
-      }
-
-      &-bolder {
-         font-weight: 900;
-      }
-
-      &-bold {
-         font-weight: 700;
-      }
-
-      &-regular {
-         font-weight: 600;
-      }
-
-      &-thin {
-         font-weight: 300;
-      }
-
-      &-thiner {
-         font-weight: 100;
       }
    }
 
@@ -117,28 +117,32 @@
       }
    }
 
-   &-left {
-      text-align: left;
-   }
+   &, &-align {
+      &-left {
+         text-align: left;
+      }
 
-   &-center {
-      text-align: center;
-   }
+      &-center {
+         text-align: center;
+      }
 
-   &-right {
-      text-align: right;
+      &-right {
+         text-align: right;
+      }
    }
+   
+   &, &-transform {
+      &-capital {
+         text-transform: capitalize;
+      }
 
-   &-capital {
-      text-transform: capitalize;
-   }
+      &-uppercase {
+         text-transform: uppercase;
+      }
 
-   &-uppercase {
-      text-transform: uppercase;
-   }
-
-   &-lowercase {
-      text-transform: lowercase;
+      &-lowercase {
+         text-transform: lowercase;
+      }
    }
 
    @include colorList(color);

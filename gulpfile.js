@@ -320,7 +320,7 @@ task('other', series("update", "config", parallel("server", "html"), "css", "inl
 task('watch', () => {
     watch(['server.js', 'plugin.js'], watchDelay, series('server'));
 
-    watch(['config.js', 'containers/*.js'], watchDelay, series('config:watch'))
+    watch(['config.js', 'containers.js'], watchDelay, series('config:watch'))
         .on('change', browserSync.reload);
     watch(['gulpfile.js', 'postcss.config.js', 'util/*.js'], watchDelay, series('gulpfile:watch'))
         .on('change', browserSync.reload);

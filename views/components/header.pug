@@ -3,7 +3,7 @@ mixin header(tabs, title)
     nav.navbar.navbar-fixed
       article.layout-contain.navbar-layout
         section.navbar-header
-          a(href="/").style-16.style-bold.style-letter-spacing-small.layout-padding-horz-small.layout-padding-left JOSEPH!
+          a(href=("/" + (dev && staticSite ? "index.html" : "") )).style-16.style-bold.style-letter-spacing-small.layout-padding-horz-small.layout-padding-left JOSEPH!
         section.layout-spacer
         section.navbar-main
           ul.navbar-list

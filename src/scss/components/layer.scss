@@ -82,7 +82,7 @@
       
       @media (max-width: 500px) {
          .layer-title {
-            font-size: 10vmax;
+            font-size: 6vmax;
          }
          
          .layer-image img {
@@ -92,13 +92,13 @@
       
       @media (min-width: 700px) {
          .layer-title {
-            font-size: 18vmax;
+            font-size: 12vmax;
          }
       }
       
       @media (min-width: 1000px) {
          .layer-title {
-            font-size: 155px;
+            font-size: 105px;
          }
       }
    }

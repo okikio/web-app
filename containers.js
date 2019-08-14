@@ -1,3 +1,8 @@
+let { env } = process;
+if (!('dev' in env)) require('dotenv').config();
+let dev = 'dev' in env && env.dev.toString() == "true";
+let staticSite = 'staticSite' in env && env.staticSite == "true";
+
 let pick = require('./util/pick');
 let { isArray } = Array;
 let { assign } = Object;
@@ -53,7 +58,7 @@ let section = component("section"); // The section component
 
 // -- Shortform Components --
 let _link = (_content, _href) => link([
-    href(_href), content(_content)
+    href(_href == "/" ? "/index.html" : _href + (dev && staticSite ? ".html" : "")), content(_content)
 ]);
 
 let _tabs = (...args) => tabs([

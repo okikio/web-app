@@ -54,6 +54,17 @@ $mid: #ccc;
 $mid-dark: #bbb;
 $dark: #222;
 
+$title-font: 'Bungee Inline', sans-serif;
+$light-font: 'Montserrat', sans-serif;
+$icon-font: "Material Icons", sans-serif;
+$regular-font: "Roboto", sans-serif;
+$bold-font: 'Montserrat', sans-serif;
+
+$size-large: 50px;
+$size-small: 15px;
+$size-mid: 20px;
+$size: 25px;
+
 // --google-blue: #3367d6
 $colors: (
     "primary": $primary,
@@ -75,17 +86,6 @@ $colors: (
     "mid-dark": $mid-dark,
     "dark": $dark
 );
-
-$title-font: 'Roboto Slab', sans-serif;
-$light-font: 'Montserrat', sans-serif;
-$icon-font: "Material Icons", sans-serif;
-$regular-font: "Roboto", sans-serif;
-$bold-font: 'Montserrat', sans-serif;
-
-$size-large: 50px;
-$size-small: 15px;
-$size-mid: 20px;
-$size: 25px;
 
 $fonts: (
     "title": $title-font,
@@ -112,7 +112,7 @@ $sizes: (
 }
 
 @mixin colorList($property) {
-    @include propertyList($property, "-color", $colors);
+    @include propertyList($property, "color", $colors);
 }
 
 @import "./components/base.scss";
