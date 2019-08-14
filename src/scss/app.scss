@@ -38,7 +38,7 @@
 // Variables
 $primary: #4500ff;
 $primary-dark: #2d22ca;
-$secondary: #ff0266; 
+$secondary: #ff0266;
 $secondary-dark: #0ccc00;
 $tertiary: #ffde03;
 $tertiary-dark: #ffde03;
@@ -56,24 +56,24 @@ $dark: #222;
 
 // --google-blue: #3367d6
 $colors: (
-   "primary": $primary,
-   "primary-dark": $primary-dark,
-   "secondary": $secondary,
-   "secondary-dark": $secondary-dark,
-   "tertiary": $tertiary,
-   "tertiary-dark": $tertiary-dark,
-   "background": $background,
-   "surface": $surface,
-   "transparent": transparent,
+    "primary": $primary,
+    "primary-dark": $primary-dark,
+    "secondary": $secondary,
+    "secondary-dark": $secondary-dark,
+    "tertiary": $tertiary,
+    "tertiary-dark": $tertiary-dark,
+    "background": $background,
+    "surface": $surface,
+    "transparent": transparent,
 
-   "white": $white,
-   "black": $black,
+    "white": $white,
+    "black": $black,
 
-   "light": $light,
-   "mid-light": $mid-light,
-   "mid": $mid,
-   "mid-dark": $mid-dark,
-   "dark": $dark
+    "light": $light,
+    "mid-light": $mid-light,
+    "mid": $mid,
+    "mid-dark": $mid-dark,
+    "dark": $dark
 );
 
 $title-font: 'Roboto Slab', sans-serif;
@@ -83,17 +83,36 @@ $regular-font: "Roboto", sans-serif;
 $bold-font: 'Montserrat', sans-serif;
 
 $size-large: 50px;
-$size-small: 15px; 
-$size-mid: 20px; 
-$size: 25px; 
+$size-small: 15px;
+$size-mid: 20px;
+$size: 25px;
+
+$fonts: (
+    "title-font": $title-font,
+    "light-font": $light-font,
+    "icon-font": $icon-font,
+    "regular-font": $regular-font,
+    "bold-font": $bold-font
+);
+
+$sizes: (
+    "large": $size-large,
+    "small": $size-small,
+    "default": $size,
+    "mid": $size-mid
+);
+
+@mixin propertyList($property, $prefix, $list) {
+    @each $name, $value in $list {
+        &-#{$name},
+        &-#{$prefix}-#{$name} {
+            #{$property}: $value;
+        }
+    }
+}
 
 @mixin colorList($property) {
-   @each $colorName, $value in $colors {
-      &-#{$colorName},
-      &-color-#{$colorName} {
-         #{$property}: $value;
-      }
-   }
+    @include propertyList($property, "-color", $colors);
 }
 
 @import "./components/base.scss";

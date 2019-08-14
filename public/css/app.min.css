@@ -501,11 +501,8 @@ li {
 }
 
 /* -- Styles (only affect text) -- */
- .style-light-font {
-  font-family: Montserrat, sans-serif;
-}
 
-.style-bold {
+.style-light-font {
   font-family: Montserrat, sans-serif;
 }
 
@@ -531,10 +528,6 @@ li {
 
 .style-center {
   text-align: center;
-}
-
- .style-color-primary {
-  color: #4500ff;
 }
 
 .style-primary-dark {

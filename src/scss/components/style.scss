@@ -2,28 +2,22 @@
 .style {
    $styleParent: &;
    &, &-font {
-      $fontFamily: (
-         "light": $light-font,
-         "regular": $regular-font,
-         "bolder": $bold-font,
-         "bold": $bold-font
-      );
-
-      @each $name, $family in $fontFamily {
+      @each $name, $family in $fonts {
          &-#{$name}, &-#{$name}-font {
             font-family: #{$family};
          }
       }
 
-      &, &-sz {
+      &, &-sz, &-size {
          font-size: 14px;
-
-         $fontSz: (12, 13, 15, 16, 18, 20, 22, 25);
-         @each $sz in $fontSz {
+         
+         @for $sz from 8 through 150 {
             &-#{$sz} {
                font-size: #{$sz}px;
             }
          }
+         
+         @include propertyList(font-size, "-font", $sizes);
       }
 
       &, &-weight {
