@@ -1,6 +1,34 @@
+include ./components/content.pug
+
 mixin _header(_section)
   - _section = _section || { class: "style-primary-dark style-center" };
   section.layer-header
     h4.style-bold(class=_section.class)= _section.title
+
+mixin _main(_section)
+  - _section = _section || { class: "style-primary-dark style-center" };
+  section.layer-main
+    h4.style-bold(class=_section.class)= _section.title
+
+mixin _footer(_section)
+  - _section = _section || { class: "style-primary-dark style-center" };
+  section.layer-footer
+    h4.style-bold(class=_section.class)= _section.title
+
+mixin section(_section)
+  - let type = _section.type;
+
+  case type
+    when "header"
+      +_header(_section)
+    when "main"
+      +_main(_section)
+    when "footer"
+      +_footer(_section)
+    default
+      +content(_section)
+
+
+
 
 
