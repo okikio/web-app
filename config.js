@@ -1,4 +1,4 @@
-let { _tile, _col, _style, _layer, _layout, _header, _main, values, title, row, page, padding, margin, _link, layout, layer, _img, _hero, font, _content, color, col, _class } = require('./containers');
+let { background, _tile, _col, _style, _layer, _layout, _header, _main, values, title, row, page, padding, margin, _link, layout, layer, _img, _hero, font, _content, color, col, _class } = require('./containers');
 let carImg = "/assets/white_car.webp?w=400&h=400";
 
 let indent = _content(" ", [
@@ -205,6 +205,49 @@ module.exports = {
                 ]),
                 // End Breakthrough Layer
 
+                // Banner layer
+                layer([
+                    values([
+                        layout([
+                            _class(
+                                _layout("contain-large"),
+                                padding("horz", "large"),
+                                background("primary"),
+                                _layout("vert")
+                            ),
+                            values([
+                                _header([
+                                    title(""),
+                                    _class([ _style("bold-font"), _style("500"), "h2", color("white") ]),
+                                    values([
+                                        `Got your attention.`, ` `,
+                                        _content(`Good!`, [ color("tertiary") ])
+                                    ])
+                                ])
+                            ])
+                        ]),
+                    
+                        layout([
+                            _class([
+                                _layout("contain-large"),
+                                _layout("enlarge-vert"),
+                                padding("horz")
+                            ]),
+                            values([
+                                _header([
+                                    title(""),
+                                    _class([ _style("bold-font"), _style("500"), "h2" ]),
+                                    values([
+                                        `Got your attention.`, ` `,
+                                        _content(`Good!`, [ color("primary") ])
+                                    ])
+                                ])
+                            ])
+                        ])
+                    ])
+                ]),
+                // End Banner Layer
+                
                 // Image Column layer
                 layer([
                     layout([

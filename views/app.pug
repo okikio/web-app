@@ -49,6 +49,7 @@ html(lang="en")
 
           if typeof layer == "object"
             - let layout = layer.layout;
+            - let layoutList = layer.values;
             +layer(layer)
 
               if typeof layout == "object"
@@ -61,6 +62,21 @@ html(lang="en")
 
                       if typeof section == "object"
                         +section(section)
+
+              if Array.isArray(layoutList)
+                  each layouts in layoutList
+                    - let layout = layer.layout;
+
+                    if typeof layout == "object"
+                      - let sectionList = layout.values;
+                      +layout(layout)
+                        
+                        if Array.isArray(sectionList)
+                          each sections in sectionList
+                            - let section = sections.section;
+
+                            if typeof section == "object"
+                              +section(section)
 
     +footer("2019 Okiki Ojo")
     script(src=`${dev ? './js/app.modern.min.js' : './js/app.vendor.min.js'}` inline defer)

@@ -71,6 +71,7 @@ body {
 }
 
 h1,
+h2,
 h3,
 h4 {
   font-family: inherit;
@@ -83,21 +84,56 @@ h4 {
 h1,
 .h1 {
   margin: 2.1rem 0 1.68rem 0;
-  font-size: 4.2rem;
   font-weight: 900;
+}
+
+h2,
+.h2 {
+  margin: 1.78rem 0 1.424rem 0;
+  font-weight: 700;
 }
 
 h3,
 .h3 {
   margin: 1.46rem 0 1.168rem 0;
-  font-size: 2.92rem;
   font-weight: 600;
 }
 
 h4,
 .h4 {
   margin: 1.14rem 0 0.912rem 0;
+}
+
+h1 {
+  font-size: 4.2rem;
+}
+
+.h1 {
+  font-size: 4.2rem !important;
+}
+
+h2 {
+  font-size: 3.56rem;
+}
+
+.h2 {
+  font-size: 3.56rem !important;
+}
+
+h3 {
+  font-size: 2.92rem;
+}
+
+.h3 {
+  font-size: 2.92rem !important;
+}
+
+h4 {
   font-size: 2.28rem;
+}
+
+.h4 {
+  font-size: 2.28rem !important;
 }
 
 img,
@@ -513,12 +549,16 @@ li {
   font-family: Bungee Inline, sans-serif;
 }
 
-.style-bold {
+.style-bold, .style-bold-font {
   font-family: Montserrat, sans-serif;
 }
 
  .style-font-16 {
   font-size: 16px;
+}
+
+.style-500 {
+  font-weight: 500;
 }
 
 .style-bold, .style-font-weight-bold {
@@ -553,7 +593,7 @@ li {
   color: #ff0266;
 }
 
-.style-white {
+.style-white, .style-color-white {
   color: #fff;
 }
 

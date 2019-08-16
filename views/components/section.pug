@@ -2,11 +2,15 @@ include ./content.pug
 
 mixin _header(value)
   - let _value = Object.assign({ class: "style-primary-dark" }, value);
-  - let _title = _value.title || _value.content || "title";
+  - let _title = _value.title || _value.content || "";
+  - let _values = _value.values;
   - let _class = _value.class;
   
   section.layer-header.style-center
     h4.style-bold(class=_class)= _title
+      if Array.isArray(_values)
+        each _value in _values
+          +content(_value)
 
 
 mixin _main(section)
@@ -23,11 +27,15 @@ mixin _main(section)
 
 mixin _footer(value)
   - let _value = Object.assign({ class: "style-center" }, section);
-  - let _title = _value.title || _value.content || "title";
+  - let _title = _value.title || _value.content || "";
+  - let _values = _value.values;
   - let _class = _value.class;
 
   section.layer-footer
     span.style-bold(class=_class)= _title
+      if Array.isArray(_values)
+        each _value in _values
+          +content(_value)
 
 
 mixin section(_section)
