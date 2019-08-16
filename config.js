@@ -22,6 +22,30 @@ module.exports = {
         "dpr": "auto"
     },
     "pages": {
+        "error": page([
+            title("Ooops!"),
+            values([
+                // Intro layer
+                layer([
+                    _class( padding("horz", "large-top") ),
+                    layout([
+                        _class("layout-shorten"),
+                        values([
+                            _header(title("404, Page Not Found.")),
+                            _main([
+                                _class( _style("center") ),
+                                values([
+                                    indent,
+                                    `Sorry, the page you are looking for doesn't exist. How about going back `,
+                                    _link("home", "/"), "."
+                                ])
+                            ])
+                        ])
+                    ])
+                ])
+                // End Intro Layer
+            ])
+        ]),
         "about": page([
             title("The Sub Page"),
             values([
@@ -238,8 +262,7 @@ module.exports = {
     },
     "routes": {
         "/": "index",
-        "/about": "about",
-        "/run": "run"
+        "/about": "about"
     },
     "social_links": [
         {

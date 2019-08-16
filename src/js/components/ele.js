@@ -335,7 +335,7 @@ Ele = _class(_event, arrProto, {
             height: Math.round(obj.height)
         }
     },
-    css (...args) {
+    style (...args) {
         let [prop, val] = args, css = '', key;
         if (args.length < 2) {
             let el = this.get(0);
