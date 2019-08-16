@@ -20,11 +20,10 @@ const replace = require('gulp-string-replace');
 const { html, js } = require('gulp-beautify');
 const rollup = require('gulp-better-rollup');
 const { spawn } = require('child_process');
-const uglifyES5 = require("gulp-uglify");
 const htmlmin = require('gulp-htmlmin');
 const assets = require("cloudinary").v2;
 const postcss = require('gulp-postcss');
-const minify = require('gulp-minify');
+const terser = require('gulp-terser');
 const rename = require('gulp-rename');
 const { writeFile } = require("fs");
 const config = require('./config');
@@ -35,7 +34,13 @@ let { pages, cloud_name, imageURLConfig } = config;
 let assetURL = `https://res.cloudinary.com/${cloud_name}/`;
 assets.config({ cloud_name, secure: true });
 
-let srcMapsWrite;
+let srcMapsWrite = [".", dev ? null : {
+    sourceMappingURL: file => {
+        let _path = file.path.replace(__dirname, "").replace("\\src", "");
+        return `${_path.replace(/\\/g, "/")}.map`;
+    }
+}];
+
 let htmlMinOpts = {
     minifyJS: true,
     minifyCSS: true,
@@ -46,15 +51,11 @@ let htmlMinOpts = {
     processScripts: ["application/ld+json"]
 };
 
-let minifyOpts = { 
-    noSource: true, 
-    mangle: { toplevel: true },
-    ext: { min: ".min.js" } 
-};
-
+let minifyOpts = { toplevel: true };
 let minSuffix = { suffix: ".min" };
 let watchDelay = { delay: 500 };
 let publicDest = 'public';
+let { assign } = Object;
 
 // Streamline Gulp Tasks
 let stream = (_src, _opt = { }, done) => {
@@ -154,7 +155,7 @@ task("css", () =>
             // Autoprefix &  Remove unused CSS
             postcss(), // Rest of code is in postcss.config.js
             rename(minSuffix), // Rename
-            write(srcMapsWrite) // Put sourcemap in public folder
+            write(...srcMapsWrite) // Put sourcemap in public folder
         ],
         dest: `${publicDest}/css`, // Output
         end: [browserSync.stream()]
@@ -180,15 +181,18 @@ task("js", () =>
                                 rollupJSON(), // Parse JSON Exports
                                 rollupBabel(babelConfig[type]) // Babelify file for uglifing
                             ] 
-                        }, type == 'general' ? 'umd' : 'es'),
-                        gen ? uglifyES5() : minify(minifyOpts), // Minify the file
-                        gen ? rename(`app${suffix}.min.js`) : null, // Rename
-                        write(srcMapsWrite) // Put sourcemap in public folder
+                        }, gen ? 'umd' : 'es'),
+                        // Minify the file
+                        terser( 
+                            assign(minifyOpts, gen ? { ie8: true, ecma: 5 } : {})
+                        ),
+                        rename(`app${suffix}.min.js`), // Rename
+                        write(...srcMapsWrite) // Put sourcemap in public folder
                     ],
                     dest: `${publicDest}/js` // Output
                 }];
             }),
-            dev ? null : ['src/js/app.vendor.js', {
+            dev && staticSite ? null : ['src/js/app.vendor.js', {
             opts: { allowEmpty: true },
             pipes: [
                 init(), // Sourcemaps init
@@ -202,8 +206,10 @@ task("js", () =>
                         rollupBabel(babelConfig.node) // ES5 file for uglifing
                     ] 
                 }, 'umd'),
-                minify(minifyOpts), // Minify the file
-                write(srcMapsWrite) // Put sourcemap in public folder
+                // Minify the file
+                terser({ ...minifyOpts, ie8: true, ecma: 5 }), 
+                rename(minSuffix), // Rename
+                write(...srcMapsWrite) // Put sourcemap in public folder
             ],
             dest: `${publicDest}/js` // Output
         }]
@@ -223,7 +229,8 @@ task("server", () =>
                         rollupBabel(babelConfig.node) // Babelify file for minifing
                     ] 
                 }, 'cjs'),
-                minify(minifyOpts) // Minify the file
+                terser({ ...minifyOpts, ecma: 7 }), // Minify the file
+                rename(minSuffix) // Rename
             ],
             dest: '.' // Output
         }]
@@ -245,7 +252,8 @@ task("config", () =>
         ["config.min.js", {
             opts: { allowEmpty: true },
             pipes: [
-                uglifyES5() // Minify the file
+                // Minify the file
+                terser({ ...minifyOpts, ie8: true, ecma: 5 }), 
             ],
             dest: '.' // Output
         }],
@@ -280,7 +288,8 @@ task("update", () =>
                     rollupBabel(babelConfig.node) // Babelify file for minifing
                 ] 
             }, 'cjs'),
-            minify(minifyOpts) // Minify the file
+            terser({ ...minifyOpts, ecma: 7 }), // Minify the file
+            rename(minSuffix) // Rename
         ],
         dest: '.' // Output
     })
