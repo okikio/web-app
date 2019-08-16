@@ -6,12 +6,14 @@
   "scripts": {
     "test": "npm run build",
     "watch": "gulp watch",
-    "build:dev": "gulp",
+    "build:dev": "gulp dev",
+    "gulp:build": "gulp",
     "build": "gulp --gulpfile ./gulpfile.min.js",
     "start": "pm2 start ecosystem.config.js --env production",
     "logs": "pm2 logs fastify-app",
     "stop": "pm2 stop all",
-    "pm2-start": "pm2 start ./server.min.js",
+    "restart": "pm2 restart all",
+    "pm2-start": "pm2 start server.min.js",
     "dev": "nodemon ./server"
   },
   "engines": {
@@ -62,7 +64,7 @@
     "animejs": "^3.1.0",
     "autoprefixer": "^9.6.1",
     "browser-sync": "^2.26.7",
-    "core-js": "^3.2.0",
+    "core-js": "^3.2.1",
     "eslint": "^6.1.0",
     "fast-stringify": "^2.0.0",
     "gulp": "^4.0.2",

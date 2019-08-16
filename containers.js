@@ -108,7 +108,8 @@ let section = component("section"); // The section component
 
 // -- Shortform Components --
 let _link = (_content, _href) => link([
-    href(_href + (dev && staticSite ? ".html" : (_href == "/" ? "index.html" : ""))), content(_content)
+    href(_href + (dev && staticSite ? (_href == "/" ? "index.html" : ".html") : "")), 
+    content(_content)
 ]);
 
 // Allows a user to set specific types of sections (eg. header, main, footer, etc...)

@@ -16,7 +16,6 @@ mixin link(value)
   - let _class = _value.class;
   - let _href = _value.href;
   
-  - _href = _href == "/" && dev && staticSite ? "/index.html" : _href;
   a(href=_href class=_class)= _content
     block
 

@@ -35,7 +35,7 @@ let { pages, cloud_name, imageURLConfig } = config;
 let assetURL = `https://res.cloudinary.com/${cloud_name}/`;
 assets.config({ cloud_name, secure: true });
 
-let srcMapsWrite = '../maps';
+let srcMapsWrite;
 let htmlMinOpts = {
     minifyJS: true,
     minifyCSS: true,
@@ -249,7 +249,7 @@ task("config", () =>
             ],
             dest: '.' // Output
         }],
-        ["config.min.js", {
+        dev ? ["config.min.js", {
             opts: { allowEmpty: true },
             pipes: [
                 js({ indent_size: 4 }), // Beautify the file
@@ -260,7 +260,7 @@ task("config", () =>
                 })
             ],
             dest: '.' // Output
-        }]
+        }] : null
     )
 );
 

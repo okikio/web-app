@@ -14,7 +14,7 @@ let babelConfig = {
         "presets": [
             ["@babel/preset-env", {
                 "useBuiltIns": "usage",
-                "corejs": "3.2.0",
+                "corejs": "3.2.1",
                 "targets": {
                     "browsers": browserlist[type]
                 }

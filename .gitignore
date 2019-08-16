@@ -89,6 +89,8 @@ test/types/index.js
 /node_modules
 npm-debug.log
 .DS_Store
+/public
+config-dev.js
 /*.env
 push-git*
 .cache
