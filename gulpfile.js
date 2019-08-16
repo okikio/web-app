@@ -272,7 +272,7 @@ task("config", () =>
 );
 
 task("config:watch", () => 
-    _exec("gulp config server html")
+    _exec("gulp config html css")
 );
 
 task("update", () =>
@@ -316,10 +316,10 @@ task('inline', () =>
 );
 
 // Gulp task to minify all files
-task('dev', series("update", "config", parallel("server", "html", "js"), "css"));
+task('dev', series("config", parallel("server", "html", "js"), "css"));
 
 // Gulp task to minify all files, and inline them in the pages
-task('default', series("dev", "inline"));
+task('default', series("update", "dev", "inline"));
 
 // Gulp task to minify all files without -js
 task('other', series("update", "config", parallel("server", "html"), "css", "inline"));
@@ -330,10 +330,10 @@ task('watch', () => {
 
     watch(['config.js', 'containers.js'], watchDelay, series('config:watch'))
         .on('change', browserSync.reload);
-    watch(['gulpfile.js', 'postcss.config.js', 'util/*.js'], watchDelay, series('gulpfile:watch'))
+    watch(['gulpfile.js', 'postcss.config.js', 'util/*.js'], watchDelay, series('gulpfile:watch', 'css', 'js'))
         .on('change', browserSync.reload);
 
-    watch('views/**/*.pug', watchDelay, series('html'))
+    watch('views/**/*.pug', watchDelay, series('html', 'css'))
         .on('change', browserSync.reload);
     watch('src/**/*.scss', watchDelay, series('css'));
     watch(['src/**/*.js', '!src/**/app.vendor.js'], watchDelay, series('js'))

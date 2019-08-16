@@ -1,7 +1,7 @@
 mixin layout(value)
-  - let _value = value || { class: "" };
+  - let _value = Object.assign({ class: "layout-contain" }, value);
   - let _class = _value.class;
 
-  article.layout-contain(class=_class)
+  article(class=_class)
     block
 

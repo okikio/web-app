@@ -136,8 +136,8 @@ let _hero = (...args) => {
 };
 
 let _tile = (...args) => {
-    let [$title, $img, $content, ...$args] = anyArgs(args);
-    return tile([ title($title), _img($img), content($content), ...anyArgs($args) ]);
+    let [$title, $content, ...$args] = anyArgs(args);
+    return tile([ title($title), content($content), ...anyArgs($args) ]);
 };
 
 let _content = (...args) => {

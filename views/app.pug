@@ -14,13 +14,13 @@ html(lang="en")
     link(rel="preload" href="https://fonts.gstatic.com/s/bungeeinline/v5/Gg8zN58UcgnlCweMrih332VuPGV_-Q.woff2" as="font" type="font/woff2")
     link(rel="preload" href="https://fonts.gstatic.com/s/montserrat/v14/JTURjIg1_i6t8kCHKm45_dJE3gnD_g.woff2" as="font" type="font/woff2")
     link(rel="preload" href="https://fonts.gstatic.com/s/montserrat/v14/JTURjIg1_i6t8kCHKm45_c5H3gnD_g.woff2" as="font" type="font/woff2")
-    link(rel="preload" href="https://fonts.gstatic.com/s/robotoslab/v9/BngRUXZYTXPIvIBgJJSb6u9mxLCGwR0.woff2" as="font" type="font/woff2")
+    link(rel="preload" href="https://fonts.gstatic.com/s/varelaround/v12/w8gdH283Tvk__Lua32TysjIfp8uP.woff2" as="font" type="font/woff2")
     link(rel="preload" href="https://fonts.gstatic.com/s/roboto/v20/KFOmCnqEu92Fr1Mu4mxK.woff2" as="font" type="font/woff2")
     link(rel='stylesheet' href='./css/app.min.css' inline async)
 
     //- link(rel='preconnect' href='https://polyfill.io/v3/')
     //- link(rel='dns-prefetch' href='https://fonts.googleapis.com')
-    //- link(rel='stylesheet' async href='https://fonts.googleapis.com/css?family=Bungee+Inline|Roboto+Slab:300|Montserrat:700,800|Roboto:400,600|Material+Icons&display=swap')
+    //- link(rel='stylesheet' async href='https://fonts.googleapis.com/css?family=Bungee+Inline|Varela+Round:400|Montserrat:700,800|Roboto:400,600|Material+Icons&display=swap')
 
     title= page.title
 
@@ -34,9 +34,25 @@ html(lang="en")
     //- Navbar etc...
     +header(page)
 
+    mixin sectionView(section)
+      if typeof section == "object"
+        +section(section)
+
+    mixin layoutView(layout)
+      if typeof layout == "object"
+        - let sectionList = layout.values;
+        - let section = layout.section;
+        +layout(layout)
+          +sectionView(section)
+
+          if Array.isArray(sectionList)
+            each sections in sectionList
+              - let section = sections.section;
+                +sectionView(section)
+
     .header-top-spot
     main.main#swup.transition-fade
-      - let layerLists = page.values || [];
+      - let layerLists = page.values;
 
       //- Page Layers
       if Array.isArray(layerLists)
@@ -51,32 +67,14 @@ html(lang="en")
             - let layout = layer.layout;
             - let layoutList = layer.values;
             +layer(layer)
-
-              if typeof layout == "object"
-                - let sectionList = layout.values;
-                +layout(layout)
-                  
-                  if Array.isArray(sectionList)
-                    each sections in sectionList
-                      - let section = sections.section;
-
-                      if typeof section == "object"
-                        +section(section)
+              +layoutView(layout)
 
               if Array.isArray(layoutList)
-                  each layouts in layoutList
-                    - let layout = layer.layout;
+                each layouts in layoutList
+                  - let layout = layouts.layout;
+                  +layoutView(layout)
 
-                    if typeof layout == "object"
-                      - let sectionList = layout.values;
-                      +layout(layout)
-                        
-                        if Array.isArray(sectionList)
-                          each sections in sectionList
-                            - let section = sections.section;
+    if !page.noFooter
+      +footer("2019 Okiki Ojo")
 
-                            if typeof section == "object"
-                              +section(section)
-
-    +footer("2019 Okiki Ojo")
     script(src=`${dev ? './js/app.modern.min.js' : './js/app.vendor.min.js'}` inline defer)

@@ -95,6 +95,12 @@
       &-large {
          letter-spacing: 7px;
       }
+
+      @for $space from 0 to 150 {
+         &-#{$space} {
+            letter-spacing: #{$space}px;
+         }
+      }
    }
 
    &-line-height {
@@ -114,6 +120,12 @@
 
       &-large {
          line-height: 3em;
+      }
+         
+      @for $height from 8 through 150 {
+         &-#{$height} {
+            line-height: #{$height}px;
+         }
       }
    }
 

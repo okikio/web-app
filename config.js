@@ -1,5 +1,15 @@
-let { background, _tile, _col, _style, _layer, _layout, _header, _main, values, title, row, page, padding, margin, _link, layout, layer, _img, _hero, font, _content, color, col, _class } = require('./containers');
+let { attr, section, _img, background, _tile, _col, _style, _layer, _layout, _header, _main, values, title, row, page, padding, margin, _link, layout, layer, _hero, font, _content, color, col, _class } = require('./containers');
 let carImg = "/assets/white_car.webp?w=400&h=400";
+let noFooter = attr("noFooter", true);
+let newFooter = (value = "2019 Okiki Ojo") => layer([
+    _class([ "footer" ]),
+    layout([
+        section([
+            _class([ padding(), _style("center", "spaceout-small"), font("weight-bold", "title") ]),
+            values([ value ]),
+        ])
+    ])
+]);
 
 let indent = _content(" ", [
     padding("top"), margin("left-large"),
@@ -7,7 +17,7 @@ let indent = _content(" ", [
 ]);
 
 let spacingColumns = size => col([
-    _class( _layout("block"), _col(size.toString()) )
+    _class([ _layout("block"), _col(size.toString()) ])
 ]);
 
 module.exports = {
@@ -27,13 +37,13 @@ module.exports = {
             values([
                 // Intro layer
                 layer([
-                    _class( padding("horz", "large-top") ),
+                    _class([ padding("horz", "large-top") ]),
                     layout([
-                        _class("layout-shorten"),
+                        _class([ _layout("shorten", "contain") ]),
                         values([
                             _header(title("404, Page Not Found.")),
                             _main([
-                                _class( _style("center") ),
+                                _class([ _style("center") ]),
                                 values([
                                     indent,
                                     `Sorry, the page you are looking for doesn't exist. How about going back `,
@@ -42,9 +52,13 @@ module.exports = {
                             ])
                         ])
                     ])
-                ])
+                ]),
                 // End Intro Layer
-            ])
+
+                // Footer
+                newFooter()
+            ]),
+            noFooter()
         ]),
         "about": page([
             title("The Sub Page"),
@@ -55,9 +69,9 @@ module.exports = {
 
                 // Intro layer
                 layer([
-                    _class( padding("horz", "large-top") ),
+                    _class([ padding("horz", "large-top") ]),
                     layout([
-                        _class("layout-shorten"),
+                        _class([ _layout("shorten", "contain") ]),
                         values([
                             _header(title("Lorem itpsuim")),
                             _main([
@@ -72,22 +86,26 @@ module.exports = {
                             ])
                         ])
                     ])
-                ])
+                ]),
                 // End Intro Layer
-            ])
+
+                // Footer
+                newFooter()
+            ]),
+            noFooter()
         ]),
         "index": page([
             title("Hello There"),
             values([
-                // Hero Layer
+                // Hero layer
                 _hero([ "Relax.", [carImg, "A city Image"] ]),
-                // End Hero Layer
+                // End Hero layer
 
                 // Intro layer
                 layer([
-                    _class( padding("horz", "large-top") ),
+                    _class([ padding("horz", "large-top") ]),
                     layout([
-                        _class("layout-shorten"),
+                        _class([ _layout("shorten", "contain") ]),
                         values([
                             _header(title("Lorem itpsuim")),
                             _main([
@@ -103,56 +121,55 @@ module.exports = {
                         ])
                     ])
                 ]),
-                // End Intro Layer
+                // End Intro layer
 
                 // Listings layer
                 layer([
-                    _class( padding("horz", "large-top") ),
                     layout([
-                        _class( _layout("shorten") ),
-                        values([
-                            _header(title("Listings")),
-                            _main([
-                                _class(
-                                    padding("top"),
-                                    _style("line-height-double")
-                                ),
-                                values([
-                                    row([
-                                        values([
-                                            col([
-                                                _class( _col("2"), padding("bottom-small") ),
-                                                values([
-                                                    _content(`03/03`, [ _style("bold"), font("16") ])
-                                                ])
-                                            ]),
-                                            
-                                            col([
-                                                _class( _col("3"), padding("bottom") ),
-                                                values([
-                                                    _content(`2018`, [
-                                                        _style("line-height-double"), _style("bold"),
-                                                        _layout("block"), font("16")
-                                                    ]),
-                                                    _content(`E-commerse`, [
-                                                        _style("line-height-double"),
-                                                        _layout("block"),
-                                                        font("16")
-                                                    ]),
-                                                    _content(`Design Executive`, [
-                                                        _style("line-height-double"),
-                                                        _layout("block"), font("16")
+                        _class([ padding("horz", "large-top") ]),
+                        section([
+                            _class([ _layout("shorten", "contain") ]),
+                            values([
+                                _header(title("Listings")),
+                                _main([
+                                    _class([ padding("top"), _style("line-height-double") ]),
+                                    values([
+                                        row([
+                                            values([
+                                                col([
+                                                    _class([ _col("2"), padding("bottom-small") ]),
+                                                    values([
+                                                        _content(`03/03`, [ _style("bold"), font("16") ])
                                                     ])
-                                                ])
-                                            ]),
+                                                ]),
+                                                
+                                                col([
+                                                    _class([ _col("3"), padding("bottom") ]),
+                                                    values([
+                                                        _content(`2018`, [
+                                                            _style("line-height-double", "bold"),
+                                                            _layout("block"), font("16")
+                                                        ]),
+                                                        _content(`E-commerse`, [
+                                                            _style("line-height-double"),
+                                                            _layout("block"),
+                                                            font("16")
+                                                        ]),
+                                                        _content(`Design Executive`, [
+                                                            _style("line-height-double"),
+                                                            _layout("block"), font("16")
+                                                        ])
+                                                    ])
+                                                ]),
 
-                                            col([
-                                                _class( _col("7") ),
-                                                values([
-                                                    _content(`Lorem Ipsum is simply dummy text of the printing and typesetting industry.
-                                                    Lorem Ipsum has been the industry's standard dummy text ever since the 1500s, when an
-                                                    unknown printer took a galley of type and scrambled it to make a type specimen book.`, 
-                                                    [ _style("line-height-double"), font("16") ])
+                                                col([
+                                                    _class([ _col("7") ]),
+                                                    values([
+                                                        _content(`Lorem Ipsum is simply dummy text of the printing and typesetting industry.
+                                                        Lorem Ipsum has been the industry's standard dummy text ever since the 1500s, when an
+                                                        unknown printer took a galley of type and scrambled it to make a type specimen book.`, 
+                                                        [ _style("line-height-double"), font("16") ])
+                                                    ])
                                                 ])
                                             ])
                                         ])
@@ -162,26 +179,104 @@ module.exports = {
                         ])
                     ])
                 ]),
-                // End Listings Layer
+                // End Listings layer
+
+                // Banner layer 1
+                layer([
+                    layout([
+                        _class([
+                            padding("horz", "vert-large"),
+                            _layout("contain-large")
+                        ]),
+                        values([
+                            _header([
+                                title(""),
+                                _class([ _layout("vert"), _style("bold-font", "500"), "h2" ]),
+                                values([
+                                    `Got your attention.`, ` `,
+                                    _content(`Good!`, [ color("primary") ])
+                                ])
+                            ])
+                        ])
+                    ])
+                ]),
+                // End Banner layer 1
+
+                // Banner layer 2
+                layer([
+                    _class([ background("primary") ]),
+                    layout([
+                        _class([ _layout("contain-large", "enlarge-vert") ]),
+                        values([
+                            _header([
+                                title(""),
+                                _class([ _layout("vert"), _style("bold-font", "500"), "h2", color("white") ]),
+                                values([
+                                    `Got your attention.`, ` `,
+                                    _content(`Good!`, [ color("tertiary") ])
+                                ])
+                            ])
+                        ])
+                    ])
+                ]),
+                // End Banner layer 2
+
+                // Banner layer 3
+                layer([
+                    _class([ background("secondary") ]),
+                    layout([
+                        _class([ _layout("contain-large", "enlarge-vert") ]),
+                        values([
+                            _header([
+                                title(""),
+                                _class([ _layout("vert"), _style("bold-font", "500"), "h2", color("white") ]),
+                                values([
+                                    `Got your attention.`, ` `,
+                                    _content(`Good!`, [ color("tertiary") ])
+                                ])
+                            ])
+                        ])
+                    ])
+                ]),
+                // End Banner layer 3
+
+                // Banner layer 4
+                layer([
+                    _class([ background("tertiary") ]),
+                    layout([
+                        _class([ _layout("contain-large", "enlarge-vert") ]),
+                        values([
+                            _header([
+                                title(""),
+                                _class([ _layout("vert"), _style("bold-font", "500"), "h2", color("dark") ]),
+                                values([
+                                    `Got your attention.`, ` `,
+                                    _content(`Good!`, [ color("secondary") ])
+                                ])
+                            ])
+                        ])
+                    ])
+                ]),
+                // End Banner layer 4
                 
                 // Breakthrough layer
                 layer([
                     layout([
-                        _class(
+                        _class([
                             _layout("contain-large"),
                             padding("horz", "large")
-                        ),
+                        ]),
                         values([
                             _main([
-                                _class( _layout("vert") ),
+                                _class([ _layout("vert") ]),
                                 values([
                                     row([
                                         values([
                                             col([
-                                                _class( _col("6"), padding("bottom-small", "right-large") ),
+                                                _class([ _col("6"), padding("bottom-small", "right-large") ]),
                                                 values([
                                                     _content(`Breakthrough<br>Limits!`, [
-                                                        _style("bold"), _style("line-height"),
+                                                        _style("bold", "line-height"),
                                                         "h3", color("primary")
                                                     ])
                                                 ])
@@ -203,70 +298,29 @@ module.exports = {
                         ])
                     ])
                 ]),
-                // End Breakthrough Layer
-
-                // Banner layer
-                layer([
-                    values([
-                        layout([
-                            _class(
-                                _layout("contain-large"),
-                                padding("horz", "large"),
-                                background("primary"),
-                                _layout("vert")
-                            ),
-                            values([
-                                _header([
-                                    title(""),
-                                    _class([ _style("bold-font"), _style("500"), "h2", color("white") ]),
-                                    values([
-                                        `Got your attention.`, ` `,
-                                        _content(`Good!`, [ color("tertiary") ])
-                                    ])
-                                ])
-                            ])
-                        ]),
-                    
-                        layout([
-                            _class([
-                                _layout("contain-large"),
-                                _layout("enlarge-vert"),
-                                padding("horz")
-                            ]),
-                            values([
-                                _header([
-                                    title(""),
-                                    _class([ _style("bold-font"), _style("500"), "h2" ]),
-                                    values([
-                                        `Got your attention.`, ` `,
-                                        _content(`Good!`, [ color("primary") ])
-                                    ])
-                                ])
-                            ])
-                        ])
-                    ])
-                ]),
-                // End Banner Layer
+                // End Breakthrough layer
                 
                 // Image Column layer
                 layer([
                     layout([
-                        _class( _layout("contain-large") ),
+                        _class([ _layout("contain-large") ]),
                         values([
                             _main([
-                                _class( _layout("shorten-vert") ),
+                                _class([ _layout("shorten-vert") ]),
                                 values([
                                     row([
-                                        _class( margin("dull") ),
+                                        _class([ margin("dull") ]),
                                         values([
                                             spacingColumns(3),
 
                                             col([
-                                                _class( _col("9"), padding("small") ),
+                                                _class([ _col("9"), padding("small") ]),
                                                 values([
-                                                    _content(` `, [ 
-                                                        _layout("block"), _layer("box"), 
-                                                        _layer("surface"), _layer("shadow--1") 
+                                                    _tile([ "", "",
+                                                        _class([
+                                                            _layer("box", "surface", "shadow--1"),
+                                                            _layout("block")
+                                                        ])
                                                     ])
                                                 ])
                                             ])
@@ -274,18 +328,17 @@ module.exports = {
                                     ]),
 
                                     row([
-                                        _class( margin("dull") ),
+                                        _class([ margin("dull") ]),
                                         values([
                                             col([
-                                                _class( _col("9"), padding("small", "vert-large") ),
+                                                _class([ _col("9"), padding("small", "vert-large") ]),
                                                 values([
                                                     _tile([
-                                                        "Google Designs", 
-                                                        ["/assets/city.webp?w=250", "City Alt"],
-                                                        "",
+                                                        "Google Designs", "",
+                                                        _img("/assets/city.webp?w=250", "City Alt"),
                                                         _class([
-                                                            _layout("block"), _layer("box"), 
-                                                            _layer("secondary"), _layer("shadow--1")
+                                                            _layer("box", "surface", "shadow--1"),
+                                                            _layout("block")
                                                         ])
                                                     ])
                                                 ])
@@ -298,9 +351,76 @@ module.exports = {
                             ])
                         ])
                     ])
-                ])
-                // End Image Column Layer
-            ])
+                ]),
+                // End Image Column layer
+                
+                // Image Banner layer
+                layer([
+                    layout([
+                        _class([]),
+                        values([
+                            _main([
+                                values([
+                                    row([
+                                        _class([ margin("dull") ]),
+                                        values([
+                                            col([
+                                                _class([ _col("12"), padding("dull") ]),
+                                                values([
+                                                    _tile([ "", "",
+                                                        _class([
+                                                            _layer("box", "box-flat", "box-tall", "surface", "shadow--2"),
+                                                            _layout("block")
+                                                        ])
+                                                    ])
+                                                ])
+                                            ])
+                                        ])
+                                    ]),
+                                ])
+                            ])
+                        ])
+                    ])
+                ]),
+                // End Image Banner layer
+
+                // Footer
+                // newFooter(),
+                
+                // Next Page layer
+                layer([
+                    _class([ background("black") ]),
+                    layout([
+                        _class([ _layout("contain"), padding("horz", "top") ]),
+                        values([
+                            section([
+                                _class([ "h4", _layout("shorten") ]),
+                                values([
+                                    _header([
+                                        title("Next"),
+                                        _class([ color("white"), font("light", "thin"), _style("spaceout") ])
+                                    ]),
+                                    _main([
+                                        _class([ _style("center"), padding("vert") ]),
+                                        values([
+                                            _content(`NASA Rocket Ship`, [ "h1", _style("bold", "primary") ]),
+                                        ])
+                                    ])
+                                
+                                ])
+                            ]),
+                            section([
+                                _class([ 
+                                    _layer("box", "box-flat", "surface", "shadow"),
+                                    _layout("block") 
+                                ])
+                            ])
+                        
+                        ])
+                    ])
+                ]),
+                // End Next Page layer
+            ]), noFooter()
         ]) 
     },
     "routes": {

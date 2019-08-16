@@ -64,12 +64,12 @@ mixin tileContent(value)
     if _image
       +image(_image)
 
-      section.layer-tile-footer
-        if _title
-          section.layer-tile-title= _title
+    section.layer-tile-footer
+      if _title
+        section.layer-tile-title= _title
 
-        if _content
-          span.layer-tile-content.style-font-12= _content
+      if _content
+        span.layer-tile-content.style-font-12= _content
 
 
 mixin tile(value)
