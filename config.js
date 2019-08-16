@@ -34,8 +34,8 @@ module.exports = {
         "dpr": "auto"
     },
     "pages": {
-        "error": page([
-            _name("error"),
+        "404": page([
+            _name("404"),
             title("Ooops!"),
             values([
                 // Intro layer

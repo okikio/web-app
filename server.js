@@ -70,7 +70,7 @@ app.setNotFoundHandler((req, res) => {
     res
         .code(404)
         .type(req.headers["content-type"] || 'text/plain')
-        .render("error", req.headers["x-partial"]);
+        .render("404", req.headers["x-partial"]);
 });
 
 app.setErrorHandler((err, req, res) => {
