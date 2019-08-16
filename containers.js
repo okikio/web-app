@@ -122,7 +122,7 @@ let _main = _section("main"); // The section main component
 let _footer = _section("footer"); // The section footer component
 
 let _tabs = (...args) => tabs([
-    values( anyArgs(args).map(val => _link(val.toUpperCase(), `/${val}`)) )
+    values( anyArgs(args).map(val => _link(val.toLowerCase(), `/${val}`)) )
 ]);
 
 let _img = (...args) => {

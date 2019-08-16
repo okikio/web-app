@@ -1,5 +1,7 @@
 let { attr, section, _img, background, _tile, _col, _style, _layer, _layout, _header, _main, values, title, row, page, padding, margin, _link, layout, layer, _hero, font, _content, color, col, _class } = require('./containers');
 let carImg = "/assets/white_car.webp?w=400&h=400";
+
+let _name = attr("name", "index");
 let noFooter = attr("noFooter", true);
 let newFooter = (value = "2019 Okiki Ojo") => layer([
     _class([ "footer" ]),
@@ -33,6 +35,7 @@ module.exports = {
     },
     "pages": {
         "error": page([
+            _name("error"),
             title("Ooops!"),
             values([
                 // Intro layer
@@ -61,6 +64,7 @@ module.exports = {
             noFooter()
         ]),
         "about": page([
+            _name("about"),
             title("The Sub Page"),
             values([
                 // Hero Layer
@@ -95,6 +99,7 @@ module.exports = {
             noFooter()
         ]),
         "index": page([
+            _name(),
             title("Hello There"),
             values([
                 // Hero layer

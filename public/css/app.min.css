@@ -516,6 +516,10 @@ li {
   color: #ddd !important;
 }
 
+.header .navbar-link-focus {
+  color: #bbb;
+}
+
 /* -- Styles (only affect text) -- */
  .style-font-title {
   font-family: Bungee Inline, sans-serif;

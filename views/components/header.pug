@@ -3,7 +3,7 @@ include ./content.pug
 mixin header(_page)
   - let page = _page || page;
   - let _tabs = page.tabs && page.tabs.values || [];
-  - let _title = (page.title || "title").toUpperCase();
+  - let _name = (page.name || "").toLowerCase();
 
   header.header
     nav.navbar.navbar-fixed
@@ -22,7 +22,7 @@ mixin header(_page)
               - let _link = tab.a;
               - let _href = _link.href;
               - let _content = _link.content;
-              - let _class = `navbar-link ${_title == _content ? "navbar-link-focus" : ""}`;
+              - let _class = _name == _content ? "navbar-link-focus" : "";
 
               li
-                a(href=_href class=_class data-swup-preload)= _content
+                a.navbar-link(href=_href class=_class data-swup-preload)= _content
