@@ -46,17 +46,20 @@ module.exports = {
                             "values": [{
                                 "section": {
                                     "title": "Lorem itpsuim",
+                                    "type": "header"
+                                }
+                            }, {
+                                "section": {
                                     "values": [{
                                         "content": " ",
                                         "class": "layout-padding-top layout-margin-left-large layout-inline-block"
-                                    }, {
-                                        "content": "Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy text ever since the 1500s, when an unknown printer\n                                        took a galley of type and scrambled it to make a type specimen book. It has survived not only five centuries, but also the leap into electronic typesetting, remaining essentially unchanged.\n                                        It was popularised in the 1960s with the release of Letraset sheets\n                                        containing Lorem Ipsum passages, and more recently with desktop publishing software like Aldus PageMaker including versions of Lorem Ipsum, "
-                                    }, {
+                                    }, "Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy text ever since the 1500s, when an unknown printer\n                                        took a galley of type and scrambled it to make a type specimen book. It has survived not only five centuries, but also the leap into electronic typesetting, remaining essentially unchanged.\n                                        It was popularised in the 1960s with the release of Letraset sheets\n                                        containing Lorem Ipsum passages, and more recently with desktop publishing software like Aldus PageMaker including versions of Lorem Ipsum, ", {
                                         "a": {
                                             "href": "/.html",
                                             "content": "home"
                                         }
-                                    }]
+                                    }],
+                                    "type": "main"
                                 }
                             }]
                         }
@@ -101,17 +104,20 @@ module.exports = {
                             "values": [{
                                 "section": {
                                     "title": "Lorem itpsuim",
+                                    "type": "header"
+                                }
+                            }, {
+                                "section": {
                                     "values": [{
                                         "content": " ",
                                         "class": "layout-padding-top layout-margin-left-large layout-inline-block"
-                                    }, {
-                                        "content": "Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy text ever since the 1500s, when an unknown printer\n                                        took a galley of type and scrambled it to make a type specimen book. It has survived not only five centuries, but also the leap into electronic typesetting, remaining essentially unchanged.\n                                        It was popularised in the 1960s with the release of Letraset sheets\n                                        containing Lorem Ipsum passages, and more recently with desktop publishing software like Aldus PageMaker including versions of Lorem Ipsum, "
-                                    }, {
+                                    }, "Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy text ever since the 1500s, when an unknown printer\n                                        took a galley of type and scrambled it to make a type specimen book. It has survived not only five centuries, but also the leap into electronic typesetting, remaining essentially unchanged.\n                                        It was popularised in the 1960s with the release of Letraset sheets\n                                        containing Lorem Ipsum passages, and more recently with desktop publishing software like Aldus PageMaker including versions of Lorem Ipsum, ", {
                                         "a": {
                                             "href": "/about.html",
                                             "content": "run"
                                         }
-                                    }]
+                                    }],
+                                    "type": "main"
                                 }
                             }]
                         }
@@ -124,6 +130,10 @@ module.exports = {
                             "values": [{
                                 "section": {
                                     "title": "Listings",
+                                    "type": "header"
+                                }
+                            }, {
+                                "section": {
                                     "class": "layout-padding-top style-line-height-double",
                                     "values": [{
                                         "row": {
@@ -153,13 +163,14 @@ module.exports = {
                                                 "col": {
                                                     "class": "layout-col-7",
                                                     "values": [{
-                                                        "class": "style-line-height-double style-font-16",
-                                                        "content": "Lorem Ipsum is simply dummy text of the printing and typesetting industry.\n                                                        Lorem Ipsum has been the industry's standard dummy text ever since the 1500s, when an\n                                                        unknown printer took a galley of type and scrambled it to make a type specimen book."
+                                                        "content": "Lorem Ipsum is simply dummy text of the printing and typesetting industry.\n                                                    Lorem Ipsum has been the industry's standard dummy text ever since the 1500s, when an\n                                                    unknown printer took a galley of type and scrambled it to make a type specimen book.",
+                                                        "class": "style-line-height-double style-font-16"
                                                     }]
                                                 }
                                             }]
                                         }
-                                    }]
+                                    }],
+                                    "type": "main"
                                 }
                             }]
                         }
@@ -191,7 +202,8 @@ module.exports = {
                                                 }
                                             }]
                                         }
-                                    }]
+                                    }],
+                                    "type": "main"
                                 }
                             }]
                         }
@@ -227,20 +239,31 @@ module.exports = {
                                                 "col": {
                                                     "class": "layout-col-9 layout-padding-small layout-padding-vert-large",
                                                     "values": [{
+                                                        "tile": {
+                                                            "title": "Google Designs",
+                                                            "img": {
+                                                                "src": "/assets/city.webp?w=250",
+                                                                "alt": "City Alt"
+                                                            },
+                                                            "content": "",
+                                                            "class": "layout-block layer-box layer-secondary layer-shadow--1"
+                                                        }
+                                                    }, {
                                                         "img": {
                                                             "src": "/assets/city.webp?w=250",
-                                                            "alt": "An iamge of a bustling city."
-                                                        },
-                                                        "class": "layout-block layer-box layer-surface layer-shadow"
+                                                            "alt": "City Alt",
+                                                            "class": "layout-block layer-box layer-secondary layer-shadow--1"
+                                                        }
                                                     }]
                                                 }
                                             }, {
                                                 "col": {
-                                                    "class": "layout-col-3 layout-block"
+                                                    "class": "layout-block layout-col-3"
                                                 }
                                             }]
                                         }
-                                    }]
+                                    }],
+                                    "type": "main"
                                 }
                             }]
                         }

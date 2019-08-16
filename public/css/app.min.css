@@ -513,10 +513,6 @@ li {
   font-family: Bungee Inline, sans-serif;
 }
 
- .style-light-font {
-  font-family: Montserrat, sans-serif;
-}
-
 .style-bold {
   font-family: Montserrat, sans-serif;
 }
@@ -525,7 +521,7 @@ li {
   font-size: 16px;
 }
 
-.style-bold {
+.style-bold, .style-font-weight-bold {
   font-weight: 700;
 }
 
@@ -1039,12 +1035,10 @@ li {
 }
 
 .layer-image-overlay {
-  background: #222;
-  background: #252b33;
   position: absolute;
   display: block;
-  height: 100%;
   opacity: 0.35;
+  height: 100%;
   width: 100%;
   z-index: 5;
   left: 0;
@@ -1101,16 +1095,44 @@ li {
   }
 }
 
+.layer-secondary {
+  background-color: #ff0266;
+}
+
 .layer-surface {
   background-color: #fff;
 }
 
+.layer-tile {
+  position: relative;
+  min-height: 300px;
+  cursor: pointer;
+  display: block;
+  width: 100%;
+}
+
+.layer-tile,
+.layer-tile .layer-image {
+  overflow: hidden;
+}
+
+.layer-tile-footer {
+  position: absolute;
+  color: #fff;
+  margin: 20px 25px;
+  bottom: 0;
+}
+
 .layer-box {
-  border-radius: 8px;
+  position: relative;
   min-height: 400px;
-  max-height: 600px;
   height: auto;
   width: 100%;
+}
+
+.layer-box,
+.layer-box .layer-image {
+  border-radius: 8px;
 }
 
 .layer-main {

@@ -1,5 +1,7 @@
-mixin layer(val)
-  - val = val || {};
-  section.layer(class=val.class)
+mixin layer(value)
+  - let _value = value || { class: "" };
+  - let _class = _value.class;
+
+  section.layer(class=_class)
     block
 

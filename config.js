@@ -1,6 +1,14 @@
-let { _header, _main, _footer, background, values, title, _tile, section, row, page, padding, margin, _link, layout, layer, _img, _hero, font, content, color, col, _class } = require('./containers');
+let { _tile, _col, _style, _layer, _layout, _header, _main, values, title, row, page, padding, margin, _link, layout, layer, _img, _hero, font, _content, color, col, _class } = require('./containers');
 let carImg = "/assets/white_car.webp?w=400&h=400";
-let { assign } = Object;
+
+let indent = _content(" ", [
+    padding("top"), margin("left-large"),
+    _layout("inline-block")
+]);
+
+let spacingColumns = size => col([
+    _class( _layout("block"), _col(size.toString()) )
+]);
 
 module.exports = {
     "websiteURL": "https://app-fast.herokuapp.com/",
@@ -18,35 +26,23 @@ module.exports = {
             title("The Sub Page"),
             values([
                 // Hero Layer
-                _hero([
-                    _img(carImg, "A city Image"),
-                    title("Subpage.")
-                ]),
+                _hero([ "Subpage.", [carImg, "A city Image"] ]),
                 // End Hero Layer
 
                 // Intro layer
                 layer([
-                    _class(
-                        padding("horz", "large-top")
-                    ),
+                    _class( padding("horz", "large-top") ),
                     layout([
                         _class("layout-shorten"),
                         values([
-                            section([
-                                title("Lorem itpsuim"),
+                            _header(title("Lorem itpsuim")),
+                            _main([
                                 values([
-                                    assign(
-                                        content(" "),
-                                        _class(
-                                            padding("top"),
-                                            margin("left-large"),
-                                            "layout-inline-block"
-                                        )
-                                    ),
-                                    content(`Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy text ever since the 1500s, when an unknown printer
+                                    indent,
+                                    `Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy text ever since the 1500s, when an unknown printer
                                         took a galley of type and scrambled it to make a type specimen book. It has survived not only five centuries, but also the leap into electronic typesetting, remaining essentially unchanged.
                                         It was popularised in the 1960s with the release of Letraset sheets
-                                        containing Lorem Ipsum passages, and more recently with desktop publishing software like Aldus PageMaker including versions of Lorem Ipsum, `),
+                                        containing Lorem Ipsum passages, and more recently with desktop publishing software like Aldus PageMaker including versions of Lorem Ipsum, `,
                                     _link("home", "/")
                                 ])
                             ])
@@ -60,35 +56,23 @@ module.exports = {
             title("Hello There"),
             values([
                 // Hero Layer
-                _hero([
-                    _img(carImg, "A city Image"),
-                    title("Relax.")
-                ]),
+                _hero([ "Relax.", [carImg, "A city Image"] ]),
                 // End Hero Layer
 
                 // Intro layer
                 layer([
-                    _class(
-                        padding("horz", "large-top")
-                    ),
+                    _class( padding("horz", "large-top") ),
                     layout([
                         _class("layout-shorten"),
                         values([
-                            section([
-                                title("Lorem itpsuim"),
+                            _header(title("Lorem itpsuim")),
+                            _main([
                                 values([
-                                    assign(
-                                        content(" "),
-                                        _class(
-                                            padding("top"),
-                                            margin("left-large"),
-                                            "layout-inline-block"
-                                        )
-                                    ),
-                                    content(`Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy text ever since the 1500s, when an unknown printer
+                                    indent,
+                                    `Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy text ever since the 1500s, when an unknown printer
                                         took a galley of type and scrambled it to make a type specimen book. It has survived not only five centuries, but also the leap into electronic typesetting, remaining essentially unchanged.
                                         It was popularised in the 1960s with the release of Letraset sheets
-                                        containing Lorem Ipsum passages, and more recently with desktop publishing software like Aldus PageMaker including versions of Lorem Ipsum, `),
+                                        containing Lorem Ipsum passages, and more recently with desktop publishing software like Aldus PageMaker including versions of Lorem Ipsum, `,
                                     _link("run", "/about")
                                 ])
                             ])
@@ -99,85 +83,52 @@ module.exports = {
 
                 // Listings layer
                 layer([
-                    _class(
-                        padding("horz", "large-top")
-                    ),
+                    _class( padding("horz", "large-top") ),
                     layout([
-                        _class("layout-shorten"),
+                        _class( _layout("shorten") ),
                         values([
-                            section([
-                                title("Listings"),
+                            _header(title("Listings")),
+                            _main([
                                 _class(
                                     padding("top"),
-                                    "style-line-height-double"
+                                    _style("line-height-double")
                                 ),
                                 values([
                                     row([
                                         values([
                                             col([
-                                                _class(
-                                                    "layout-col-2",
-                                                    padding("bottom-small")
-                                                ),
+                                                _class( _col("2"), padding("bottom-small") ),
                                                 values([
-                                                    assign(
-                                                        content(`03/03`),
-                                                        _class(
-                                                            "style-bold",
-                                                            font("16")
-                                                        )
-                                                    )
+                                                    _content(`03/03`, [ _style("bold"), font("16") ])
+                                                ])
+                                            ]),
+                                            
+                                            col([
+                                                _class( _col("3"), padding("bottom") ),
+                                                values([
+                                                    _content(`2018`, [
+                                                        _style("line-height-double"), _style("bold"),
+                                                        _layout("block"), font("16")
+                                                    ]),
+                                                    _content(`E-commerse`, [
+                                                        _style("line-height-double"),
+                                                        _layout("block"),
+                                                        font("16")
+                                                    ]),
+                                                    _content(`Design Executive`, [
+                                                        _style("line-height-double"),
+                                                        _layout("block"), font("16")
+                                                    ])
                                                 ])
                                             ]),
 
                                             col([
-                                                _class(
-                                                    "layout-col-3",
-                                                    padding("bottom")
-                                                ),
+                                                _class( _col("7") ),
                                                 values([
-                                                    assign(
-                                                        content(`2018`),
-                                                        _class(
-                                                            "style-line-height-double",
-                                                            "style-bold",
-                                                            "layout-block",
-                                                            font("16")
-                                                        )
-                                                    ),
-                                                    assign(
-                                                        content(`E-commerse`),
-                                                        _class(
-                                                            "style-line-height-double",
-                                                            "layout-block",
-                                                            font("16")
-                                                        )
-                                                    ),
-                                                    assign(
-                                                        content(`Design Executive`),
-                                                        _class(
-                                                            "style-line-height-double",
-                                                            "layout-block",
-                                                            font("16")
-                                                        )
-                                                    )
-                                                ])
-                                            ]),
-
-                                            col([
-                                                _class(
-                                                    "layout-col-7"
-                                                ),
-                                                values([
-                                                    assign(
-                                                        _class(
-                                                            "style-line-height-double",
-                                                            font("16")
-                                                        ),
-                                                        content(`Lorem Ipsum is simply dummy text of the printing and typesetting industry.
-                                                        Lorem Ipsum has been the industry's standard dummy text ever since the 1500s, when an
-                                                        unknown printer took a galley of type and scrambled it to make a type specimen book.`)
-                                                    )
+                                                    _content(`Lorem Ipsum is simply dummy text of the printing and typesetting industry.
+                                                    Lorem Ipsum has been the industry's standard dummy text ever since the 1500s, when an
+                                                    unknown printer took a galley of type and scrambled it to make a type specimen book.`, 
+                                                    [ _style("line-height-double"), font("16") ])
                                                 ])
                                             ])
                                         ])
@@ -188,51 +139,37 @@ module.exports = {
                     ])
                 ]),
                 // End Listings Layer
-
+                
                 // Breakthrough layer
                 layer([
                     layout([
                         _class(
-                            "layout-contain-large",
+                            _layout("contain-large"),
                             padding("horz", "large")
                         ),
                         values([
-                            section([
-                                _class( "layout-vert" ),
+                            _main([
+                                _class( _layout("vert") ),
                                 values([
                                     row([
                                         values([
                                             col([
-                                                _class(
-                                                    "layout-col-6",
-                                                    padding("bottom-small", "right-large")
-                                                ),
+                                                _class( _col("6"), padding("bottom-small", "right-large") ),
                                                 values([
-                                                    assign(
-                                                        content(`Breakthrough<br>Limits!`),
-                                                        _class(
-                                                            "style-bold",
-                                                            "style-line-height",
-                                                            "h3",
-                                                            color("primary")
-                                                        )
-                                                    )
+                                                    _content(`Breakthrough<br>Limits!`, [
+                                                        _style("bold"), _style("line-height"),
+                                                        "h3", color("primary")
+                                                    ])
                                                 ])
                                             ]),
 
                                             col([
-                                                _class( "layout-col-6" ),
+                                                _class( _col("6") ),
                                                 values([
-                                                    assign(
-                                                        content(`Lorem Ipsum is simply dummy text of the printing and typesetting industry.
+                                                    _content(`Lorem Ipsum is simply dummy text of the printing and typesetting industry.
                                                         Lorem Ipsum has been the industry's standard dummy text ever since the 1500s, when an
-                                                        unknown printer took a galley of type and scrambled it to make a type specimen book.`),
-                                                        _class(
-                                                            "layout-block",
-                                                            "style-line-height-double",
-                                                            font("16")
-                                                        )
-                                                    )
+                                                        unknown printer took a galley of type and scrambled it to make a type specimen book.`,
+                                                        [ _layout("block"), _style("line-height-double"), font("16") ])
                                                 ])
                                             ])
                                         ])
@@ -247,36 +184,23 @@ module.exports = {
                 // Image Column layer
                 layer([
                     layout([
-                        _class( "layout-contain-large" ),
+                        _class( _layout("contain-large") ),
                         values([
-                            section([
-                                _class( "layout-shorten-vert" ),
+                            _main([
+                                _class( _layout("shorten-vert") ),
                                 values([
                                     row([
                                         _class( margin("dull") ),
                                         values([
-                                            col([
-                                                _class(
-                                                    "layout-block",
-                                                    "layout-col-3"
-                                                )
-                                            ]),
+                                            spacingColumns(3),
 
                                             col([
-                                                _class(
-                                                    "layout-col-9",
-                                                    padding("small")
-                                                ),
+                                                _class( _col("9"), padding("small") ),
                                                 values([
-                                                    assign(
-                                                        content(` `),
-                                                        _class(
-                                                            "layout-block",
-                                                            "layer-box",
-                                                            "layer-surface",
-                                                            "layer-shadow--1"
-                                                        )
-                                                    )
+                                                    _content(` `, [ 
+                                                        _layout("block"), _layer("box"), 
+                                                        _layer("surface"), _layer("shadow--1") 
+                                                    ])
                                                 ])
                                             ])
                                         ])
@@ -286,29 +210,21 @@ module.exports = {
                                         _class( margin("dull") ),
                                         values([
                                             col([
-                                                _class(
-                                                    "layout-col-9",
-                                                    padding("small", "vert-large")
-                                                ),
+                                                _class( _col("9"), padding("small", "vert-large") ),
                                                 values([
-                                                    assign(
-                                                        _img("/assets/city.webp?w=250"),
-                                                        _class(
-                                                            "layout-block",
-                                                            "layer-box",
-                                                            "layer-surface",
-                                                            "layer-shadow"
-                                                        )
-                                                    )
+                                                    _tile([
+                                                        "Google Designs", 
+                                                        ["/assets/city.webp?w=250", "City Alt"],
+                                                        "",
+                                                        _class([
+                                                            _layout("block"), _layer("box"), 
+                                                            _layer("secondary"), _layer("shadow--1")
+                                                        ])
+                                                    ])
                                                 ])
                                             ]),
 
-                                            col([
-                                                _class(
-                                                    "layout-col-3",
-                                                    "layout-block"
-                                                )
-                                            ])
+                                            spacingColumns(3),
                                         ])
                                     ])
                                 ])
@@ -318,7 +234,7 @@ module.exports = {
                 ])
                 // End Image Column Layer
             ])
-        ])
+        ]) 
     },
     "routes": {
         "/": "index",

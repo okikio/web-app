@@ -1,5 +1,7 @@
-mixin layout(val)
-  - val = val || {};
-  article.layout-contain(class=val.class)
+mixin layout(value)
+  - let _value = value || { class: "" };
+  - let _class = _value.class;
+
+  article.layout-contain(class=_class)
     block
 

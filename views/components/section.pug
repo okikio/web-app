@@ -1,34 +1,52 @@
-include ./components/content.pug
+include ./content.pug
 
-mixin _header(_section)
-  - _section = _section || { class: "style-primary-dark style-center" };
-  section.layer-header
-    h4.style-bold(class=_section.class)= _section.title
+mixin _header(value)
+  - let _value = Object.assign({ class: "style-primary-dark" }, value);
+  - let _title = _value.title || _value.content || "title";
+  - let _class = _value.class;
+  
+  section.layer-header.style-center
+    h4.style-bold(class=_class)= _title
 
-mixin _main(_section)
-  - _section = _section || { class: "style-primary-dark style-center" };
-  section.layer-main
-    h4.style-bold(class=_section.class)= _section.title
 
-mixin _footer(_section)
-  - _section = _section || { class: "style-primary-dark style-center" };
+mixin _main(section)
+  - let _section = Object.assign({ class: "" }, section);
+  - let _values = _section.values;
+  - let _class = _section.class;
+  
+  section.layer-main(class=_class)
+    span.style-line-height-double
+      if Array.isArray(_values)
+        each _value in _values
+          +content(_value)
+
+
+mixin _footer(value)
+  - let _value = Object.assign({ class: "style-center" }, section);
+  - let _title = _value.title || _value.content || "title";
+  - let _class = _value.class;
+
   section.layer-footer
-    h4.style-bold(class=_section.class)= _section.title
+    span.style-bold(class=_class)= _title
+
 
 mixin section(_section)
-  - let type = _section.type;
+  - let _type = _section.type;
+  - let _class = _section.class;
+  - let _values = _section.values;
 
-  case type
+  case _type
     when "header"
       +_header(_section)
+
     when "main"
       +_main(_section)
+
     when "footer"
       +_footer(_section)
+
     default
-      +content(_section)
-
-
-
-
-
+      section(class=_class)
+        if Array.isArray(_values)
+          each _value in _values
+            +content(_value)

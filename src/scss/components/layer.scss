@@ -31,12 +31,10 @@
       top: 0;
 
       &-overlay {
-          background: $dark;
-          background: #252b33;
           position: absolute;
           display: block;
-          height: 100%;
           opacity: 0.35;
+          height: 100%;
           width: 100%;
           z-index: 5;
           left: 0;
@@ -108,12 +106,16 @@
    }
    
    &-tile {
+      position: relative;
       min-height: 300px;
-      overflow: hidden;
       cursor: pointer;
       display: block;
       width: 100%;
-      border: 0;
+      
+      &,
+      .layer-image {
+         overflow: hidden;
+      }
       
       &-footer {
          position: absolute;
@@ -124,11 +126,15 @@
    }
    
    &-box {
-      border-radius: 8px;
+      position: relative;
       min-height: 400px;
-      max-height: 600px;
       height: auto;
       width: 100%;
+      
+      &, 
+      .layer-image {
+         border-radius: 8px;
+      }
       
       &-flat {
          border-radius: 0 !important;

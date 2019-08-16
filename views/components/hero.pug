@@ -1,29 +1,24 @@
-mixin hero(val)
-  - val = val || { img: {} };
+include ./content.pug
+
+mixin hero(value)
+  - let _value = value || { img: {}, title: "Title", };
+  - let _title = _value.title;
+  - let _image = _value.img;
+
   article.layout-contain.layout-padding-horz-small.layout-padding-bottom.layout-padding-dull-top
     .layer-hero
-      .layer-image
-        img.load-img(src=val.img.src, alt=val.img.alt)
-        .layer-image-overlay
+      +image(_image)
+
       section.layout-enlarge
         .layer-content.style-center
           section.layer-header
           section.layer-main
-            h1.style-font-title.layer-title.style-white= val.title
-            a.h3.style-secondary.layer-hero-scroll-down.layer-shadow.icon-btn
+            h1.style-font-title.layer-title.style-white= _title
+            
+            +link({
+              class: "h3 style-secondary layer-hero-scroll-down layer-shadow icon-btn",
+              content: ""
+            })
               .layout-padding-small
                 i.icon expand_more
-
-  //- article.layout-contain.layout-padding-horz-small.layout-padding-bottom.layout-padding-dull-top
-    .layer-hero.layout-enlarge
-      .layer-image
-        img.load-img(src=val.img.src, alt=val.img.alt)
-        .layer-image-overlay
-      .layer-content
-        section.layer-header
-        section.layer-main.style-center
-          h1.style-font-title.layer-title.style-white= val.title
-          a.h3.layer-hero-scroll-down.layer-shadow.icon-btn
-            .layout-padding-small
-              i.icon expand_more
 

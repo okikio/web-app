@@ -61,7 +61,7 @@ let attr = (attr, defaults, list) => (...vals) => {
 };
 
 // Class attribute container
-let _class = (...args) => attr("class", "") (args.join(' '));
+let _class = (...args) => attr("class", "") (anyArgs(args).join(' '));
 
 // The base for containers that add to the class attribute
 let class_add = prefix => (...args) => {
@@ -80,9 +80,15 @@ let margin = class_add("layout-margin"); // Margins of a component
 let padding = class_add("layout-padding"); // Paddings of a component
 let background = class_add("layer-color"); // Background of a component
 
+let _col = class_add("layout-col"); // Layout Column Classes for a component
+let _layer = class_add("layer"); // Layer Classes for a component
+let _layout = class_add("layout"); // Layout Classes for a component
+let _style = class_add("style"); // General Style of a component
+
 // -- Attributes --
 let href = attr("href", "/"); // Href attribute
 let title = attr("title", "Title"); // Title attribute
+let type = attr("type", "Blank"); // Type of a component
 let content = attr("content", "..."); // Content of a component
 let values = attr("values", [], true); // The values property
 let src = attr("src", "/assets/city.webp"); // Src attribute container
@@ -106,8 +112,8 @@ let _link = (_content, _href) => link([
 ]);
 
 // Allows a user to set specific types of sections (eg. header, main, footer, etc...)
-let _section = type => { 
-    return (...args) => section(...anyArgs(args), { "type": type }); 
+let _section = _type => { 
+    return (...args) => section([ ...anyArgs(args), type(_type) ]); 
 };
 
 let _header = _section("header"); // The section header component
@@ -115,21 +121,28 @@ let _main = _section("main"); // The section main component
 let _footer = _section("footer"); // The section footer component
 
 let _tabs = (...args) => tabs([
-    values(
-        ...anyArgs(args).map(val => _link(val.toUpperCase(), `/${val}`))
-    )
+    values( anyArgs(args).map(val => _link(val.toUpperCase(), `/${val}`)) )
 ]);
 
-let _tile = (_title, _src, _alt) => tile([
-    title(_title), src(_src), alt(_alt)
-]);
+let _img = (...args) => {
+    let [_src = src().src, _alt = alt().alt, ...$args] = anyArgs(args);
+    return img(src(_src), alt(_alt), ...anyArgs($args));
+};
 
-let _img = (_src = src().src, _alt = alt().alt) => img(src(_src), alt(_alt));
+let _hero = (...args) => {
+    let [$title = "Title", $img = [], ...$args] = anyArgs(args);
+    return hero([ title($title), _img($img), ...anyArgs($args) ]);
+};
 
-let _hero = (...args) => hero([
-    title("Page"), _img(),
-    ...anyArgs(args)
-]);
+let _tile = (...args) => {
+    let [$title, $img, $content, ...$args] = anyArgs(args);
+    return tile([ title($title), _img($img), content($content), ...anyArgs($args) ]);
+};
+
+let _content = (...args) => {
+    let [$txt, $class = [], ...$args] = anyArgs(args);
+    return assign( content($txt), _class($class), ...anyArgs($args) );
+};
 
 // Shared similarites between page containers
 let page = (...args) => {
@@ -137,5 +150,5 @@ let page = (...args) => {
     return component("page") (assign(assign(...defaults), ...anyArgs(args)));
 };
 
-assign(page, { _header, _main, _footer, _link, _tabs, _tile, _img, _hero, values, title, tile, tabs, src, section, row, page, padding, margin, link, layout, layer, img, href, hero, font, content, component, color, col, _class, class_add, background, attr, alt });
+assign(page, { _content, _col, _style, _layer, _layout, type, _header, _main, _footer, _link, _tabs, _tile, _img, _hero, values, title, tile, tabs, src, section, row, page, padding, margin, link, layout, layer, img, href, hero, font, content, component, color, col, _class, class_add, background, attr, alt });
 module.exports = page;

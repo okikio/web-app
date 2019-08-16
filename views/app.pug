@@ -32,32 +32,34 @@ html(lang="en")
     include ./components/footer.pug
   body
     //- Navbar etc...
-    +header(page.tabs, page.title)
+    +header(page)
 
     .header-top-spot
     main.main#swup.transition-fade
-      - let layerLists = page.values;
+      - let layerLists = page.values || [];
 
       //- Page Layers
-      if layerLists
+      if Array.isArray(layerLists)
         each layers in layerLists
           - let layer = layers.layer;  //- Display Custom Layer if it exists
           - let hero = layers.hero; //- Display Hero Layer if it exists
-          if hero
+          
+          if typeof hero == "object"
             +hero(hero)
 
-          if layer
-          - let layout = layer.layout;
+          if typeof layer == "object"
+            - let layout = layer.layout;
             +layer(layer)
 
-              if layout
+              if typeof layout == "object"
                 - let sectionList = layout.values;
                 +layout(layout)
                   
-                  if sectionList
+                  if Array.isArray(sectionList)
                     each sections in sectionList
                       - let section = sections.section;
-                      if section
+
+                      if typeof section == "object"
                         +section(section)
 
     +footer("2019 Okiki Ojo")

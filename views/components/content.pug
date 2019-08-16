@@ -1,51 +1,135 @@
-mixin cols(val)
-  span(class=val.class) !{val.content}
+mixin image(value)
+  - let _value = Object.assign({ class: "" }, value);
+  - let _class = _value.class;
+  - let _overlay = _value.overlay;
+  - let _src = _value.src || "default.jpg";
+  - let _alt = _value.alt || "Alternate text";
+
+  .layer-image(class=_class)
+    img.load-img(src=_src alt=_alt)
+    .layer-image-overlay(class=_overlay)
+
+
+mixin link(value)
+  - let _value = Object.assign({ class: "layout-inline", content: "" }, value);
+  - let _content = _value.content;
+  - let _class = _value.class;
+  - let _href = _value.href;
+  
+  - _href = _href == "/" && dev && staticSite ? "/index.html" : _href;
+  a(href=_href class=_class)= _content
     block
 
-mixin norm(val)
-  span.style-line-height-double.layout-padding-vert-small(class=val.class)= val.content
-    block
 
-mixin contents(val)
-  - val = val || {};
-  if val.content
-    +norm(val)
+mixin span(value)
+  if typeof value == "string"
+    span.style-line-height-double.layout-padding-vert-small !{value}
       block
-  if val.img
-    img(class=val.class src=val.img.src alt=val.img.alt)
-  else if val.a
-    a.layout-inline(href=val.a.href)= val.a.content
 
-mixin doc(val, col)
-  - val = val || {};
-  if val.content
-    if col
-      +cols(val)
-    else
-      +norm(val)
   else
-    +contents(val)
+    - let _value = Object.assign({ class: "", content: "" }, value);
+    - let _content = _value.content;
+    - let _class = _value.class;
+    - let _type = _value.type;
+    - let _tempClass = _class;
 
-mixin content(val)
-  - val = val || {};
-  section.layer-main(class=val.class)
-    span.style-line-height
-      +doc(val, false)
+    if _type != "blank"
+      - _class = `style-line-height-double layout-padding-vert-small ${_tempClass}`;
 
-      if val.values
-        each txt in val.values
-          +doc(txt, false)
-
-          if txt.row
-            .layout-row(class=txt.row.class)
-              each col in txt.row.values
-                if col.col
-                  section(class=col.col.class)
-                    +doc(col.col, true)
-
-                    if col.col.values
-                      each col_txt in col.col.values
-                        +doc(col_txt, true)
+    span(class=_class) !{_content}
+      block
 
 
+mixin basicContent(value)
+  - let content = value.content;
+  - let image = value.img;
+  - let link = value.a;
+  
+  if typeof value == "string" || typeof content == "string"
+    +span(value)
 
+  else if typeof image == "object"
+    +image(image)
+
+  else if typeof link == "object"
+    +link(link)
+
+
+mixin tileContent(value)
+  - let _content = value.content;
+  - let _title = value.title;
+  - let _class = value.class;
+  - let _image = value.img;
+  
+  .layer-tile(class=_class)
+    if _image
+      +image(_image)
+
+      section.layer-tile-footer
+        if _title
+          section.layer-tile-title= _title
+
+        if _content
+          span.layer-tile-content.style-font-12= _content
+
+
+mixin tile(value)
+  - let _link = value.a;
+
+  if _link
+    +link(_link)
+      +tileContent(value)
+
+  else 
+    +tileContent(value)
+
+
+mixin column(value)
+  - let _class = value.class || "layout-col";
+  - let _values = value.values;
+  
+  section(class=_class)
+    if Array.isArray(_values)
+      each _value in _values
+        - let _content = _value.content;
+        - let _tile = _value.tile;
+
+        if typeof _content == "string"
+          - let $value = Object.assign({ type: "blank" }, _value);
+          +span($value)
+
+        else if typeof _tile == "object"
+          +tile(_tile)
+
+        else
+          +basicContent(_value)
+
+
+mixin row(value)
+  - let _class = value.class || "";
+  - let _values = value.values;
+
+  section.layout-row(class=_class)
+    if Array.isArray(_values)
+      each _value in _values
+        - let _column = _value.col;
+
+        if typeof _column == "object"
+          +column(_column)
+
+        else
+          +basicContent(_value)
+
+
+mixin content(value)
+  - let column = value.col;
+  - let row = value.row;
+  
+  if typeof column == "object"
+    +column(column)
+
+  else if typeof row == "object"
+    +row(row)
+
+  else 
+    +basicContent(value)
