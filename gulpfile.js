@@ -34,10 +34,9 @@ let { pages, cloud_name, imageURLConfig } = config;
 let assetURL = `https://res.cloudinary.com/${cloud_name}/`;
 assets.config({ cloud_name, secure: true });
 
-let srcMapsWrite = [".", {
+let srcMapsWrite = ["../maps", {
     sourceMappingURL: file => {
-        let _path = file.path.replace(__dirname, "").replace("\\src", "");
-        return `${_path.replace(/\\/g, "/").replace("scss", "css")}.map`;
+        return `/maps/${file.relative}.map`;
     }
 }];
 
