@@ -291,33 +291,38 @@ Ele = _class(_event, arrProto, {
         let data = _is.def(value) ? this.attr(attrName, value) : this.attr(attrName);
         return data != null ? _valfix(data) : undefined;
     },
-    val(value) {
-        if (_is.def(value)) {
-            if (value == null) value = ""
-            return this.each(function (idx) {
-                this.value = _fnval(value, [idx, this.value], this);
-            })
+    val(...args) {
+        let [value] = args, _el;
+        if (args.length) {
+            if (_is.nul(value)) value = "";
+            return this.each((el, idx) => {
+                el.value = _fnval(value, [idx, this.value], this);
+            });
         } else {
-            return this[0] && (this[0].multiple ?
-                $(this[0]).find('option').filter(function () { return this.selected }).pluck('value') :
-                this[0].value)
+            _el = this.get(0);
+            return _el && (_el.multiple ?
+                Ele(_el).find('option').filter(el => el.selected).pluck('value') :
+                _el.value);
         }
     },
-    offset: function (coordinates) {
-        if (coordinates) return this.each(function (index) {
-            let $this = $(this),
-                coords = funcArg(this, coordinates, index, $this.offset()),
-                parentOffset = $this.offsetParent().offset(),
-                props = {
-                    top: coords.top - parentOffset.top,
-                    left: coords.left - parentOffset.left
-                }
+    offset(coords) {
+        if (coords) {
+            return this.each((el, idx) => {
+                let $this = Ele(el);
+                let _coords = _fnval(coords, [idx, $this.offset()], el);
+                let parentOffset = $this.offsetParent().offset();
+                let props = {
+                    top: _coords.top - parentOffset.top,
+                    left: _coords.left - parentOffset.left
+                };
 
-            if ($this.css('position') == 'static') props['position'] = 'relative'
-            $this.css(props)
-        })
-        if (!this.length) return null
-        if (document.documentElement !== this[0] && !$.contains(document.documentElement, this[0]))
+                if ($this.style('position') == 'static') props.position = 'relative';
+                $this.style(props);
+            })
+        }
+
+        if (!this.length) return null;
+        if (documentElement != this.get(0) && !$.contains(document.documentElement, this[0]))
             return { top: 0, left: 0 }
         let obj = this[0].getBoundingClientRect()
         return {
