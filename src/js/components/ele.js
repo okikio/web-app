@@ -1,12 +1,13 @@
-// import _class from "./class";
-import { _is, assign, _path, keys } from "./util";
-// const { _get, _alias } = _class;
-/*import _global from './global';
+import { _is, assign, _path, keys, _intersect, _fnval } from "./util";
 import _event from './event';
+import _class from "./class";
 import anime from "animejs";
+
 const { createElement, documentElement } = document;
+const { _get, _alias } = _class;
 
 let Ele;
+let { applyNative, nativeEvents } = event;
 let tagRE = /^<([\w-])\s*\/?>(?:<\/\1>|)$/;
 let _cssNumber = ["column-count", "columns", "font-weight", "line-height", "opacity", "z-index", "zoom"];
 let _qsa = (dom, sel) => Ele(...dom.querySelectorAll(sel));
@@ -50,16 +51,27 @@ let arrProto = _alias(Array.prototype, (val, ...args) => {
 });
 
 let _filter = (nodes, sel) => _is.nul(sel) ? Ele(nodes) : Ele(nodes).filter(sel);
-let _uniq = arr => { 
-    return arrProto.filter.call(arr, (val, idx) => arr.indexOf(val) == idx); 
+let _uniq = arr => {
+    return arrProto.filter.call(arr, (val, idx) => arr.indexOf(val) == idx);
 };
 
+let _setAttr = (node, name, value) => value == null ? node.removeAttribute(name) : node.setAttribute(name, value);
 let _children = el => {
     return 'children' in el ? arrProto.slice.call(el.children) :
-        arrProto.map.call(el.childNodes, node => { 
-            if (node.nodeType == 1) return node; 
+        arrProto.map.call(el.childNodes, node => {
+            if (node.nodeType == 1) return node;
         });
-}; 
+};
+
+let _valfix = value => {
+    let validTypes = /^true|false|null|undefined|\d+$/;
+    let _fn = v => Function(`"use strict"; return ${v};`) ();
+    let objectType = /^[[{]([\s\S]+)?[\]}]$/;
+    try {
+        return validTypes.test(value) ? _fn(value) : 
+            objectType.test(value) ? JSON.parse(value.replace(/'/g, "\"")) : value;
+    } catch (e) { return value; }
+};
 
 let _maybeAddPx = (name, val) => {
     return (_is.num(val) && _cssNumber.includes(name)) ? `${val}px` : val;
@@ -77,35 +89,26 @@ Ele = _class(_event, arrProto, {
             targets: this.ele,
             autoplay: false
         });
-
-        _global.on("ready load", () => {
-            this.emit("ready load", Ele);
-        }, this);
     },
-    
-    on($super, evt, ...args) {
-        $super(evt, ...args);
-        let $evt, emit = this.emit;
+
+    on($super, evt, callback, scope) {
+        let _same;
         if (_is.undef(evt)) { return; } // If there is no event break
         if (_is.str(evt)) { evt = evt.split(/\s/g); }
         if (_is.not("arr", evt) && _is.not("obj", evt)) { evt = [evt]; } // Set evt to an array
-        
-        // Added support for native:events
-        keys(evt).forEach(key => {
-            $evt = evt[key];
-            if (/native:/i.test($evt)) { 
-                this.each(el => {
-                    el.addEventListener(
-                        $evt.replace(/native:/i, ""), 
-                        (..._args) => { emit($evt, ..._args); }
-                    );
-                });
+
+        _same = _intersect(evt, nativeEvents);
+        return this.forEach(el => {
+            if (_same.length > 0) {
+                _same.forEach(ev => {
+                    applyNative(this, el, ev);
+                }, this);
             }
+
+            $super(evt, callback, scope || el);
         }, this);
-        return this;
     },
 
-    ready(fn) { return this.on("ready load", fn, this); },
     length: _get("ele.length"),
     each(fn) {
         arrProto.call(this, (el, idx) => fn.call(el, el, idx) != false);
@@ -207,24 +210,24 @@ Ele = _class(_event, arrProto, {
         return _filter(ancestors, sel);
     },
 
-    // `pluck`; based on underscore.js, but way more powerful
+    // `pluck` based on underscore.js, but way more powerful
     pluck(prop) { return this.map(el => _path(el, prop)); },
     parent(sel) {
         return _filter(_uniq(this.pluck('parentNode')), sel);
     },
 
-    children (sel) {
+    children(sel) {
         return _filter(this.map(el => _children(el)), sel);
     },
 
-    contents () {
+    contents() {
         return this.map(el => el.contentDocument || arrProto.slice.call(el.childNodes));
     },
-    
-    siblings (sel) {
-        return _filter(this.map(el => 
+
+    siblings(sel) {
+        return _filter(this.map(el =>
             arrProto.filter.call(
-                _children(el.parentNode), 
+                _children(el.parentNode),
                 child => (child != el)
             )
         ), sel);
@@ -247,7 +250,7 @@ Ele = _class(_event, arrProto, {
         let [html] = args;
         return args.length ?
             this.each((el, idx) => {
-                let originHtml = el.innerHTML;
+                let originHTML = el.innerHTML;
                 Ele(el).empty().append(_fnval(html, [idx, originHTML], el));
             }) : (this.length ? this.get(0).innerHTML : null);
     },
@@ -261,49 +264,38 @@ Ele = _class(_event, arrProto, {
     },
     attr(name, val) {
         let result;
-        return (_is.str(name) && _is.undef(val)) ?
-            (this.length && this.get(0).nodeType == 1 && 
-                (result = this.get(0).getAttribute(name)) != null ? result : undefined) :
-            this.each((el, idx) => {
-                if (el.nodeType !== 1) return
-                if (_is.obj(name)) for (key in name) setAttribute(el, key, name[key])
-                else setAttribute(el, name, funcArg(el, val, idx, el.getAttribute(name)))
+        if (_is.str(name) && _is.undef(val)) {
+            result = this.length && this.get(0).nodeType == 1 &&
+                this.get(0).getAttribute(name);
+            return !_is.nul(result) ? result : undefined;
+        } else {
+            return this.each((el, idx) => {
+                if (el.nodeType != 1) return;
+                if (_is.arr(name)) {
+                    for (let i in name)
+                        _setAttr(el, i, name[i]);
+                } else {
+                    _setAttr(el, name, _fnval(val, [idx, el.getAttribute(name)], el));
+                }
             });
+        }
     },
-    removeAttr: function (name) {
-        return this.each(function () {
-        this.nodeType === 1 && name.split(' ').forEach(function (attribute) {
-            setAttribute(this, attribute)
-        }, this)
-        })
+    removeAttr(name) {
+        return this.each(el => {
+            el.nodeType == 1 && name.split(' ')
+                .forEach(attr => { _setAttr(this, attr); }, this);
+        });
     },
-    prop: function (name, value) {
-        name = propMap[name] || name
-        return (typeof name == 'string' && !(1 in arguments)) ?
-            (this[0] && this[0][name]) :
-            this.each(function (idx) {
-                if (isObject(name)) for (key in name) this[propMap[key] || key] = name[key]
-                else this[name] = funcArg(this, value, idx, this[name])
-            })
+    data(name, value) {
+        let attrName = `data-${name}`.toLowerCase();
+        let data = _is.def(value) ? this.attr(attrName, value) : this.attr(attrName);
+        return data != null ? _valfix(data) : undefined;
     },
-    removeProp: function (name) {
-        name = propMap[name] || name
-        return this.each(function () { delete this[name] })
-    },
-    data: function (name, value) {
-        let attrName = 'data-' + name.replace(capitalRE, '-$1').toLowerCase()
-
-        let data = (1 in arguments) ?
-            this.attr(attrName, value) :
-            this.attr(attrName)
-
-        return data !== null ? deserializeValue(data) : undefined
-    },
-    val: function (value) {
-        if (0 in arguments) {
+    val(value) {
+        if (_is.def(value)) {
             if (value == null) value = ""
             return this.each(function (idx) {
-                this.value = funcArg(this, value, idx, this.value)
+                this.value = _fnval(value, [idx, this.value], this);
             })
         } else {
             return this[0] && (this[0].multiple ?
@@ -335,7 +327,7 @@ Ele = _class(_event, arrProto, {
             height: Math.round(obj.height)
         }
     },
-    style (...args) {
+    style(...args) {
         let [prop, val] = args, css = '', key;
         if (args.length < 2) {
             let el = this.get(0);
@@ -417,21 +409,19 @@ Ele = _class(_event, arrProto, {
         );
     }
 }, () => {
-    return `blur focus focusin focusout resize scroll click dblclick 
-	        mousedown mouseup mousemove mouseover mouseout mouseenter mouseleave 
-            change select submit keydown keypress keyup contextmenu`.split(" ")
-     .reduce((acc, name) => {
-	    // Handle event binding
-        acc[name] = (data, fn) => {
-            return arguments.length > 0 ?
+    return nativeEvents.reduce((acc, name) => {
+        // Handle event binding
+        acc[name] = (...args) => {
+            let [data, fn] = args;
+            return args.length > 0 ?
                 this.on(name, null, data, fn) :
                 this.emit(name);
         };
     }, {
-        hover(fnOver, fnOut) {
-            return this.mouseenter( fnOver ).mouseleave( fnOut || fnOver );
-        }
-    });
+            hover(fnOver, fnOut) {
+                return this.mouseenter(fnOver).mouseleave(fnOut || fnOver);
+            }
+        });
 }, () => {
     /*
     // Generate the `width` and `height` functions
@@ -518,34 +508,8 @@ Ele = _class(_event, arrProto, {
         }
     return ["before"].reduce(() => {
 
-    })
-});*/
+    })*/
+});
 
-export default class El {
-    constructor(el) {
-        this.el = (el instanceof El) ? el.el : [...document.querySelectorAll(el)];
-    }
 
-    each(fn = () => {}) {
-        this.el.forEach(fn.bind(this), this);
-        return this;
-    }
-
-    set(prop, val) {
-        return this.each(el => {
-            switch (typeof val) {
-                case 'object':
-                    if (typeof el[prop] != 'object') this.el[prop] = {};
-                    assign(el[prop], val);
-                    break;
-                case 'undefined':
-                    el = prop;
-                    break;
-                default:
-                    el[prop] = val;
-            }
-        });
-    }
-};
-
-// export default Ele;
+export default Ele;

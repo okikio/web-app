@@ -1,5 +1,15 @@
 import _class, { _get, _is, _argNames, keys } from "./class";
 import { _stringify } from "../../../util/stringify";
+const { readyState } = document;
+
+// Test for passive support, based on [github.com/rafrex/detect-passive-events]
+let passive = false, opts = {}, noop = () => { };
+opts = Object.defineProperty({}, "passive", {
+	get: () => passive = { capture: false, passive: true }
+});
+
+window.addEventListener("PassiveEventTest", noop, opts);
+window.removeEventListener("PassiveEventsTest", noop, opts);
 
 // Event class
 let _event = _class({
@@ -154,6 +164,29 @@ let _event = _class({
 
     // Alias for the `listeners` method
     callbacks: _get("listeners")
+})
+.static({
+    nativeEvents: `ready load blur focus focusin focusout resize click scroll dblclick 
+    mousedown mouseup mousemove mouseover mouseout mouseenter mouseleave 
+    change select submit keydown keypress keyup contextmenu`.split(" "),
+    applyNative(evt, el, ev) {
+        let _emit = e => { evt.emit("ready load", e); };
+
+        if (/ready|load/.test(ev)) {
+            if (!/in/.test(readyState)) { _emit(); }
+            else if (document.addEventListener) {
+                document.addEventListener('DOMContentLoaded', _emit);
+            } else {
+                document.attachEvent('onreadystatechange', () => {
+                    if (!/in/.test(readyState)) _emit();
+                });
+            }
+        } else {
+            el.addEventListener(ev, e => { 
+                evt.emit(ev, e); 
+            }, ev == "scroll" ? passive : {});
+        }
+    }
 });
-    
+
 export default _event;

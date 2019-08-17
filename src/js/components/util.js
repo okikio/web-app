@@ -1,6 +1,9 @@
 let { assign, keys, values } = Object;
 let { isArray, from, of } = Array;
 
+// Create an array of values that two array share in common
+let _intersect = (a, b) => a.filter(val => b.includes(val));
+
 // Test the type of a value
 let _is = (val, type) => (typeof val == type);
 
@@ -93,4 +96,4 @@ let _new = (ctor, args) => {
     return new F();
 };
 
-export { _is, _fnval, _argNames, _path, _attr, _new, assign, keys, values, from, of };
+export { _is, _intersect, _fnval, _argNames, _path, _attr, _new, assign, keys, values, from, of };
