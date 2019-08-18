@@ -330,10 +330,8 @@ task('watch', () => {
     browserSync.init({ server: "./public" });
 
     watch(['server.js', 'plugin.js'], watchDelay, series('server'));
-    watch(['config.js', 'containers.js'], watchDelay, series('config:watch'))
-        .on('change', browserSync.reload);
-    watch(['gulpfile.js', 'postcss.config.js', 'util/*.js'], watchDelay, series('gulpfile:watch', 'css', 'js'))
-        .on('change', browserSync.reload);
+    watch(['config.js', 'containers.js'], watchDelay, series('config:watch'));
+    watch(['gulpfile.js', 'postcss.config.js', 'util/*.js'], watchDelay, series('gulpfile:watch', 'css', 'js'));
 
     watch('views/**/*.pug', watchDelay, series('html', 'css'));
     watch('src/**/*.scss', watchDelay, series('css'));
