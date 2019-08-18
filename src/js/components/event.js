@@ -166,7 +166,7 @@ let _event = _class({
 
     // Alias for the `listeners` method
     callbacks: _get("listeners")
-})
+})/*
 .static({
     nativeEvents: `ready load blur focus focusin focusout resize click scroll dblclick 
     mousedown mouseup mousemove mouseover mouseout mouseenter mouseleave 
@@ -189,6 +189,6 @@ let _event = _class({
             }, ev == "scroll" ? passive : {});
         }
     }
-});
+})*/;
 
 export default _event;

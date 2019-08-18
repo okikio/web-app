@@ -1,6 +1,7 @@
 let { env } = process;
 if (!('dev' in env)) require('dotenv').config();
 let dev = 'dev' in env && env.dev.toString() == "true";
+let debug = 'debug' in env && env.debug.toString() == "true";
 let staticSite = 'staticSite' in env && env.staticSite == "true";
 
 const gulp = require('gulp');
@@ -182,7 +183,7 @@ task("js", () =>
                             ] 
                         }, gen ? 'umd' : 'es'),
                         // Minify the file
-                        terser( 
+                        debug ? null : terser( 
                             assign(minifyOpts, gen ? { ie8: true, ecma: 5 } : {})
                         ),
                         rename(`app${suffix}.min.js`), // Rename
@@ -206,7 +207,7 @@ task("js", () =>
                     ] 
                 }, 'umd'),
                 // Minify the file
-                terser({ ...minifyOpts, ie8: true, ecma: 5 }), 
+                debug ? null : terser({ ...minifyOpts, ie8: true, ecma: 5 }), 
                 rename(minSuffix), // Rename
                 write(...srcMapsWrite) // Put sourcemap in public folder
             ],
@@ -287,7 +288,7 @@ task("update", () =>
                     rollupBabel(babelConfig.node) // Babelify file for minifing
                 ] 
             }, 'cjs'),
-            terser({ ...minifyOpts, ecma: 7 }), // Minify the file
+            debug ? null : terser({ ...minifyOpts, ecma: 7 }), // Minify the file
             rename(minSuffix) // Rename
         ],
         dest: '.' // Output
@@ -326,19 +327,19 @@ task('other', series("update", "config", parallel("server", "html"), "css", "inl
 
 // Gulp task to check to make sure a file has changed before minify that file files
 task('watch', () => {
+    browserSync.init({ server: "./public" });
+    
     watch(['server.js', 'plugin.js'], watchDelay, series('server'));
-
     watch(['config.js', 'containers.js'], watchDelay, series('config:watch'))
         .on('change', browserSync.reload);
     watch(['gulpfile.js', 'postcss.config.js', 'util/*.js'], watchDelay, series('gulpfile:watch', 'css', 'js'))
         .on('change', browserSync.reload);
 
-    watch('views/**/*.pug', watchDelay, series('html', 'css'))
-        .on('change', browserSync.reload);
+    watch('views/**/*.pug', watchDelay, series('html', 'css'));
     watch('src/**/*.scss', watchDelay, series('css'));
-    watch(['src/**/*.js', '!src/**/app.vendor.js'], watchDelay, series('js'))
-        .on('change', browserSync.reload);
+    watch(['src/**/*.js', '!src/**/app.vendor.js'], watchDelay, series('js'));
         
     watch('src/**/app.vendor.js', watchDelay, series('js'));
-    browserSync.init({ server: "./public" });
+    watch(['public/**/*', '!public/css/*.css'])
+        .on('change', browserSync.reload);
 });

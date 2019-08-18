@@ -59,16 +59,17 @@ export let _method = _attachProp("prototype");
 export let _static = _attachProp("static");
 
 // Create a copy of static methods that can function as prototype methods
-export let _alias = function (props, opts) {
+export let _alias = function (props = {}, opts) {
     let thisArg = opts && opts.thisArg || []; // This as first argument
     let chain = opts && opts.chain || [], toStr;
-    let result = {}, val, _args;
+    let result = {}, val, _args, _key;
+    let _keys = keys(props);
 
-    for (let i in props) {
-        val = props[i];
+    for (let i = 0; i < _keys.length; i ++) {
+        val = props[(_key = _keys[i])];
 
         if (_is.fn(val)) {
-            result[i] = function (...args) {
+            result[_key] = function (...args) {
                 if (_is.fn(opts)) {
                     return opts.call(this, val, ...args);
                 } else {
@@ -83,9 +84,9 @@ export let _alias = function (props, opts) {
             };
 
             toStr = val.toString.bind(val);
-            result[i].toString = chain.includes(i) ?
+            result[_key].toString = chain.includes(i) ?
                 () => `${toStr()} return this;` : toStr;
-            result[i].valueOf = val.valueOf.bind(val);
+            result[_key].valueOf = val.valueOf.bind(val);
         }
     }
     return result;
@@ -136,7 +137,7 @@ export let props = { _is, _fnval, _argNames, _method, _static, _path, _attr, _al
 
 // Properties methods with Class support
 export let aliasMethods = _alias(props, {
-    thisArg: ["_new", "_attr", "_path", "_method", "_static", "_callsuper"]
+    thisArg: ["_attr", "_path", "_method", "_static"] // "_new", , "_callsuper"
 });
 
 // Create classes
@@ -154,6 +155,8 @@ export let _class = function (...args) {
 
     // Class Object
     Class = function (..._args) {
+        // Current Class
+        if (_is.not("inst", this, Class)) { return _new(Class, _args); }
         this._args = _args; // Arguments
 
         // Initialize Class
@@ -172,14 +175,13 @@ export let _class = function (...args) {
     Class.SubClasses = []; // List of SubClasses
 
     // Extend Class
-    assign(Class, props);
     assign(Class.prototype, aliasMethods, {
         SuperClass: Class.SuperClass, 
         SubClasses: Class.SubClasses
     });
 
     assign(Class.prototype, {
-        callsuper: Class.prototype._callsuper,
+        // callsuper: Class.prototype._callsuper,
         method: Class.prototype._method, 
         static: Class.prototype._static,
         attr: Class.prototype._attr 
@@ -200,7 +202,7 @@ export let _class = function (...args) {
         Class.toValue = Class.prototype.init.toValue;
     }
 
-    return new Class(...args);
+    return Class(...args);
 };
 
 assign(_class, props); // Extend _class
