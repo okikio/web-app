@@ -35,7 +35,7 @@ let { pages, cloud_name, imageURLConfig } = config;
 let assetURL = `https://res.cloudinary.com/${cloud_name}/`;
 assets.config({ cloud_name, secure: true });
 
-let srcMapsWrite = ["../maps", {
+let srcMapsWrite = debug ? ["../maps"] : ["../maps", {
     sourceMappingURL: file => {
         return `/maps/${file.relative}.map`;
     }
@@ -328,7 +328,7 @@ task('other', series("update", "config", parallel("server", "html"), "css", "inl
 // Gulp task to check to make sure a file has changed before minify that file files
 task('watch', () => {
     browserSync.init({ server: "./public" });
-    
+
     watch(['server.js', 'plugin.js'], watchDelay, series('server'));
     watch(['config.js', 'containers.js'], watchDelay, series('config:watch'))
         .on('change', browserSync.reload);
