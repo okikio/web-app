@@ -1,7 +1,7 @@
 import { _is, _fnval, _argNames, _path, _attr, _new, assign, keys } from "./util";
 
 // Attach properties to class prototype or the class itself
-let _attachProp = where => {
+export let _attachProp = where => {
     let _prototype = where == "prototype";
 
     return (_obj, ...args) => {
@@ -53,13 +53,13 @@ let _attachProp = where => {
 };
 
 // Set class prototype properties and methods
-let _method = _attachProp("prototype");
+export let _method = _attachProp("prototype");
 
 // Set static properties and methods
-let _static = _attachProp("static");
+export let _static = _attachProp("static");
 
 // Create a copy of static methods that can function as prototype methods
-let _alias = (props, opts) => {
+export let _alias = (props, opts) => {
     let thisArg = opts && opts.thisArg || []; // This as first argument
     let chain = opts && opts.chain || [], toStr;
     let result = {}, val, _args;
@@ -92,7 +92,7 @@ let _alias = (props, opts) => {
 };
 
 // Easy access to configurable property attributes, like get, set, writeable, value etc...
-let _configAttr = (attr = "get", type = "function") => {
+export let _configAttr = (attr = "get", type = "function") => {
     return val => {
         let _val = val;
         if (type == "function") {
@@ -104,11 +104,11 @@ let _configAttr = (attr = "get", type = "function") => {
 };
 
 // Get and set property attributes
-let _get = _configAttr("get", "function");
-let _set = _configAttr("set", "function");
+export let _get = _configAttr("get", "function");
+export let _set = _configAttr("set", "function");
 
 // Call the parent version of a method
-let _callsuper = function (obj, method, ...args) {
+export let _callsuper = function (obj, method, ...args) {
     let _prototype = obj.prototype; // Only static methods have access to the prototype Object
     let _parent = null, $ = obj, _const = $, _super = _const.SuperClass;
 
@@ -132,15 +132,15 @@ let _callsuper = function (obj, method, ...args) {
 };
 
 // All properties combined
-let props = { _is, _fnval, _argNames, _method, _static, _path, _attr, _alias, _configAttr, _get, _set, _new, _callsuper };
+export let props = { _is, _fnval, _argNames, _method, _static, _path, _attr, _alias, _configAttr, _get, _set, _new, _callsuper };
 
 // Properties methods with Class support
-let aliasMethods = _alias(props, {
+export let aliasMethods = _alias(props, {
     thisArg: ["_new", "_attr", "_path", "_method", "_static", "_callsuper"]
 });
 
 // Create classes
-let _class = function (...args) {
+export let _class = function (...args) {
     let Class, SubClass, Parent;
 
     // SubClass constructor
@@ -175,9 +175,13 @@ let _class = function (...args) {
 
     // Extend Class
     assign(Class, aliasMethods);
-    assign(Class.prototype, aliasMethods, { 
+    assign(Class.prototype, aliasMethods, {
+        callsuper: Class.prototype._callsuper,
+        method: Class.prototype._method, 
+        static: Class.prototype._static,
         SuperClass: Class.SuperClass, 
-        SubClasses: Class.SubClasses 
+        SubClasses: Class.SubClasses,
+        attr: Class.prototype._attr 
     });
 
     // Add Methods to Class

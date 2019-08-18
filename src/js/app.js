@@ -1,13 +1,13 @@
 import swup from "swup";
-// import el from "./components/ele";
+import el from "./components/ele";
 // import scrollPlugin from "@swup/scroll-plugin";
 // import slideTheme from '@swup/slide-theme';
 // import preload from '@swup/preload-plugin';
 // import anime from "anime";
 
-/*
 let ele = new el("body");
-ele.set("style", {});
+console.log(ele);
+/*ele.set("style", {});
 fetch("/assets/app.js")
 	.then(console.log);*/
 

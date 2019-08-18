@@ -1,4 +1,4 @@
-import { _is, _path,  _intersect, _fnval } from "./util";
+import { _is, _path,  _intersect, _fnval, _capital } from "./util";
 import _event from './event';
 import _class from "./class";
 import anime from "animejs";
@@ -26,7 +26,7 @@ let _contains = (parent, node) => {
     return false;
 };
 
-// Allow default Array methods to work as Element methods
+// Allow default Array methods to work as Element Object methods
 let arrProto = _alias(Array.prototype, (val, ...args) => {
     args = args.map(v => _is.fn(v) ? v.bind(this) : v, this);
     let _val = val.apply(this, args);
@@ -60,12 +60,29 @@ let _elem = sel => {
     return [];
 };
 
-let _filter = (nodes, sel) => _is.nul(sel) ? Ele(nodes) : Ele(nodes).filter(sel);
+// Traverse DOM Depth First
+let traverseDF = (_node, fn, childType = "childNodes") => {
+    let recurse;
+    // This is a recurse and immediately-invoking function
+    recurse = node => { // Step 2
+        node[childType] && node[childType].forEach(recurse, node); // Step 3
+        fn.call(node, node); // Step 4
+    };
+    recurse(_node); // Step 1
+};
+
+// Quickly filter nodes by a selector 
+let _filter = (nodes, sel) => !_is.def(sel) ? Ele(nodes) : Ele(nodes).filter(sel);
+
+// Select all the different values in an Array, based on underscorejs
 let _uniq = arr => {
     return [].filter.call(arr, (val, idx) => arr.indexOf(val) == idx);
 };
 
+// Quickly set the value of an attribute or remove the attribute completely from a node
 let _setAttr = (node, name, value) => value == null ? node.removeAttribute(name) : node.setAttribute(name, value);
+
+// Select all children of an element
 let _children = el => {
     return 'children' in el ? [].slice.call(el.children) :
         [].map.call(el.childNodes, node => {
@@ -73,6 +90,7 @@ let _children = el => {
         });
 };
 
+// Transform  string value to the proper type of value eg. "12" = 12, "[12, 'xyz']" = [12, 'xyz']
 let _valfix = value => {
     let validTypes = /^true|false|null|undefined|\d+$/;
     let _fn = v => Function(`"use strict"; return ${v};`) ();
@@ -83,8 +101,9 @@ let _valfix = value => {
     } catch (e) { return value; }
 };
 
+// Decide if the value deserves px at the 
 let _maybeAddPx = (name, val) => {
-    return _is.num(val) && !_cssNumber.includes(name) ? `${val}px` : val;
+    return _is.num(+val) && !_cssNumber.includes(name) ? `${val}px` : val;
 };
 
 // Element Object [Based on Zepto.js]
@@ -401,108 +420,92 @@ Ele = _class(_event, arrProto, {
         _is.def(opt.play) && (opt.play && tl.play() || tl.pause());
         return this;
     },
-}, () => {
-    return nativeEvents.reduce((acc, name) => {
-        // Handle event binding
-        acc[name] = (...args) => {
-            return this.on(name, ...args);
-        };
-    }, {
-        hover(fnOver, fnOut) {
-            return this.mouseenter(fnOver).mouseleave(fnOut || fnOver);
-        }
-    });
-}, () => {
-    let result = {};
-    // Generate the `width` and `height` functions
-    ['width', 'height'].forEach((sz) => {
-        let prop = sz[0].toUpperCase() + sz.slice(1);
+}, 
 
-        result[sz] = function (value) {
-            let offset, el = this.get(0);
-            if (_is.undef(value)) {
-                if (_is.win(el)) { 
-                    return el['inner' + prop];
-                } else if (_is.doc(el)) {
-                    return el.documentElement['scroll' + prop];
-                } else {
-                    return (offset = this.offset()) && offset[sz];
-                }
-            } else {
-                return this.each((_el, idx) => {
-                    el = Ele(_el);
-                    el.style(sz, _fnval(value, [idx, el[sz]()], _el));
-                });
-            }
-        };
-    });
+// Generate shortforms for events eg. .click(), .hover(), etc... 
+nativeEvents.reduce((acc, name) => {
+    // Handle event binding
+    acc[name] = (...args) => { return this.on(name, ...args); };
+    return acc;
+}, {
+    hover(fnOver, fnOut) 
+        { return this.mouseenter(fnOver).mouseleave(fnOut || fnOver); }
+}), 
 
-    /*
-    function traverseNode(node, fun) {
-        fun(node)
-        for (var i = 0, len = node.childNodes.length; i < len; i++)
-            traverseNode(node.childNodes[i], fun)
-    }*/
-
-    let adjacencyOperators = [ 'after', 'prepend', 'before', 'append' ];
-    // Generate the `after`, `prepend`, `before`, `append`,
-    // `insertAfter`, `insertBefore`, `appendTo`, and `prependTo` methods.
-    adjacencyOperators.forEach((operator, idx) => {
-        let inside = idx % 2 //=> prepend, append
-
-        result[operator] = function (...args) {
-            // Arguments can be nodes, arrays of nodes, Element objects and HTML strings
-            let clone = this.length > 1;
-            let nodes = args.map(arg => {
-                if (_is.arr(arg)) {
-                    return arg.reduce((acc, el) => {
-                        if (_is.def(el.nodeType)) acc.push(el);
-                        else if (_is.inst(el, Ele)) acc = acc.concat(el.get());
-                        else if (_is.str(el)) acc = acc.concat(_createElem(el));
-                        return acc;
-                    }, []);
-                }
-
-                return _is.obj(arg) || _is.nul(arg) ? arg : _createElem(arg);
-            }).filter(item => _is.def(item));
-
-            return this.each(target => {
-                let parent = inside ? target : target.parentNode;
-                let parentInDoc = _contains(documentElement, parent);
-                let next = target.nextSibling, first = target.firstChild;
-                
-                // Convert all methods to a "before" operation
-                target = [next, first, target, null] [idx];
-                nodes.forEach(node => {
-                    if (clone) node = node.cloneNode(true);
-                    else if (!parent) return Ele(node).remove();
-                    parent.insertBefore(node, target);
-                    
-                    if (parentInDoc) {
-                        traverseDF(node, el => {
-                            if (!_is.nul(el.nodeName) && el.nodeName.toUpperCase() == 'SCRIPT' &&
-                                (!el.type || el.type == 'text/javascript') && !el.src) {
-                                let target = el.ownerDocument ? el.ownerDocument.defaultView : window;
-                                target.eval.call(target, el.innerHTML);
-                            }
-                        });
-                    }
-                });
+// Generate the `width` and `height` methods
+['width', 'height'].reduce((acc, sz) => {
+    let prop = _capital(sz);
+    acc[sz] = function (value) {
+        let offset, el = this.get(0);
+        if (_is.undef(value)) {
+            if (_is.win(el)) { 
+                return el[`inner${prop}`];
+            } else if (_is.doc(el)) {
+                return el.documentElement[`scroll${prop}`];
+            } else { return (offset = this.offset()) && offset[sz]; }
+        } else {
+            return this.each((_el, idx) => {
+                el = Ele(_el);
+                el.style(sz, _fnval(value, [idx, el[sz]()], _el));
             });
-        };
-/*
-        // after    => insertAfter
-        // prepend  => prependTo
-        // before   => insertBefore
-        // append   => appendTo
-        $.fn[inside ? operator + 'To' : 'insert' + (operatorIndex ? 'Before' : 'After')] = function (html) {
-            $(html)[operator](this)
-            return this
         }
-    return ["before"].reduce(() => {*/
+    };
 
-    })
-});
+    return acc;
+}, {}), 
 
+// Generate the `after`, `prepend`, `before`, `append`, `insertAfter`, `insertBefore`, `appendTo`, and `prependTo` methods.
+[ 'after', 'prepend', 'before', 'append' ].reduce((acc, fn, idx) => {
+    let inside = idx % 2 //=> prepend, append
+    acc[fn] = function (...args) {
+        // Arguments can be nodes, arrays of nodes, Element objects and HTML strings
+        let clone = this.length > 1;
+        let nodes = args.map(arg => {
+            if (_is.arr(arg)) {
+                return arg.reduce((acc, el) => {
+                    if (_is.def(el.nodeType)) acc.push(el);
+                    else if (_is.inst(el, Ele)) acc = acc.concat(el.get());
+                    else if (_is.str(el)) acc = acc.concat(_createElem(el));
+                    return acc;
+                }, []);
+            }
+
+            return _is.obj(arg) || _is.nul(arg) ? arg : _createElem(arg);
+        }).filter(item => _is.def(item));
+
+        return this.each(target => {
+            let parent = inside ? target : target.parentNode;
+            let parentInDoc = _contains(documentElement, parent);
+            let next = target.nextSibling, first = target.firstChild;
+            
+            // Convert all methods to a "before" operation
+            target = [next, first, target, null] [idx];
+            nodes.forEach(node => {
+                if (clone) node = node.cloneNode(true);
+                else if (!parent) return Ele(node).remove();
+                parent.insertBefore(node, target);
+                
+                if (parentInDoc) {
+                    traverseDF(node, el => {
+                        if (!_is.nul(el.nodeName) && el.nodeName.toUpperCase() == 'SCRIPT' &&
+                            (!el.type || el.type == 'text/javascript') && !el.src) {
+                            let target = el.ownerDocument ? el.ownerDocument.defaultView : window;
+                            target.eval.call(target, el.innerHTML);
+                        }
+                    });
+                }
+            });
+        });
+    };
+
+    // after    => insertAfter, prepend  => prependTo
+    // before   => insertBefore, append   => appendTo
+    acc[inside ? `${fn}To` : `insert${_capital(fn)}`] = function (html) {
+        Ele(html) [fn] (this);
+        return this;
+    };
+
+    return acc;
+}, {}));
 
 export default Ele;

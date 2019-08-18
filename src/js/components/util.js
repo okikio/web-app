@@ -4,6 +4,9 @@ let { isArray, from, of } = Array;
 // Create an array of values that two array share in common
 let _intersect = (a, b) => a.filter(val => b.includes(val));
 
+// Capitalize strings
+let _capital = val => val[0].toUpperCase() + val.slice(1);
+
 // Test the type of a value
 let _is = (val, type) => (typeof val == type);
 
@@ -19,6 +22,7 @@ assign(_is, {
         let len = _is(obj.length, "number") && obj.length;
         return len == 0 || len > 0 && (len - 1) in obj;
     },
+    num: val => !isNaN(val) && _type("number") (val),
     class: obj => obj && obj._method && obj._class,
     not: (type, ...args) => !_is[type](...args),
     doc: ctor => _isInst(ctor, Document),
@@ -28,7 +32,6 @@ assign(_is, {
     bool: _type("boolean"),
     fn: _type("function"),
     obj: _type("object"),
-    num: _type("number"),
     str: _type("string"),
     nul: _type("null"),
     inst: _isInst, 
@@ -97,4 +100,4 @@ let _new = (ctor, args) => {
     return new F();
 };
 
-export { _is, _intersect, _fnval, _argNames, _path, _attr, _new, assign, keys, values, from, of };
+export { _capital, _is, _intersect, _fnval, _argNames, _path, _attr, _new, assign, keys, values, from, of };

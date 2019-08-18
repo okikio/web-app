@@ -1,5 +1,7 @@
-import _class, { _get, _is, _argNames, keys } from "./class";
 import { _stringify } from "../../../util/stringify";
+import _class from "./class";
+
+const { _get, _is, _argNames, keys } = _class;
 const { readyState } = document;
 
 // Test for passive support, based on [github.com/rafrex/detect-passive-events]
