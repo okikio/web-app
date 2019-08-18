@@ -1,14 +1,14 @@
-let { assign, keys, values } = Object;
-let { isArray, from, of } = Array;
+export let { assign, keys, values } = Object;
+export let { isArray, from, of } = Array;
 
 // Create an array of values that two array share in common
-let _intersect = (a, b) => a.filter(val => b.includes(val));
+export let _intersect = (a, b) => a.filter(val => b.includes(val));
 
 // Capitalize strings
-let _capital = val => val[0].toUpperCase() + val.slice(1);
+export let _capital = val => val[0].toUpperCase() + val.slice(1);
 
 // Test the type of a value
-let _is = (val, type) => (typeof val == type);
+export let _is = (val, type) => (typeof val == type);
 
 // Is Instance Of
 let _isInst = (ctor, obj) => (ctor instanceof obj);
@@ -44,7 +44,7 @@ assign(_is, {
  * @param  {Array<any>} args
  * @param  {Object} ctxt
  */
-let _fnval = (fn, args, ctxt) => {
+export let _fnval = (fn, args, ctxt) => {
     if (_is.not("fn", fn) || 
         keys(fn.prototype || {}).length > 0) 
         { return fn; }
@@ -52,7 +52,7 @@ let _fnval = (fn, args, ctxt) => {
 };
 
 // Argument names
-let _argNames = fn => {
+export let _argNames = fn => {
     let args = fn.toString()
         .match(/^[\s(]*function[^(]*\(([^)]*)\)/)[1]
         .replace(/\/\/.*?[\r\n]|\/\*(?:.|[\r\n])*?\*\//g, '')
@@ -61,7 +61,7 @@ let _argNames = fn => {
 };
 
 // Get or set a value in an Object, based on it's path
-let _path = (obj, path, val) => {
+export let _path = (obj, path, val) => {
     path = path.toString().split(/[.,]/g);
     if (_is.def(val)) {
         if (path.length > 1) {
@@ -80,7 +80,7 @@ let _path = (obj, path, val) => {
     * Using Objects as paths and setting the values individually
     * Access values as an Array, from multiple paths
 */
-let _attr = (obj, path, val) => {
+export let _attr = (obj, path, val) => {
     if (_is.obj(path) && _is.not("arr", path)) 
         { return assign(obj, path); }
     else if (_is.arr(path)) {
@@ -94,10 +94,10 @@ let _attr = (obj, path, val) => {
 };
 
 // A more efficient `new` keyword that allows for arrays to be passed as arguments
-let _new = (ctor, args) => {
+export let _new = function (ctor, args) {
     let F = function () { return ctor.apply(this, args); };
     F.prototype = ctor.prototype;
     return new F();
 };
 
-export { _capital, _is, _intersect, _fnval, _argNames, _path, _attr, _new, assign, keys, values, from, of };
+export default { _capital, _is, _intersect, _fnval, _argNames, _path, _attr, _new, assign, keys, values, from, of };

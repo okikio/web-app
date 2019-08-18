@@ -26,14 +26,14 @@ let _event = _class({
     _eventCount: _get("_names.length"),
 
     // Prepare the event
-    _preEvent: function (evt) {
+    _preEvent(evt) {
         if (!this._events[evt]) // List of event's
             { this._events[evt] = []; }
         return this._events[evt];
     },
 
     // Apply event as object
-    _eventApp: function (callback, scope, event) {
+    _eventApp(callback, scope, event) {
         return {
             callback: callback,
             scope: scope || this,
@@ -42,7 +42,7 @@ let _event = _class({
     },
 
     // Add a listener for a given event
-    on: function (evt, callback, scope) {
+    on(evt, callback, scope) {
         let $EvtApp, $evt;
         if (_is.undef(evt)) { return; } // If there is no event break
         if (_is.str(evt)) { evt = evt.split(/\s/g); }
@@ -63,7 +63,7 @@ let _event = _class({
     },
 
     // Call all function(s) within an event
-    emit: function (evt, ...args) {
+    emit(evt, ...args) {
         let $Evt, $args = args;
         if (_is.undef(evt)) { return; } // If there is no event break
         if (_is.str(evt)) { evt = evt.split(/\s/g); }
@@ -86,7 +86,7 @@ let _event = _class({
     },
 
     // Removes a listener for a given event
-    off: function (evt, callback, scope) {
+    off(evt, callback, scope) {
         let $evt;
         if (_is.undef(evt)) { return; } // If there is no event break
         if (_is.str(evt)) { evt = evt.split(/\s/g); }
@@ -116,7 +116,7 @@ let _event = _class({
     },
 
     // Adds a one time event listener for a given event
-    once: function (evt, callback, scope) {
+    once(evt, callback, scope) {
         if (_is.undef(evt)) { return; } // If there is no event break
         if (_is.str(evt)) { evt = evt.split(/\s/g); }
         if (_is.not("arr", evt) && _is.not("obj", evt)) { evt = [evt]; } // Set evt to an array
@@ -131,25 +131,25 @@ let _event = _class({
     },
 
     // List's all listeners for a given event
-    listeners: function (evt) {
+    listeners(evt) {
         let $Evt = this._preEvent(evt);
         if (!$Evt.length) { return []; }
         return $Evt.map(val => val.callback);
     },
 
     // List's all listener values for a given event
-    listenerValues: function (evt, ...args) {
+    listenerValues(evt, ...args) {
         let $Evt = this._preEvent(evt);
         if (!$Evt.length) { return []; }
         return $Evt.map(val => val.callback.call(val.scope, ...args));
     },
 
     // Clear all events
-    clear: function ()
+    clear()
         { this._eventCount = 0; this._events = {}; return this; },
 
     // Clear all events
-    clearListeners: function (evt)
+    clearListeners(evt)
         { this._events[evt] = []; return this; },
 
     // Alias for the `on` method

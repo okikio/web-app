@@ -8,7 +8,7 @@ const { _get, _alias } = _class;
 
 let Ele;
 let tagRE = /^\s*<(\w+|!)[^>]*>/;
-let { applyNative, nativeEvents } = event;
+let { applyNative, nativeEvents } = _event;
 let _cssNumber = ["column-count", "columns", "font-weight", "line-height", "opacity", "z-index", "zoom"];
 let _qsa = (dom = document, sel) => _is.str(sel) && sel.length ? Ele(...dom.querySelectorAll(sel)) : [];
 
@@ -27,7 +27,7 @@ let _contains = (parent, node) => {
 };
 
 // Allow default Array methods to work as Element Object methods
-let arrProto = _alias(Array.prototype, (val, ...args) => {
+let arrProto = _alias(Array.prototype, function (val, ...args) {
     args = args.map(v => _is.fn(v) ? v.bind(this) : v, this);
     let _val = val.apply(this, args);
     return _is.inst(_val, Ele) ? Ele(_val) : (_is.undef(_val) ? this : _val);
@@ -128,7 +128,7 @@ Ele = _class(_event, arrProto, {
         if (_is.not("arr", evt) && _is.not("obj", evt)) { evt = [evt]; } // Set evt to an array
 
         _same = _intersect(evt, nativeEvents);
-        return this.forEach(el => {
+        return this.forEach(function (el) {
             if (_same.length > 0) {
                 _same.forEach(ev => {
                     applyNative(this, el, ev);
@@ -142,7 +142,8 @@ Ele = _class(_event, arrProto, {
     length: _get("len"),
     len: _get("ele.length"),
     each(fn) {
-        arrProto.call(this, (el, idx) => fn.call(el, el, idx) != false);
+        arrProto.forEach.call(this, function (el, idx) 
+            { return fn.call(el, el, idx) != false; });
         return this;
     },
 
@@ -161,14 +162,14 @@ Ele = _class(_event, arrProto, {
     },
 
     not(sel) {
-        let excludes;
+        let excludes, $this = this;
         return Ele(
-            this.reduce((acc, el, idx) => {
+            this.reduce(function (acc, el, idx) {
                 if (_is.fn(sel) && _is.def(sel.call)) {
-                    if (!sel.call(el, idx, el)) acc.push(el);
+                    if (!sel.call(el, el, idx)) acc.push(el);
                 } else {
-                    excludes = _is.str(sel) ? this.filter(sel) :
-                        (_is.arrlike(sel) && _is.fn(sel.item)) ? arrProto.slice.call(sel) : Ele(sel);
+                    excludes = _is.str(sel) ? $this.filter(sel) :
+                        (_is.arrlike(sel) && _is.fn(sel.item)) ? [].slice.call(sel) : Ele(sel);
                     if (excludes.indexOf(el) < 0) acc.push(el);
                 }
                 return acc;
@@ -178,12 +179,12 @@ Ele = _class(_event, arrProto, {
 
     filter(sel) {
         if (_is.fn(sel)) return this.not(this.not(sel));
-        return arrProto.filter.call(this, ele => _matches(ele, sel), this);
+        return [].filter.call(this, ele => _matches(ele, sel), this);
     },
 
     has(sel) {
-        return this.filter(() => {
-            return _is.obj(sel) ? _contains(this, sel) : Ele(this).find(sel).size();
+        return this.filter(el => {
+            return _is.obj(sel) ? _contains(el, sel) : Ele(el).find(sel).size();
         });
     },
 
@@ -192,24 +193,24 @@ Ele = _class(_event, arrProto, {
     },
 
     first() {
-        var el = this.get(0)
-        return el && !_is.obj(el) ? el : Ele(el)
+        let el = this.get(0);
+        return el && !_is.obj(el) ? el : Ele(el);
     },
 
     last() {
         let el = this.get(-1);
-        return el && !_is.obj(el) ? el : Ele(el)
+        return el && !_is.obj(el) ? el : Ele(el);
     },
 
     find(sel) {
         let result, $this = this;
-        if (!sel) { result = Ele(); }
+        if (!sel) result = Ele();
         else if (_is.obj(sel)) {
-            result = Ele(sel).filter((_, el) => {
-                return arrProto.some.call($this, parent => _contains(parent, el));
+            result = Ele(sel).filter(el => {
+                return [].some.call($this, parent => _contains(parent, el));
             });
-        } else if (this.len() == 1) { result = Ele(_qsa(this[0], sel)); }
-        else { result = this.map(() => _qsa(this, sel)); }
+        } else if (this.length == 1) { result = Ele(_qsa(this.get(0), sel)); }
+        else { result = this.map(el => _qsa(el, sel)); }
         return result;
     },
 
@@ -251,12 +252,12 @@ Ele = _class(_event, arrProto, {
     },
 
     contents() {
-        return this.map(el => el.contentDocument || arrProto.slice.call(el.childNodes));
+        return this.map(el => el.contentDocument || [].slice.call(el.childNodes));
     },
 
     siblings(sel) {
         return _filter(this.map(el =>
-            arrProto.filter.call(
+            [].filter.call(
                 _children(el.parentNode),
                 child => (child != el)
             )
@@ -316,7 +317,7 @@ Ele = _class(_event, arrProto, {
     removeAttr(name) {
         return this.each(el => {
             el.nodeType == 1 && name.split(' ')
-                .forEach(attr => { _setAttr(this, attr); }, this);
+                .forEach(attr => { _setAttr(el, attr); });
         });
     },
 
@@ -331,7 +332,7 @@ Ele = _class(_event, arrProto, {
         if (args.length) {
             if (_is.nul(value)) value = "";
             return this.each((el, idx) => {
-                el.value = _fnval(value, [idx, this.value], this);
+                el.value = _fnval(value, [idx, el.value], el);
             });
         } else {
             _el = this.get(0);
@@ -362,7 +363,7 @@ Ele = _class(_event, arrProto, {
         if (documentElement != this.get(0) && !_contains(documentElement, this.get(0)))
             return { top: 0, left: 0 };
         
-        obj = this.get(0).getBoundingClientRect()
+        obj = this.get(0).getBoundingClientRect();
         return {
             left: obj.left + window.pageXOffset,
             top: obj.top + window.pageYOffset,
@@ -425,7 +426,7 @@ Ele = _class(_event, arrProto, {
 // Generate shortforms for events eg. .click(), .hover(), etc... 
 nativeEvents.reduce((acc, name) => {
     // Handle event binding
-    acc[name] = (...args) => { return this.on(name, ...args); };
+    acc[name] = function (...args) { return this.on(name, ...args); };
     return acc;
 }, {
     hover(fnOver, fnOut) 

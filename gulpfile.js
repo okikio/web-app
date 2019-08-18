@@ -50,7 +50,7 @@ let htmlMinOpts = {
     processScripts: ["application/ld+json"]
 };
 
-let minifyOpts = { toplevel: true };
+let minifyOpts = { toplevel: !dev };
 let minSuffix = { suffix: ".min" };
 let watchDelay = { delay: 500 };
 let publicDest = 'public';

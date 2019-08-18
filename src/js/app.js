@@ -1,12 +1,17 @@
 import swup from "swup";
-import el from "./components/ele";
+// import el from "./components/ele";
+import _class from "./components/class";
+import _event from "./components/event";
 // import scrollPlugin from "@swup/scroll-plugin";
 // import slideTheme from '@swup/slide-theme';
 // import preload from '@swup/preload-plugin';
 // import anime from "anime";
 
-let ele = new el("body");
-console.log(ele);
+// let ele = new el("body");
+let c = _class({
+	log: (...args) => args.forEach(v => console.log(v))
+});
+c.log(_event.static); // ._static({})
 /*ele.set("style", {});
 fetch("/assets/app.js")
 	.then(console.log);*/

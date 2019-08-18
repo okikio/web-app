@@ -59,7 +59,7 @@ export let _method = _attachProp("prototype");
 export let _static = _attachProp("static");
 
 // Create a copy of static methods that can function as prototype methods
-export let _alias = (props, opts) => {
+export let _alias = function (props, opts) {
     let thisArg = opts && opts.thisArg || []; // This as first argument
     let chain = opts && opts.chain || [], toStr;
     let result = {}, val, _args;
@@ -68,11 +68,11 @@ export let _alias = (props, opts) => {
         val = props[i];
 
         if (_is.fn(val)) {
-            result[i] = (...args) => {
+            result[i] = function (...args) {
                 if (_is.fn(opts)) {
                     return opts.call(this, val, ...args);
                 } else {
-                    _args = thisArg.includes(i) ?  [this, ...args] : args;
+                    _args = thisArg.includes(i) ? [this, ...args] : args;
                     if (chain.includes(i)) {
                         val.apply(this, _args);
                         return this;
@@ -92,7 +92,7 @@ export let _alias = (props, opts) => {
 };
 
 // Easy access to configurable property attributes, like get, set, writeable, value etc...
-export let _configAttr = (attr = "get", type = "function") => {
+export let _configAttr = function (attr = "get", type = "function") {
     return val => {
         let _val = val;
         if (type == "function") {
@@ -154,8 +154,6 @@ export let _class = function (...args) {
 
     // Class Object
     Class = function (..._args) {
-        // Current Class
-        if (_is.not("inst", this, Class)) { return _new(Class, _args); }
         this._args = _args; // Arguments
 
         // Initialize Class
@@ -174,13 +172,16 @@ export let _class = function (...args) {
     Class.SubClasses = []; // List of SubClasses
 
     // Extend Class
-    assign(Class, aliasMethods);
+    assign(Class, props);
     assign(Class.prototype, aliasMethods, {
+        SuperClass: Class.SuperClass, 
+        SubClasses: Class.SubClasses
+    });
+
+    assign(Class.prototype, {
         callsuper: Class.prototype._callsuper,
         method: Class.prototype._method, 
         static: Class.prototype._static,
-        SuperClass: Class.SuperClass, 
-        SubClasses: Class.SubClasses,
         attr: Class.prototype._attr 
     });
 
@@ -192,14 +193,14 @@ export let _class = function (...args) {
 
     // Set Class constructor
     Class.prototype.constructor = Class;
-    if (!Class.prototype.init) { Class.prototype.init = () => { }; }
+    if (!Class.prototype.init) { Class.prototype.init = function () { }; }
     else {
         // Set toString & toValue
         Class.toString = Class.prototype.init.toString;
         Class.toValue = Class.prototype.init.toValue;
     }
 
-    return Class;
+    return new Class(...args);
 };
 
 assign(_class, props); // Extend _class
