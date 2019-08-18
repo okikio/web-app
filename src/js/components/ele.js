@@ -1,4 +1,4 @@
-import { _is, assign, _path, keys, _intersect, _fnval } from "./util";
+import { _is, _path,  _intersect, _fnval } from "./util";
 import _event from './event';
 import _class from "./class";
 import anime from "animejs";
@@ -7,10 +7,10 @@ const { createElement, documentElement } = document;
 const { _get, _alias } = _class;
 
 let Ele;
+let tagRE = /^\s*<(\w+|!)[^>]*>/;
 let { applyNative, nativeEvents } = event;
-let tagRE = /^<([\w-])\s*\/?>(?:<\/\1>|)$/;
 let _cssNumber = ["column-count", "columns", "font-weight", "line-height", "opacity", "z-index", "zoom"];
-let _qsa = (dom, sel) => Ele(...dom.querySelectorAll(sel));
+let _qsa = (dom = document, sel) => _is.str(sel) && sel.length ? Ele(...dom.querySelectorAll(sel)) : [];
 
 // The matches() method checks to see if the Element would be selected by the provided selectorString -- in other words -- checks if the element "is" the selector.
 let _matches = (ele, sel) => {
@@ -20,45 +20,55 @@ let _matches = (ele, sel) => {
 
 // Check if the parent node contains the given DOM node. Returns false if both are the same node.
 let _contains = (parent, node) => {
-    if (parent.contains) return parent !== node && parent.contains(node);
+    if (parent.contains) return parent != node && parent.contains(node);
     while (node && (node = node.parentNode))
-        if (node === parent) return true;
+        if (node == parent) return true;
     return false;
 };
 
-// Creates elements
-let _createElem = sel => {
-    let el = "div";
-    if (_is.str(sel) && tagRE.test(sel)) {
-        el = sel.replace(tagRE, "$1")
-        return createElement(el);
-    }
-};
-
-// Element selector
-let _elem = sel => {
-    if (_is.inst(sel, Ele)) { return sel.ele; }
-    else if (_is.arr(sel) || _is.inst(sel, NodeList)) { return [...sel]; }
-    else if (_is.el(sel)) { return [sel]; }
-    else if (tagRE.test(sel)) { return [_createElem(sel)]; }
-    return _qsa(document, sel);
-};
-
+// Allow default Array methods to work as Element methods
 let arrProto = _alias(Array.prototype, (val, ...args) => {
     args = args.map(v => _is.fn(v) ? v.bind(this) : v, this);
     let _val = val.apply(this, args);
     return _is.inst(_val, Ele) ? Ele(_val) : (_is.undef(_val) ? this : _val);
 });
 
+// Create an Element List from a HTML string
+let _createElem = html => {
+    let dom, container;
+    container = createElement('div');
+    container.innerHTML = '' + html;
+    dom = [].slice.call(container.childNodes);
+    dom.forEach(el => {
+        container.removeChild(el);
+    });
+
+    return dom;
+};
+
+// Element selector
+let _elem = sel => {
+    if (_is.str(sel)) {
+        sel = sel.trim();
+        if (tagRE.test(sel)) { return _createElem(sel); }
+        else { return _qsa(document, sel); }
+    } else if (_is.inst(sel, Ele)) { return sel.ele; }
+    else if (_is.arr(sel) || _is.inst(sel, NodeList)) 
+        { return [...sel].filter(item => _is.def(item)); }
+    else if (_is.obj(sel) || _is.el(sel)) { return [sel]; }
+    else if (_is.fn(sel)) { Ele(document).ready(sel); }
+    return [];
+};
+
 let _filter = (nodes, sel) => _is.nul(sel) ? Ele(nodes) : Ele(nodes).filter(sel);
 let _uniq = arr => {
-    return arrProto.filter.call(arr, (val, idx) => arr.indexOf(val) == idx);
+    return [].filter.call(arr, (val, idx) => arr.indexOf(val) == idx);
 };
 
 let _setAttr = (node, name, value) => value == null ? node.removeAttribute(name) : node.setAttribute(name, value);
 let _children = el => {
-    return 'children' in el ? arrProto.slice.call(el.children) :
-        arrProto.map.call(el.childNodes, node => {
+    return 'children' in el ? [].slice.call(el.children) :
+        [].map.call(el.childNodes, node => {
             if (node.nodeType == 1) return node;
         });
 };
@@ -74,16 +84,17 @@ let _valfix = value => {
 };
 
 let _maybeAddPx = (name, val) => {
-    return (_is.num(val) && _cssNumber.includes(name)) ? `${val}px` : val;
+    return _is.num(val) && !_cssNumber.includes(name) ? `${val}px` : val;
 };
 
 // Element Object [Based on Zepto.js]
 Ele = _class(_event, arrProto, {
     init(sel = '') {
-        this.sel = _is.inst(sel, Ele) ? sel.ele : sel; // Selector
-        this.ele = _elem(sel); // Element
+        this.sel = sel; // Selector
+        this.ele = _elem(this.sel); // Element
 
-        for (let i = 0; i < this.len; i++) { this[i] = this.ele[i]; }
+        for (let i = 0; i < this.len; i++) 
+            this[i] = this.ele[i];
 
         this.timeline = anime.timeline({
             targets: this.ele,
@@ -109,7 +120,8 @@ Ele = _class(_event, arrProto, {
         }, this);
     },
 
-    length: _get("ele.length"),
+    length: _get("len"),
+    len: _get("ele.length"),
     each(fn) {
         arrProto.call(this, (el, idx) => fn.call(el, el, idx) != false);
         return this;
@@ -120,12 +132,11 @@ Ele = _class(_event, arrProto, {
     },
     nth: _get("get"),
 
-    len() { return this.length; },
-    size() { return this.len(); },
+    size() { return this.length; },
     toArray() { return this.get(); },
     remove() {
         return this.each(el => {
-            if (el.parentNode != null)
+            if (!_is.nul(el.parentNode))
                 el.parentNode.removeChild(el);
         });
     },
@@ -254,6 +265,7 @@ Ele = _class(_event, arrProto, {
                 Ele(el).empty().append(_fnval(html, [idx, originHTML], el));
             }) : (this.length ? this.get(0).innerHTML : null);
     },
+
     text(...args) {
         let [text] = args;
         return args.length ?
@@ -262,6 +274,7 @@ Ele = _class(_event, arrProto, {
                 el.textContent = _is.nul(newText) ? '' : `${newText}`;
             }) : (this.length ? this.pluck('textContent').join("") : null);
     },
+
     attr(name, val) {
         let result;
         if (_is.str(name) && _is.undef(val)) {
@@ -280,17 +293,20 @@ Ele = _class(_event, arrProto, {
             });
         }
     },
+
     removeAttr(name) {
         return this.each(el => {
             el.nodeType == 1 && name.split(' ')
                 .forEach(attr => { _setAttr(this, attr); }, this);
         });
     },
+
     data(name, value) {
         let attrName = `data-${name}`.toLowerCase();
         let data = _is.def(value) ? this.attr(attrName, value) : this.attr(attrName);
         return data != null ? _valfix(data) : undefined;
     },
+
     val(...args) {
         let [value] = args, _el;
         if (args.length) {
@@ -305,7 +321,9 @@ Ele = _class(_event, arrProto, {
                 _el.value);
         }
     },
+
     offset(coords) {
+        let obj;
         if (coords) {
             return this.each((el, idx) => {
                 let $this = Ele(el);
@@ -322,28 +340,30 @@ Ele = _class(_event, arrProto, {
         }
 
         if (!this.length) return null;
-        if (documentElement != this.get(0) && !$.contains(document.documentElement, this[0]))
-            return { top: 0, left: 0 }
-        let obj = this[0].getBoundingClientRect()
+        if (documentElement != this.get(0) && !_contains(documentElement, this.get(0)))
+            return { top: 0, left: 0 };
+        
+        obj = this.get(0).getBoundingClientRect()
         return {
             left: obj.left + window.pageXOffset,
             top: obj.top + window.pageYOffset,
             width: Math.round(obj.width),
             height: Math.round(obj.height)
-        }
+        };
     },
+
     style(...args) {
         let [prop, val] = args, css = '', key;
         if (args.length < 2) {
             let el = this.get(0);
             if (!el) return;
             if (_is.str(prop)) {
-                return el.style[camelize(prop)] || window.getComputedStyle(el, '').getPropertyValue(prop)
+                return el.style[prop] || window.getComputedStyle(el, '').getPropertyValue(prop);
             } else if (_is.arr(prop)) {
                 let props = {};
-                let computedStyle = window.getComputedStyle(el, '')
+                let computedStyle = window.getComputedStyle(el, '');
                 prop.forEach(_prop => {
-                    props[_prop] = (el.style[camelize(_prop)] || computedStyle.getPropertyValue(_prop))
+                    props[_prop] = (el.style[_prop] || computedStyle.getPropertyValue(_prop))
                 });
                 return props;
             }
@@ -351,16 +371,16 @@ Ele = _class(_event, arrProto, {
 
         if (_is.str(prop)) {
             if (!val && val != 0) {
-                this.each(el => { el.style.removeProperty(dasherize(prop)) })
+                this.each(el => { el.style.removeProperty(prop); });
             } else {
-                css = dasherize(prop) + ":" + maybeAddPx(prop, val);
+                css = prop + ":" + _maybeAddPx(prop, val);
             }
         } else {
             for (key in prop) {
                 if (!prop[key] && prop[key] != 0) {
-                    this.each(el => { el.style.removeProperty(dasherize(key)); });
+                    this.each(el => { el.style.removeProperty(key); });
                 } else {
-                    css += dasherize(key) + ':' + maybeAddPx(key, prop[key]) + ';';
+                    css += key + ':' + _maybeAddPx(key, prop[key]) + ';';
                 }
             }
         }
@@ -371,138 +391,106 @@ Ele = _class(_event, arrProto, {
     show: () => this.style("display", ""),
     hide: () => this.style("display", "none"),
     empty: () => this.each(el => { el.innerHTML = ''; }),
-    index: function (element) {
-        return element ? this.indexOf($(element)[0]) : this.parent().children().indexOf(this[0])
+    index(el) {
+        return el ? this.indexOf(Ele(el).get(0)) : this.parent().children().indexOf(this.get(0));
     },
 
-    x(el) { return this.clientRect(el).x; },
-    y(el) { return this.clientRect(el).y; },
-    width(el) { return this.clientRect(el).width; },
-    height(el) { return this.clientRect(el).height; },
-    clientRect(el) { return el.getBoundingClientRect(); },
-    style(ele, css = {}) {
-        Object.assign(ele.style, css);
-        return this;
-    },
     animate(opt = {}, offset) {
         let tl = this.timeline;
         tl.add(opt, offset);
         _is.def(opt.play) && (opt.play && tl.play() || tl.pause());
         return this;
     },
-    click(fn = () => { }) {
-        return this.each(function (ele) {
-            ele.onclick = fn.bind(this);
-        }, this);
-    },
-    hover(fn = () => { }) {
-        return this.each(function (ele) {
-            ele.onmouseover = fn.bind(this);
-        }, this);
-    },
-    mousemove(fn = () => { }) {
-        return this.each(function (ele) {
-            ele.addEventListener("mousemove", fn.bind(this));
-        }, this);
-    },
-    intersect($this, el) {
-        return (
-            this.x($this) < this.x(el) + this.width(el) &&
-            this.x(el) < this.x($this) + this.width($this) &&
-            this.y($this) < this.y(el) + this.height(el) &&
-            this.y(el) < this.y($this) + this.height($this)
-        );
-    }
 }, () => {
     return nativeEvents.reduce((acc, name) => {
         // Handle event binding
         acc[name] = (...args) => {
-            let [data, fn] = args;
-            return args.length > 0 ?
-                this.on(name, null, data, fn) :
-                this.emit(name);
+            return this.on(name, ...args);
         };
     }, {
-            hover(fnOver, fnOut) {
-                return this.mouseenter(fnOver).mouseleave(fnOut || fnOver);
-            }
-        });
-}, () => {
-    /*
-    // Generate the `width` and `height` functions
-    ['width', 'height'].forEach(function (dimension) {
-        var dimensionProperty =
-            dimension.replace(/./, function (m) { return m[0].toUpperCase() })
-
-        $.fn[dimension] = function (value) {
-            var offset, el = this[0]
-            if (value === undefined) return isWindow(el) ? el['inner' + dimensionProperty] :
-                isDocument(el) ? el.documentElement['scroll' + dimensionProperty] :
-                    (offset = this.offset()) && offset[dimension]
-            else return this.each(function (idx) {
-                el = $(this)
-                el.css(dimension, funcArg(this, value, idx, el[dimension]()))
-            })
+        hover(fnOver, fnOut) {
+            return this.mouseenter(fnOver).mouseleave(fnOut || fnOver);
         }
-    })
+    });
+}, () => {
+    let result = {};
+    // Generate the `width` and `height` functions
+    ['width', 'height'].forEach((sz) => {
+        let prop = sz[0].toUpperCase() + sz.slice(1);
 
+        result[sz] = function (value) {
+            let offset, el = this.get(0);
+            if (_is.undef(value)) {
+                if (_is.win(el)) { 
+                    return el['inner' + prop];
+                } else if (_is.doc(el)) {
+                    return el.documentElement['scroll' + prop];
+                } else {
+                    return (offset = this.offset()) && offset[sz];
+                }
+            } else {
+                return this.each((_el, idx) => {
+                    el = Ele(_el);
+                    el.style(sz, _fnval(value, [idx, el[sz]()], _el));
+                });
+            }
+        };
+    });
+
+    /*
     function traverseNode(node, fun) {
         fun(node)
         for (var i = 0, len = node.childNodes.length; i < len; i++)
             traverseNode(node.childNodes[i], fun)
-    }
+    }*/
 
+    let adjacencyOperators = [ 'after', 'prepend', 'before', 'append' ];
     // Generate the `after`, `prepend`, `before`, `append`,
     // `insertAfter`, `insertBefore`, `appendTo`, and `prependTo` methods.
-    adjacencyOperators.forEach(function (operator, operatorIndex) {
-        var inside = operatorIndex % 2 //=> prepend, append
+    adjacencyOperators.forEach((operator, idx) => {
+        let inside = idx % 2 //=> prepend, append
 
-        $.fn[operator] = function () {
-            // arguments can be nodes, arrays of nodes, Zepto objects and HTML strings
-            var argType, nodes = $.map(arguments, function (arg) {
-                var arr = []
-                argType = type(arg)
-                if (argType == "array") {
-                    arg.forEach(function (el) {
-                        if (el.nodeType !== undefined) return arr.push(el)
-                        else if ($.zepto.isZ(el)) return arr = arr.concat(el.get())
-                        arr = arr.concat(zepto.fragment(el))
-                    })
-                    return arr
+        result[operator] = function (...args) {
+            // Arguments can be nodes, arrays of nodes, Element objects and HTML strings
+            let clone = this.length > 1;
+            let nodes = args.map(arg => {
+                if (_is.arr(arg)) {
+                    return arg.reduce((acc, el) => {
+                        if (_is.def(el.nodeType)) acc.push(el);
+                        else if (_is.inst(el, Ele)) acc = acc.concat(el.get());
+                        else if (_is.str(el)) acc = acc.concat(_createElem(el));
+                        return acc;
+                    }, []);
                 }
-                return argType == "object" || arg == null ?
-                    arg : zepto.fragment(arg)
-            }),
-                parent, copyByClone = this.length > 1
-            if (nodes.length < 1) return this
 
-            return this.each(function (_, target) {
-                parent = inside ? target : target.parentNode
+                return _is.obj(arg) || _is.nul(arg) ? arg : _createElem(arg);
+            }).filter(item => _is.def(item));
 
-                // convert all methods to a "before" operation
-                target = operatorIndex == 0 ? target.nextSibling :
-                    operatorIndex == 1 ? target.firstChild :
-                        operatorIndex == 2 ? target :
-                            null
-
-                var parentInDocument = $.contains(document.documentElement, parent)
-
-                nodes.forEach(function (node) {
-                    if (copyByClone) node = node.cloneNode(true)
-                    else if (!parent) return $(node).remove()
-
-                    parent.insertBefore(node, target)
-                    if (parentInDocument) traverseNode(node, function (el) {
-                        if (el.nodeName != null && el.nodeName.toUpperCase() === 'SCRIPT' &&
-                            (!el.type || el.type === 'text/javascript') && !el.src) {
-                            var target = el.ownerDocument ? el.ownerDocument.defaultView : window
-                            target['eval'].call(target, el.innerHTML)
-                        }
-                    })
-                })
-            })
-        }
-
+            return this.each(target => {
+                let parent = inside ? target : target.parentNode;
+                let parentInDoc = _contains(documentElement, parent);
+                let next = target.nextSibling, first = target.firstChild;
+                
+                // Convert all methods to a "before" operation
+                target = [next, first, target, null] [idx];
+                nodes.forEach(node => {
+                    if (clone) node = node.cloneNode(true);
+                    else if (!parent) return Ele(node).remove();
+                    parent.insertBefore(node, target);
+                    
+                    if (parentInDoc) {
+                        traverseDF(node, el => {
+                            if (!_is.nul(el.nodeName) && el.nodeName.toUpperCase() == 'SCRIPT' &&
+                                (!el.type || el.type == 'text/javascript') && !el.src) {
+                                let target = el.ownerDocument ? el.ownerDocument.defaultView : window;
+                                target.eval.call(target, el.innerHTML);
+                            }
+                        });
+                    }
+                });
+            });
+        };
+/*
         // after    => insertAfter
         // prepend  => prependTo
         // before   => insertBefore
@@ -511,9 +499,9 @@ Ele = _class(_event, arrProto, {
             $(html)[operator](this)
             return this
         }
-    return ["before"].reduce(() => {
+    return ["before"].reduce(() => {*/
 
-    })*/
+    })
 });
 
 

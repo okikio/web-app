@@ -23,6 +23,7 @@ assign(_is, {
     not: (type, ...args) => !_is[type](...args),
     doc: ctor => _isInst(ctor, Document),
     def: val => !_is(val, "undefined"),
+    win: val => val && val.window,
     undef: _type("undefined"),
     bool: _type("boolean"),
     fn: _type("function"),
