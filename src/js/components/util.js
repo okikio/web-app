@@ -1,3 +1,6 @@
+import anime from "animejs";
+export let { timeline, remove, stagger, random } = anime;
+
 export let { assign, keys, values, getOwnPropertyNames } = Object;
 export let { isArray, from, of } = Array;
 
@@ -53,11 +56,18 @@ export let _fnval = (fn, args, ctxt) => {
 
 // Argument names
 export let _argNames = fn => {
-    let args = fn.toString()
-        .match(/^[\s(]*function[^(]*\(([^)]*)\)/)[1]
-        .replace(/\/\/.*?[\r\n]|\/\*(?:.|[\r\n])*?\*\//g, '')
-        .replace(/\s+/g, '').split(',');
-    return args.length == 1 && !args[0] ? [] : args;
+    /*let args = fn.toString().toString().match(/function\s.*?\(([^)]*)\)/);
+    return _is.undef(args) ? [] : []args[1].split(',').map(function(arg) {
+        // Ensure no inline comments are parsed and trim the whitespace.
+        return arg.replace(/\/\*.*\*\//, '').trim();
+      }).filter(item => _is.def(item));*/
+      return (fn + '')
+      .replace(/[/][/].*$/mg,'') // strip single-line comments
+      .replace(/\s+/g, '') // strip white space
+      .replace(/[/][*][^/*]*[*][/]/g, '') // strip multi-line comments  
+      .split('){', 1)[0].replace(/^[^(]*[(]/, '') // extract the parameters  
+      .replace(/=[^,]+/g, '') // strip any ES6 defaults  
+      .split(',').filter(Boolean); // split & filter [""]
 };
 
 // Get or set a value in an Object, based on it's path
@@ -100,4 +110,4 @@ export let _new = function (ctor, args) {
     return new F();
 };
 
-export default { _capital, _is, _intersect, _fnval, _argNames, _path, _attr, _new, assign, keys, values, from, of, getOwnPropertyNames };
+export default { anime, random, timeline, remove, stagger, _capital, _is, _intersect, _fnval, _argNames, _path, _attr, _new, assign, keys, values, from, of, getOwnPropertyNames };

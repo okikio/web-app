@@ -5,7 +5,7 @@ export let _attachProp = where => {
     let _prototype = where == "prototype";
     return (_obj, ...args) => {
         // If super class exists, set value of parent to `SuperClass` prototype
-        let parent = _obj.SuperClass && _obj.SuperClass.prototype;
+        let parent = _obj.SuperClass && (_prototype ? _obj.SuperClass.prototype : _obj.SuperClass);
         args.forEach(function (val) {
             // Transform functions to Objects
             let obj = _fnval(val, [_obj, _obj.constructor], _prototype ? _obj.prototype : _obj);
@@ -15,11 +15,12 @@ export let _attachProp = where => {
                 let _val = obj[i], preVal = _val;
 
                 // If a Parent Class is Present, Set any argument/params named `$super` to the `Parent`
-                if (_is.fn(_val)) {
-                    if (_prototype && parent && _argNames(_val)[0] == "$super") {
+                if (_is.fn(preVal)) {
+                    if (parent && _argNames(preVal) && _argNames(preVal)[0] == "$super") {
                         // Let the first argument be the original value
                         _val = function (...args) {
                             let parentFn = parent[i].bind(this);
+                            console.log(parentFn)
                             return preVal.call(this, parentFn, ...args);
                         };
                     }

@@ -1,7 +1,6 @@
-import { _is, _path,  _intersect, _fnval, _capital } from "./util";
+import { _is, _path,  _intersect, _fnval, _capital, timeline, remove, stagger, random } from "./util";
 import _event from './event';
 import _class from "./class";
-// import anime from "animejs";
 
 const { createElement, documentElement } = document;
 const { _get, _alias } = _class;
@@ -26,8 +25,35 @@ let _contains = (parent, node) => {
     return false;
 };
 
+// Support the Element Object as an Array
+let _toArr = val => (_is.inst(val, Ele) ? val.toArray() : val);
+let _concat = function (args) {
+    [].map.call(args, val => _toArr(val));
+    return [].concat.apply(_toArr(this), args);
+};
+
+// Create a flat Array
+let _flatten = arr => (arr.length > 0 ? _concat.apply([], arr) : arr);
+
+// Map Objects
+let _map = (obj, fn, ctxt) => {
+    return _flatten([].map.call(obj, fn, ctxt)
+        .filter(item => _is.def(item)));
+};
+
+// Select all children of an element
+let _children = el => {
+    return 'children' in el ? [].slice.call(el.children) :
+        _map(el.childNodes, node => {
+            if (node.nodeType == 1) return node;
+        });
+};
+
 // Allow default Array methods to work as Element Object methods
-let arrProto = _alias(Array.prototype);
+let arrProto = _alias(Array.prototype, function (val, ...args) {
+    let _val = val.apply(this, args);
+    return _is.undef(_val) ? this : _val;
+});
 
 // Create an Element List from a HTML string
 let _createElem = html => {
@@ -78,14 +104,6 @@ let _uniq = arr => {
 // Quickly set the value of an attribute or remove the attribute completely from a node
 let _setAttr = (node, name, value) => value == null ? node.removeAttribute(name) : node.setAttribute(name, value);
 
-// Select all children of an element
-let _children = el => {
-    return 'children' in el ? [].slice.call(el.children) :
-        [].map.call(el.childNodes, node => {
-            if (node.nodeType == 1) return node;
-        });
-};
-
 // Transform  string value to the proper type of value eg. "12" = 12, "[12, 'xyz']" = [12, 'xyz']
 let _valfix = value => {
     let validTypes = /^true|false|null|undefined|\d+$/;
@@ -110,11 +128,11 @@ Ele = _class(_event, arrProto, {
 
         for (let i = 0; i < this.length; i++) 
             this[i] = this.ele[i];
+    },
 
-        /*this.timeline = anime.timeline({
-            targets: this,
-            autoplay: false
-        });*/
+    slice(...args) { return Ele([].slice.apply(this, args)); },
+    map(fn) {
+        return Ele(_map(this, (el, i) => fn.call(el, el, i), this));
     },
 
     on($super, evt, callback, scope) {
@@ -123,6 +141,7 @@ Ele = _class(_event, arrProto, {
         if (_is.str(evt)) { evt = evt.split(/\s/g); }
         if (_is.not("arr", evt) && _is.not("obj", evt)) { evt = [evt]; } // Set evt to an array
 
+        console.log($super);
         _same = _intersect(evt, nativeEvents);
         return this.forEach(function (el) {
             if (_same.length > 0) {
@@ -131,7 +150,7 @@ Ele = _class(_event, arrProto, {
                 }, this);
             }
 
-            $super(evt, callback, scope || el);
+            // $super(evt, callback, scope || el);
         }, this);
     },
 
@@ -144,7 +163,7 @@ Ele = _class(_event, arrProto, {
     },
 
     get(idx) {
-        return _is.undef(idx) ? this.slice() : this[idx >= 0 ? idx : idx + this.length];
+        return _is.undef(idx) ? [].slice.call(this) : this[idx >= 0 ? idx : idx + this.length];
     },
     nth: _get("get"),
 
@@ -410,13 +429,21 @@ Ele = _class(_event, arrProto, {
     index(el) {
         return el ? this.indexOf(Ele(el).get(0)) : this.parent().children().indexOf(this.get(0));
     },
-    /*
+    getAnime() { return this.timeline; },
     animate(opt = {}, offset) {
+        opt = _fnval(opt, [{ stagger, remove, random }, offset], this);
+        if (_is.undef(this.timeline)) { 
+            this.timeline = timeline({
+                targets: _toArr(this)
+            });
+        }
+
+        let { play, ...opts } = opt;
         let tl = this.timeline;
-        tl.add(opt, offset);
-        _is.def(opt.play) && (opt.play && tl.play() || tl.pause());
+        tl.add(opts, offset);
+        _is.def(play) && (play && tl.play() || tl.pause());
         return this;
-    },*/
+    }, 
 }, 
 
 // Generate shortforms for events eg. .click(), .hover(), etc... 
@@ -457,7 +484,7 @@ nativeEvents.reduce((acc, name) => {
     acc[fn] = function (...args) {
         // Arguments can be nodes, arrays of nodes, Element objects and HTML strings
         let clone = this.length > 1;
-        let nodes = args.map(function (arg) {
+        let nodes = _map(args, function (arg) {
             if (_is.arr(arg)) {
                 return arg.reduce((acc, el) => {
                     if (_is.def(el.nodeType)) acc.push(el);
@@ -468,7 +495,7 @@ nativeEvents.reduce((acc, name) => {
             }
 
             return _is.obj(arg) || _is.nul(arg) ? arg : _createElem(arg);
-        }).filter(item => _is.def(item));
+        });
 
         return this.each(function (target) {
             let parent = inside ? target : target.parentNode;
