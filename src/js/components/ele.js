@@ -1,7 +1,7 @@
 import { _is, _path,  _intersect, _fnval, _capital } from "./util";
 import _event from './event';
 import _class from "./class";
-import anime from "animejs";
+// import anime from "animejs";
 
 const { createElement, documentElement } = document;
 const { _get, _alias } = _class;
@@ -10,7 +10,7 @@ let Ele;
 let tagRE = /^\s*<(\w+|!)[^>]*>/;
 let { applyNative, nativeEvents } = _event;
 let _cssNumber = ["column-count", "columns", "font-weight", "line-height", "opacity", "z-index", "zoom"];
-let _qsa = (dom = document, sel) => _is.str(sel) && sel.length ? Ele(...dom.querySelectorAll(sel)) : [];
+let _qsa = (dom = document, sel) => _is.str(sel) && sel.length ? [...dom.querySelectorAll(sel)] : [];
 
 // The matches() method checks to see if the Element would be selected by the provided selectorString -- in other words -- checks if the element "is" the selector.
 let _matches = (ele, sel) => {
@@ -27,11 +27,7 @@ let _contains = (parent, node) => {
 };
 
 // Allow default Array methods to work as Element Object methods
-let arrProto = _alias(Array.prototype, function (val, ...args) {
-    args = args.map(v => _is.fn(v) ? v.bind(this) : v, this);
-    let _val = val.apply(this, args);
-    return _is.inst(_val, Ele) ? Ele(_val) : (_is.undef(_val) ? this : _val);
-});
+let arrProto = _alias(Array.prototype);
 
 // Create an Element List from a HTML string
 let _createElem = html => {
@@ -107,7 +103,7 @@ let _maybeAddPx = (name, val) => {
 };
 
 // Element Object [Based on Zepto.js]
-Ele = _class(_event, {
+Ele = _class(_event, arrProto, {
     init(sel = '') {
         this.sel = sel; // Selector
         this.ele = _elem(this.sel); // Element
@@ -115,10 +111,10 @@ Ele = _class(_event, {
         for (let i = 0; i < this.length; i++) 
             this[i] = this.ele[i];
 
-        this.timeline = anime.timeline({
-            targets: this.ele,
+        /*this.timeline = anime.timeline({
+            targets: this,
             autoplay: false
-        });
+        });*/
     },
 
     on($super, evt, callback, scope) {
@@ -142,7 +138,7 @@ Ele = _class(_event, {
     length: _get("len"),
     len: _get("ele.length"),
     each(fn) {
-        arrProto.forEach.call(this, function (el, idx) 
+        [].every.call(this, function (el, idx) 
             { return fn.call(el, el, idx) != false; });
         return this;
     },
@@ -156,7 +152,7 @@ Ele = _class(_event, {
     toArray() { return this.get(); },
     remove() {
         return this.each(el => {
-            if (!_is.nul(el.parentNode))
+            if (_is.def(el.parentNode));
                 el.parentNode.removeChild(el);
         });
     },
@@ -414,14 +410,14 @@ Ele = _class(_event, {
     index(el) {
         return el ? this.indexOf(Ele(el).get(0)) : this.parent().children().indexOf(this.get(0));
     },
-
+    /*
     animate(opt = {}, offset) {
         let tl = this.timeline;
         tl.add(opt, offset);
         _is.def(opt.play) && (opt.play && tl.play() || tl.pause());
         return this;
-    },
-}, arrProto,
+    },*/
+}, 
 
 // Generate shortforms for events eg. .click(), .hover(), etc... 
 nativeEvents.reduce((acc, name) => {
@@ -456,12 +452,12 @@ nativeEvents.reduce((acc, name) => {
 }, {}), 
 
 // Generate the `after`, `prepend`, `before`, `append`, `insertAfter`, `insertBefore`, `appendTo`, and `prependTo` methods.
-[ 'after', 'prepend', 'before', 'append' ].reduce((acc, fn, idx) => {
+[ 'after', 'prepend', 'before', 'append' ].reduce(function (acc, fn, idx) {
     let inside = idx % 2 //=> prepend, append
     acc[fn] = function (...args) {
         // Arguments can be nodes, arrays of nodes, Element objects and HTML strings
         let clone = this.length > 1;
-        let nodes = args.map(arg => {
+        let nodes = args.map(function (arg) {
             if (_is.arr(arg)) {
                 return arg.reduce((acc, el) => {
                     if (_is.def(el.nodeType)) acc.push(el);
@@ -474,20 +470,20 @@ nativeEvents.reduce((acc, name) => {
             return _is.obj(arg) || _is.nul(arg) ? arg : _createElem(arg);
         }).filter(item => _is.def(item));
 
-        return this.each(target => {
+        return this.each(function (target) {
             let parent = inside ? target : target.parentNode;
             let parentInDoc = _contains(documentElement, parent);
             let next = target.nextSibling, first = target.firstChild;
             
             // Convert all methods to a "before" operation
             target = [next, first, target, null] [idx];
-            nodes.forEach(node => {
+            nodes.forEach(function (node) {
                 if (clone) node = node.cloneNode(true);
                 else if (!parent) return Ele(node).remove();
                 parent.insertBefore(node, target);
                 
                 if (parentInDoc) {
-                    traverseDF(node, el => {
+                    traverseDF(node, function (el) {
                         if (!_is.nul(el.nodeName) && el.nodeName.toUpperCase() == 'SCRIPT' &&
                             (!el.type || el.type == 'text/javascript') && !el.src) {
                             let target = el.ownerDocument ? el.ownerDocument.defaultView : window;

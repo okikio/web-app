@@ -1,32 +1,28 @@
-import { _is, _fnval, _argNames, _path, _attr, _new, assign, keys } from "./util";
+import { _is, _fnval, _argNames, _path, _attr, _new, assign, keys, getOwnPropertyNames } from "./util";
 
 // Attach properties to class prototype or the class itself
 export let _attachProp = where => {
     let _prototype = where == "prototype";
-
     return (_obj, ...args) => {
         // If super class exists, set value of parent to `SuperClass` prototype
-        let parent = _prototype && _obj.SuperClass ? _obj.SuperClass.prototype : _obj.SuperClass;
-
-        args.forEach(val => {
+        let parent = _obj.SuperClass && _obj.SuperClass.prototype;
+        args.forEach(function (val) {
             // Transform functions to Objects
             let obj = _fnval(val, [_obj, _obj.constructor], _prototype ? _obj.prototype : _obj);
 
             // Iterate through Object
-            keys(obj).forEach(i => {
+            keys(obj).forEach(function (i) {
                 let _val = obj[i], preVal = _val;
 
                 // If a Parent Class is Present, Set any argument/params named `$super` to the `Parent`
                 if (_is.fn(_val)) {
-                    if (parent && _argNames(_val)[0] == "$super") {
+                    if (_prototype && parent && _argNames(_val)[0] == "$super") {
                         // Let the first argument be the original value
-                        _val = (...args) => {
-                            let parentFn = parent[i].bind(_obj);
-                            return preVal.apply(_obj, [parentFn, ...args]);
+                        _val = function (...args) {
+                            let parentFn = parent[i].bind(this);
+                            return preVal.call(this, parentFn, ...args);
                         };
                     }
-
-                    _val = _val.bind(_obj);
 
                     // For debugging purposes
                     _val.valueOf = preVal.valueOf.bind(preVal);
@@ -39,14 +35,12 @@ export let _attachProp = where => {
                     Allows the use of `Object.defineProperty`, if an Object has any of these 
                     { $$prop: true, get: function () { ... }, set: function () { ... } } 
                 */
-                if (_is.def(_val) && _is.obj(_val) &&
-                    _is.not("nul", _val) && (_val.$$prop ||
-                        _val.get && _is.fn(_val.get) ||
-                        _val.set && _is.fn(_val.set)
-                    ) && !_val._class) {
+                if (_is.def(_val) && _is.obj(_val) && 
+                    (_val.$$prop || _is.fn(_val.get) || _is.fn(_val.set)) && 
+                    !_val._class) {
                     Object.defineProperty(_prototype ? _obj.prototype : _obj, i, _val);
                 }
-            }, _obj);
+            }, this);
         }, _obj);
         return _obj;
     };
@@ -61,11 +55,12 @@ export let _static = _attachProp("static");
 // Create a copy of static methods that can function as prototype methods
 export let _alias = function (props = {}, opts) {
     let thisArg = opts && opts.thisArg || []; // This as first argument
+    let _keys = getOwnPropertyNames(props);
     let chain = opts && opts.chain || [];
     let result = {},  _args;
 
-    for (let i in props) {
-        let val = props[i], toStr;
+    for (let idx = 0; idx < _keys.length; idx ++) {
+        let i = _keys[idx], val = props[i], toStr;
         
         if (_is.fn(val)) {
             // For more info: stackoverflow.com/questions/19696015

@@ -5,6 +5,7 @@
   "main": "./server.min",
   "scripts": {
     "test": "npm run build",
+    "dev:watch": "gulp dev && gulp watch",
     "watch": "gulp watch",
     "build:dev": "gulp dev",
     "gulp:build": "gulp",
