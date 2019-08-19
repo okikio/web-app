@@ -11,7 +11,7 @@ export let _attachProp = where => {
         args.forEach(val => {
             // Transform functions to Objects
             let obj = _fnval(val, [_obj, _obj.constructor], _prototype ? _obj.prototype : _obj);
-            
+
             // Iterate through Object
             keys(obj).forEach(i => {
                 let _val = obj[i], preVal = _val;
@@ -27,7 +27,7 @@ export let _attachProp = where => {
                     }
 
                     _val = _val.bind(_obj);
-                    
+
                     // For debugging purposes
                     _val.valueOf = preVal.valueOf.bind(preVal);
                     _val.toString = preVal.toString.bind(preVal);
@@ -39,9 +39,9 @@ export let _attachProp = where => {
                     Allows the use of `Object.defineProperty`, if an Object has any of these 
                     { $$prop: true, get: function () { ... }, set: function () { ... } } 
                 */
-                if (_is.def(_val) && _is.obj(_val) && 
-                    _is.not("nul", _val) && (_val.$$prop || 
-                        _val.get && _is.fn(_val.get) || 
+                if (_is.def(_val) && _is.obj(_val) &&
+                    _is.not("nul", _val) && (_val.$$prop ||
+                        _val.get && _is.fn(_val.get) ||
                         _val.set && _is.fn(_val.set)
                     ) && !_val._class) {
                     Object.defineProperty(_prototype ? _obj.prototype : _obj, i, _val);
@@ -61,15 +61,15 @@ export let _static = _attachProp("static");
 // Create a copy of static methods that can function as prototype methods
 export let _alias = function (props = {}, opts) {
     let thisArg = opts && opts.thisArg || []; // This as first argument
-    let chain = opts && opts.chain || [], toStr;
-    let result = {}, val, _args, _key;
-    let _keys = keys(props);
+    let chain = opts && opts.chain || [];
+    let result = {},  _args;
 
-    for (let i = 0; i < _keys.length; i ++) {
-        val = props[(_key = _keys[i])];
-
+    for (let i in props) {
+        let val = props[i], toStr;
+        
         if (_is.fn(val)) {
-            result[_key] = function (...args) {
+            // For more info: stackoverflow.com/questions/19696015
+            result[i] = function (...args) {
                 if (_is.fn(opts)) {
                     return opts.call(this, val, ...args);
                 } else {
@@ -84,9 +84,9 @@ export let _alias = function (props = {}, opts) {
             };
 
             toStr = val.toString.bind(val);
-            result[_key].toString = chain.includes(i) ?
+            result[i].toString = chain.includes(i) ?
                 () => `${toStr()} return this;` : toStr;
-            result[_key].valueOf = val.valueOf.bind(val);
+            result[i].valueOf = val.valueOf.bind(val);
         }
     }
     return result;
@@ -116,8 +116,7 @@ export let _callsuper = function (obj, method, ...args) {
     // Climb prototype chain to find method not equal to callee's method
     while (_super) {
         _super = (_prototype ? _super : _super.prototype);
-        if ($[method] != _super[method]) 
-            { _parent = _super[method]; break; }
+        if ($[method] != _super[method]) { _parent = _super[method]; break; }
 
         $ = _super;
         _const = $.constructor;
@@ -133,11 +132,42 @@ export let _callsuper = function (obj, method, ...args) {
 };
 
 // All properties combined
-export let props = { _is, _fnval, _argNames, _method, _static, _path, _attr, _alias, _configAttr, _get, _set, _new, _callsuper };
+let _props = {
+    is: _is,
+    fnval: _fnval,
+    argNames: _argNames,
+    method: _method,
+    static: _static,
+    path: _path,
+    attr: _attr,
+    alias: _alias,
+    configAttr: _configAttr,
+    get: _get,
+    set: _set,
+    new: _new,
+    callsuper: _callsuper
+};
+
+export let props = {
+    _is,
+    _fnval,
+    _argNames,
+    _method,
+    _static,
+    _path,
+    _attr,
+    _alias,
+    _configAttr,
+    _get,
+    _set,
+    _new,
+    _callsuper,
+    ..._props
+};
 
 // Properties methods with Class support
 export let aliasMethods = _alias(props, {
-    thisArg: ["_attr", "_path", "_method", "_static"] // "_new", , "_callsuper"
+    thisArg: ["_new", "_attr", "_path", "_method", "_static", "_callsuper"]
 });
 
 // Create classes
@@ -148,8 +178,8 @@ export let _class = function (...args) {
     SubClass = function () { };
 
     // Set parent constructor
-    if (_is.fn(args[0]) || _is.arr(this.SubClasses)) {
-        if (_is.arr(this.SubClasses)) { Parent = this; }
+    if (_is.fn(args[0]) || _is.arr(args[0].SubClasses)) {
+        if (_is.arr(Class.SubClasses)) { Parent = Class; }
         else { Parent = args.shift(); }
     }
 
@@ -175,16 +205,10 @@ export let _class = function (...args) {
     Class.SubClasses = []; // List of SubClasses
 
     // Extend Class
+    assign(Class, aliasMethods);
     assign(Class.prototype, aliasMethods, {
-        SuperClass: Class.SuperClass, 
+        SuperClass: Class.SuperClass,
         SubClasses: Class.SubClasses
-    });
-
-    assign(Class.prototype, {
-        // callsuper: Class.prototype._callsuper,
-        method: Class.prototype._method, 
-        static: Class.prototype._static,
-        attr: Class.prototype._attr 
     });
 
     // Add Methods to Class
@@ -202,8 +226,8 @@ export let _class = function (...args) {
         Class.toValue = Class.prototype.init.toValue;
     }
 
-    return Class(...args);
+    return Class;
 };
 
-assign(_class, props); // Extend _class
+assign(_class, aliasMethods); // Extend _class
 export default _class;

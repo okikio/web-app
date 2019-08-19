@@ -107,12 +107,12 @@ let _maybeAddPx = (name, val) => {
 };
 
 // Element Object [Based on Zepto.js]
-Ele = _class(_event, arrProto, {
+Ele = _class(_event, {
     init(sel = '') {
         this.sel = sel; // Selector
         this.ele = _elem(this.sel); // Element
 
-        for (let i = 0; i < this.len; i++) 
+        for (let i = 0; i < this.length; i++) 
             this[i] = this.ele[i];
 
         this.timeline = anime.timeline({
@@ -130,7 +130,7 @@ Ele = _class(_event, arrProto, {
         _same = _intersect(evt, nativeEvents);
         return this.forEach(function (el) {
             if (_same.length > 0) {
-                _same.forEach(ev => {
+                _same.forEach(function (ev) {
                     applyNative(this, el, ev);
                 }, this);
             }
@@ -173,7 +173,7 @@ Ele = _class(_event, arrProto, {
                     if (excludes.indexOf(el) < 0) acc.push(el);
                 }
                 return acc;
-            }, [])
+            }, [], this)
         );
     },
 
@@ -421,7 +421,7 @@ Ele = _class(_event, arrProto, {
         _is.def(opt.play) && (opt.play && tl.play() || tl.pause());
         return this;
     },
-}, 
+}, arrProto,
 
 // Generate shortforms for events eg. .click(), .hover(), etc... 
 nativeEvents.reduce((acc, name) => {

@@ -49,7 +49,7 @@ let _event = _class({
         if (_is.not("arr", evt) && _is.not("obj", evt)) { evt = [evt]; } // Set evt to an array
 
         // Loop through the list of events 
-        keys(evt).forEach(key => {
+        keys(evt).forEach(function (key) {
             $evt = evt[key];
             if (_is.obj(evt) && _is.not("arr", evt)) {
                 $EvtApp = this._eventApp($evt, callback || this, key);
@@ -70,7 +70,7 @@ let _event = _class({
         if (_is.not("arr", evt)) { evt = [evt]; } // Set evt to an array
 
         // Loop through the list of events 
-        evt.forEach($evt => {
+        evt.forEach(function ($evt) {
             $Evt = this._preEvent($evt);
             if (!this._emit.includes($evt)) 
                 { this._emit.push($evt); }
@@ -92,7 +92,7 @@ let _event = _class({
         if (_is.str(evt)) { evt = evt.split(/\s/g); }
         if (_is.not("arr", evt) && _is.not("obj", evt)) { evt = [evt]; } // Set evt to an array
 
-        let _off = (($evt, callback, scope) => {
+        let _off = function ($evt, callback, scope) {
             let _Evt = this._preEvent($evt);
 
             if (callback) {
@@ -104,9 +104,9 @@ let _event = _class({
 
                 if (i > - 1) { _Evt.splice(i, 1); }
             } else { delete this._events[$evt]; }
-        }).bind(this);
+        }.bind(this);
 
-        keys(evt).forEach((key) => {
+        keys(evt).forEach(function (key) {
             $evt = evt[key];
             if (_is.obj(evt) && _is.not("obj", evt)) {
                 _off(key, $evt, scope);
@@ -166,7 +166,7 @@ let _event = _class({
 
     // Alias for the `listeners` method
     callbacks: _get("listeners")
-})/*
+})
 .static({
     nativeEvents: `ready load blur focus focusin focusout resize click scroll dblclick 
     mousedown mouseup mousemove mouseover mouseout mouseenter mouseleave 
@@ -189,6 +189,6 @@ let _event = _class({
             }, ev == "scroll" ? passive : {});
         }
     }
-})*/;
+});
 
 export default _event;
