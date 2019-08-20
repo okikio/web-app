@@ -154,9 +154,15 @@ export let props = {
     _get,
     _set,
     _new,
-    _callsuper,
-    ..._thisArgs
+    _callsuper, 
+    assign, 
+    keys
 };
+
+props = keys(props).reduce(function (acc, i) {
+    i.charAt(0) == "_" && (acc[i.slice(1)] = props[i]);
+    return acc;
+}, props);
 
 // Properties methods with Class support
 export let aliasMethods = _alias(_thisArgs, function (val, ...args) {

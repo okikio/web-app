@@ -162,10 +162,10 @@ Ele = _event.extend(arrProto, {
         if (_is.not("arr", evt) && _is.not("obj", evt)) { evt = [evt]; } // Set evt to an array
 
         _same = _intersect(evt, nativeEvents);
-        return this.forEach(function (el) {
+        return this.forEach(function (el, i) {
             if (_same.length > 0) {
                 _same.forEach(function (ev) {
-                    applyNative(this, el, ev);
+                    applyNative(this, el, ev, i);
                 }, this);
             }
 
