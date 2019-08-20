@@ -16,9 +16,6 @@ ele.hover(() => {
 	}); 
 });
 
-_log(ele.get(0), {
-	message: "Hello"
-});
 
 new swup({
 	requestHeaders: {

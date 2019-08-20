@@ -36,7 +36,7 @@ assign(_is, {
     fn: _type("function"),
     obj: _type("object"),
     str: _type("string"),
-    nul: _type("null"),
+    nul: v => v == null,
     inst: _isInst, 
     arr: isArray,
     _type
@@ -54,20 +54,23 @@ export let _fnval = (fn, args, ctxt) => {
     return fn.apply(ctxt, args);
 };
 
+let STRIP_COMMENTS = /((\/\/.*$)|(\/\*[\s\S]*?\*\/))/mg;
+let ARGUMENT_NAMES = /(?:^|,)\s*([^\s,=]+)/g;
+
 // Argument names
 export let _argNames = fn => {
-    /*let args = fn.toString().toString().match(/function\s.*?\(([^)]*)\)/);
-    return _is.undef(args) ? [] : []args[1].split(',').map(function(arg) {
-        // Ensure no inline comments are parsed and trim the whitespace.
-        return arg.replace(/\/\*.*\*\//, '').trim();
-      }).filter(item => _is.def(item));*/
-      return (fn + '')
-      .replace(/[/][/].*$/mg,'') // strip single-line comments
-      .replace(/\s+/g, '') // strip white space
-      .replace(/[/][*][^/*]*[*][/]/g, '') // strip multi-line comments  
-      .split('){', 1)[0].replace(/^[^(]*[(]/, '') // extract the parameters  
-      .replace(/=[^,]+/g, '') // strip any ES6 defaults  
-      .split(',').filter(Boolean); // split & filter [""]
+    let fnStr = fn.toString().replace(STRIP_COMMENTS, '');
+    let argsList = fnStr.slice(fnStr.indexOf('(') + 1, fnStr.indexOf(')'));
+    let result = argsList.match( ARGUMENT_NAMES ), stripped = [];
+
+    if (_is.nul(result)) return [];
+    else {
+        for (let i = 0; i < result.length; i ++) {
+            stripped.push( result[i].replace(/[\s,]/g, '') );
+        }
+        
+        return stripped;
+    }
 };
 
 // Get or set a value in an Object, based on it's path

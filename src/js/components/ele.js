@@ -1,15 +1,31 @@
-import { _is, _path,  _intersect, _fnval, _capital, timeline, remove, stagger, random } from "./util";
+import { _is, _path, _intersect, _fnval, _capital, timeline, remove, stagger, random, getOwnPropertyNames } from "./util";
 import _event from './event';
 import _class from "./class";
 
 const { createElement, documentElement } = document;
-const { _get, _alias } = _class;
+const { _get } = _class;
 
 let Ele;
 let tagRE = /^\s*<(\w+|!)[^>]*>/;
 let { applyNative, nativeEvents } = _event;
 let _cssNumber = ["column-count", "columns", "font-weight", "line-height", "opacity", "z-index", "zoom"];
-let _qsa = (dom = document, sel) => _is.str(sel) && sel.length ? [...dom.querySelectorAll(sel)] : [];
+let _qsa = (dom = document, sel) => {
+    let classes;
+    if (!_is.str(sel) && sel.length == 0) return [];
+    if (/^(#?[\w-]+|\.[\w-.]+)$/.test(sel)) {
+        switch (sel.charAt(0)) {
+            case '#':
+                return [dom.getElementById(sel.substr(1))];
+            case '.':
+                classes = sel.substr(1).replace(/\./g, ' ');
+                return [...dom.getElementsByClassName(classes)];
+            default:
+                return [...dom.getElementsByTagName(sel)];
+        }
+    }
+    
+    return [...dom.querySelectorAll(sel)];
+};
 
 // The matches() method checks to see if the Element would be selected by the provided selectorString -- in other words -- checks if the element "is" the selector.
 let _matches = (ele, sel) => {
@@ -50,10 +66,14 @@ let _children = el => {
 };
 
 // Allow default Array methods to work as Element Object methods
-let arrProto = _alias(Array.prototype, function (val, ...args) {
-    let _val = val.apply(this, args);
-    return _is.undef(_val) ? this : _val;
-});
+let arrProto = getOwnPropertyNames(Array.prototype)
+.reduce(function (acc, i) {
+    acc[i] = function (...args) {
+        let _val = Array.prototype[i].apply(this, args);
+        return _is.undef(_val) ? this : _val;
+    };
+    return acc;
+}, {});
 
 // Create an Element List from a HTML string
 let _createElem = html => {
@@ -121,7 +141,7 @@ let _maybeAddPx = (name, val) => {
 };
 
 // Element Object [Based on Zepto.js]
-Ele = _class(_event, arrProto, {
+Ele = _event.extend(arrProto, {
     init(sel = '') {
         this.sel = sel; // Selector
         this.ele = _elem(this.sel); // Element
@@ -141,7 +161,6 @@ Ele = _class(_event, arrProto, {
         if (_is.str(evt)) { evt = evt.split(/\s/g); }
         if (_is.not("arr", evt) && _is.not("obj", evt)) { evt = [evt]; } // Set evt to an array
 
-        console.log($super);
         _same = _intersect(evt, nativeEvents);
         return this.forEach(function (el) {
             if (_same.length > 0) {
@@ -150,7 +169,7 @@ Ele = _class(_event, arrProto, {
                 }, this);
             }
 
-            // $super(evt, callback, scope || el);
+            $super(evt, callback, scope || el);
         }, this);
     },
 

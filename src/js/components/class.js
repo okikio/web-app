@@ -1,14 +1,16 @@
-import { _is, _fnval, _argNames, _path, _attr, _new, assign, keys, getOwnPropertyNames } from "./util";
+// Based on Prototype.js [#class] (api.prototypejs.org/language/Class/)
+import { _is, _fnval, _argNames, _path, _attr, _new, assign, keys } from "./util";
 
 // Attach properties to class prototype or the class itself
-export let _attachProp = where => {
+export let _attachProp = function (where) {
     let _prototype = where == "prototype";
-    return (_obj, ...args) => {
+    return function (_obj, ...args) {
         // If super class exists, set value of parent to `SuperClass` prototype
         let parent = _obj.SuperClass && (_prototype ? _obj.SuperClass.prototype : _obj.SuperClass);
+
         args.forEach(function (val) {
             // Transform functions to Objects
-            let obj = _fnval(val, [_obj, _obj.constructor], _prototype ? _obj.prototype : _obj);
+            let obj = _fnval(val, [_obj, _obj.constructor], _obj.prototype);
 
             // Iterate through Object
             keys(obj).forEach(function (i) {
@@ -16,11 +18,10 @@ export let _attachProp = where => {
 
                 // If a Parent Class is Present, Set any argument/params named `$super` to the `Parent`
                 if (_is.fn(preVal)) {
-                    if (parent && _argNames(preVal) && _argNames(preVal)[0] == "$super") {
+                    if (parent && _argNames(preVal)[0] == "$super") {
                         // Let the first argument be the original value
                         _val = function (...args) {
                             let parentFn = parent[i].bind(this);
-                            console.log(parentFn)
                             return preVal.call(this, parentFn, ...args);
                         };
                     }
@@ -41,8 +42,9 @@ export let _attachProp = where => {
                     !_val._class) {
                     Object.defineProperty(_prototype ? _obj.prototype : _obj, i, _val);
                 }
-            }, this);
-        }, _obj);
+            });
+        });     
+
         return _obj;
     };
 };
@@ -56,12 +58,11 @@ export let _static = _attachProp("static");
 // Create a copy of static methods that can function as prototype methods
 export let _alias = function (props = {}, opts) {
     let thisArg = opts && opts.thisArg || []; // This as first argument
-    let _keys = getOwnPropertyNames(props);
     let chain = opts && opts.chain || [];
     let result = {},  _args;
 
-    for (let idx = 0; idx < _keys.length; idx ++) {
-        let i = _keys[idx], val = props[i], toStr;
+    for (let i in props) {
+        let val = props[i], toStr;
         
         if (_is.fn(val)) {
             // For more info: stackoverflow.com/questions/19696015
@@ -106,15 +107,15 @@ export let _set = _configAttr("set", "function");
 
 // Call the parent version of a method
 export let _callsuper = function (obj, method, ...args) {
-    let _prototype = obj.prototype; // Only static methods have access to the prototype Object
     let _parent = null, $ = obj, _const = $, _super = _const.SuperClass;
 
     // Climb prototype chain to find method not equal to callee's method
     while (_super) {
-        _super = (_prototype ? _super : _super.prototype);
-        if ($[method] != _super[method]) { _parent = _super[method]; break; }
+        let _method = _super.prototype[method];
+        if ($[method] != _method) 
+            { _parent = _method; break; }
 
-        $ = _super;
+        $ = _super.prototype;
         _const = $.constructor;
         _super = _const.SuperClass;
     }
@@ -123,13 +124,12 @@ export let _callsuper = function (obj, method, ...args) {
         console.error(`${method} method not found in prototype chain.`);
         return;
     }
-    return (args.length > 0) ?
-        _parent.apply(obj, args) : _parent.call(obj);
+    
+    return _parent.apply(obj, args);
 };
 
-// All properties combined
-let _props = {
-    is: _is,
+// All properties with the ability to use this as a first Argument
+let _thisArgs = {
     fnval: _fnval,
     argNames: _argNames,
     method: _method,
@@ -137,9 +137,6 @@ let _props = {
     path: _path,
     attr: _attr,
     alias: _alias,
-    configAttr: _configAttr,
-    get: _get,
-    set: _set,
     new: _new,
     callsuper: _callsuper
 };
@@ -158,72 +155,78 @@ export let props = {
     _set,
     _new,
     _callsuper,
-    ..._props
+    ..._thisArgs
 };
 
 // Properties methods with Class support
-export let aliasMethods = _alias(props, {
-    thisArg: ["_new", "_attr", "_path", "_method", "_static", "_callsuper"]
+export let aliasMethods = _alias(_thisArgs, function (val, ...args) {
+    let _val = val.apply(this, [this, ...args]);
+    return _val;
 });
 
 // Create classes
-export let _class = function (...args) {
-    let Class, SubClass, Parent;
+export let _create = function (...args) {
+    let $class, subclass, parent, extend;
 
     // SubClass constructor
-    SubClass = function () { };
+    subclass = function () { };
 
     // Set parent constructor
-    if (_is.fn(args[0]) || _is.arr(args[0].SubClasses)) {
-        if (_is.arr(Class.SubClasses)) { Parent = Class; }
-        else { Parent = args.shift(); }
+    if (_is.fn(args[0]) && keys(args[0].prototype || {}).length) {
+        parent = args.shift();
     }
 
     // Class Object
-    Class = function (..._args) {
+    $class = function (..._args) {
         // Current Class
-        if (_is.not("inst", this, Class)) { return _new(Class, _args); }
+        if (!_is.inst(this, $class)) 
+            { return _new($class, _args); }
         this._args = _args; // Arguments
 
         // Initialize Class
         return this.init.apply(this, this._args);
     };
 
+    $class.SuperClass = parent; // Current Class's Parent if any
+    $class.SubClasses = []; // List of SubClasses
+
     // Extend parent class, if any
-    if (Parent) {
-        Parent.prototype.constructor = Parent;
-        SubClass.prototype = Parent.prototype;
-        Class.prototype = new SubClass();
-        void (Parent.SubClasses && Parent.SubClasses.push(Class));
+    if (parent) {
+        subclass.prototype = parent.prototype;
+        $class.prototype = new subclass();
+        if (!_is.arr(parent.SubClasses)) 
+            parent.SubClasses = [];
+        parent.SubClasses.push($class);
     }
 
-    Class.SuperClass = Parent; // Current Class's Parent if any
-    Class.SubClasses = []; // List of SubClasses
+    // Easily extend this class to create new subclasses
+    extend = function (...args) { 
+        return _create.call(this, this, ...args);
+    };
 
     // Extend Class
-    assign(Class, aliasMethods);
-    assign(Class.prototype, aliasMethods, {
-        SuperClass: Class.SuperClass,
-        SubClasses: Class.SubClasses
-    });
+    assign($class, aliasMethods, { extend, create: _create });
+    assign($class.prototype, $class);
 
     // Add Methods to Class
-    _method(Class, ...args);
+    $class.method(...args);
 
     // Set Current class type
-    if (!Class.prototype._class) { Class.prototype._class = "New Class"; }
+    if (!$class.prototype._class) { $class.prototype._class = "New Class"; }
 
-    // Set Class constructor
-    Class.prototype.constructor = Class;
-    if (!Class.prototype.init) { Class.prototype.init = function () { }; }
+    if (!$class.prototype.init) { $class.prototype.init = function () { }; }
     else {
         // Set toString & toValue
-        Class.toString = Class.prototype.init.toString;
-        Class.toValue = Class.prototype.init.toValue;
+        $class.toString = $class.prototype.init.toString;
+        $class.toValue = $class.prototype.init.toValue;
     }
 
-    return Class;
+    // Set Class constructor
+    $class.prototype.constructor = $class;
+    return $class;
 };
 
-assign(_class, aliasMethods); // Extend _class
+// Create classes
+export let _class = _create;
+assign(_class, props); // Extend _class
 export default _class;
