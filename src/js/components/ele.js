@@ -1,9 +1,8 @@
 import { _is, _path, _intersect, _fnval, _capital, timeline, remove, stagger, random, getOwnPropertyNames } from "./util";
+import { _get } from "./class";
 import _event from './event';
-import _class from "./class";
 
 const { createElement, documentElement } = document;
-const { _get } = _class;
 
 let Ele;
 let tagRE = /^\s*<(\w+|!)[^>]*>/;
@@ -65,15 +64,23 @@ let _children = el => {
         });
 };
 
-// Allow default Array methods to work as Element Object methods
-let arrProto = getOwnPropertyNames(Array.prototype)
-.reduce(function (acc, i) {
-    acc[i] = function (...args) {
-        let _val = Array.prototype[i].apply(this, args);
-        return _is.undef(_val) ? this : _val;
-    };
-    return acc;
-}, {});
+// Class name cache
+let _cache = {};
+
+// Get the class name for an Element
+let _getclass = function classNme(node, value) {
+    let name = node.className || '';
+    let svg  = name && !_is.undef(name.baseVal);
+
+    if (_is.undef(value)) return svg ? name.baseVal : name;
+    svg ? (name.baseVal = value) : (node.className = value)
+};
+
+// Class name RegExp
+let _classRE = name => {
+    return name in _cache ? _cache[name] : 
+        (_cache[name] = new RegExp('(^|\\s)' + name + '(\\s|$)'));
+};
 
 // Create an Element List from a HTML string
 let _createElem = html => {
@@ -139,6 +146,16 @@ let _valfix = value => {
 let _maybeAddPx = (name, val) => {
     return _is.num(+val) && !_cssNumber.includes(name) ? `${val}px` : val;
 };
+
+// Allow default Array methods to work as Element Object methods
+let arrProto = getOwnPropertyNames(Array.prototype)
+.reduce(function (acc, i) {
+    acc[i] = function (...args) {
+        let _val = Array.prototype[i].apply(this, args);
+        return _is.undef(_val) ? this : _val;
+    };
+    return acc;
+}, {});
 
 // Element Object [Based on Zepto.js]
 Ele = _event.extend(arrProto, {
@@ -448,6 +465,104 @@ Ele = _event.extend(arrProto, {
     index(el) {
         return el ? this.indexOf(Ele(el).get(0)) : this.parent().children().indexOf(this.get(0));
     },
+
+    hasClass(name) {
+        if (!name) return false;
+        return [].some.call(this, function (el) {
+            return this.test(_getclass(el));
+        }, _classRE(name));
+    },
+
+    addClass(name) {
+        if (!name) return this;
+        return this.each(function (el, idx) {
+            if (!('className' in el)) return;
+
+            let classList = [], cls = _getclass(el);
+            _fnval(name, [idx, cls], el).split(/\s+/g).forEach(function (_name) {
+                if (!Ele(this).hasClass(_name)) classList.push(_name);
+            }, el);
+
+            classList.length && _getclass(el, cls + (cls ? " " : "") + classList.join(" "));
+        });
+    },
+
+    removeClass(name) {
+        return this.each(function (el, idx) {
+            if (!('className' in el)) return;
+            if (_is.undef(name)) return _getclass(el, '');
+
+            let classList = _getclass(el);
+            _fnval(name, [idx, classList], el).split(/\s+/g).forEach(function (_name) {
+                classList = classList.replace(_classRE(_name), " ");
+            });
+
+            _getclass(el, classList.trim());
+        });
+    },
+
+    toggleClass(name, when) {
+        if (!name) return this;
+        return this.each(function (el, idx) {
+            let $this = Ele(el);
+            _fnval(name, [idx, _getclass(el)], el).split(/\s+/g)
+            .forEach(function (_name) {
+                (_is.undef(when) ? !$this.hasClass(_name) : when) ?
+                    $this.addClass(_name) : $this.removeClass(_name);
+            });
+        });
+    },
+
+    scrollTop(val) {
+        if (!this.length) return;
+
+        let hasScroll = 'scrollTop' in this.get(0);
+        if (_is.undef(val)) return this.get(0)[hasScroll ? "scrollTop" : "pageYOffset"];
+        return this.each(function () {
+            hasScroll ? (this.scrollTop = val) : this.scrollTo(this.scrollX, val);
+        });
+    },
+
+    scrollLeft(val) {
+        if (!this.length) return;
+
+        let hasScroll = 'scrollLeft' in this.get(0);
+        if (_is.undef(val)) return this.get(0)[hasScroll ? "scrollLeft" : "pageXOffset"];
+        return this.each(function () {
+            hasScroll ? (this.scrollLeft = val) : this.scrollTo(val, this.scrollY);
+        });
+    },
+
+    offsetParent() {
+        return this.map(function (el) {
+            let parent = el.offsetParent || document.body;
+            while (parent && !/^(?:body|html)$/i.test(parent.nodeName) &&
+                Ele(parent).style("position") == "static")
+                parent = parent.offsetParent;
+            return parent;
+        });
+    },
+
+    position() {
+        if (!this.length) return;
+
+        let elem = this.get(0),
+            offsetParent = this.offsetParent(),
+            offset = this.offset(),
+            parentOffset = /^(?:body|html)$/i.test(offsetParent[0].nodeName) ? { top: 0, left: 0 } : offsetParent.offset();
+
+        offset.top -= parseFloat(Ele(elem).style('margin-top')) || 0;
+        offset.left -= parseFloat(Ele(elem).style('margin-left')) || 0;
+
+        parentOffset.top += parseFloat(Ele(offsetParent[0]).style('border-top-width')) || 0;
+        parentOffset.left += parseFloat(Ele(offsetParent[0]).style('border-left-width')) || 0;
+
+        return {
+            top: offset.top - parentOffset.top,
+            left: offset.left - parentOffset.left
+        }
+    },
+
     getAnime() { return this.timeline; },
     animate(opt = {}, offset) {
         opt = _fnval(opt, [{ stagger, remove, random }, offset], this);
