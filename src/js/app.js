@@ -10,13 +10,13 @@ let _load = () => {
 	let ele = el("<a>Hello</a>");
 	ele.prependTo("#swup");
 	ele.on("click", function () {
+		_log(this);
 		el(this).animate({
 			color: "#ffeeaa",
 			translateX: 250
 		}); 
 	});
 };
-
 
 let trans = new swup({
 	requestHeaders: {
