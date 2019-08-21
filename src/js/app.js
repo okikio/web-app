@@ -1,5 +1,5 @@
 import swup from "swup";
-import el, { html, define } from "./components/ele"; // , { define, html }
+import el from "./components/ele"; // , { define, html }
 // import _class from "./components/class";
 // import _event from "./components/event";
 // import scrollPlugin from "@swup/scroll-plugin";
@@ -7,12 +7,7 @@ import el, { html, define } from "./components/ele"; // , { define, html }
 import preload from '@swup/preload-plugin';
 let _load = () => {
 	let _log = (...args) => args.forEach(v => console.log(v));
-	define("page-link", {
-		value: "Hello",
-		render: ({ value }) => html`<a>${value}</a>`
-	});
-
-	let ele = el("<page-link value='Hello'/>");
+	let ele = el("<a>Hello</a>");
 	ele.prependTo("#swup");
 	ele.on("click", function () {
 		_log(this);
