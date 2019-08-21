@@ -97,11 +97,11 @@ let _createElem = html => {
 };
 
 // Element selector
-let _elem = sel => {
+let _elem = (sel, ctxt) => {
     if (_is.str(sel)) {
         sel = sel.trim();
         if (tagRE.test(sel)) { return _createElem(sel); }
-        else { return _qsa(document, sel); }
+        else { return _qsa(ctxt, sel); }
     } else if (_is.inst(sel, Ele)) { return sel.ele; }
     else if (_is.arr(sel) || _is.inst(sel, NodeList)) 
         { return [...sel].filter(item => _is.def(item)); }
@@ -160,9 +160,9 @@ let arrProto = getOwnPropertyNames(Array.prototype)
 
 // Element Object [Based on Zepto.js]
 Ele = _event.extend(arrProto, {
-    init(sel = '') {
+    init(sel = '', ctxt) {
         this.sel = sel; // Selector
-        this.ele = _elem(this.sel); // Element
+        this.ele = _elem(this.sel, ctxt); // Element
 
         for (let i = 0; i < this.length; i++) 
             this[i] = this.ele[i];
@@ -179,16 +179,15 @@ Ele = _event.extend(arrProto, {
         if (_is.str(evt)) { evt = evt.split(/\s/g); }
         if (_is.not("arr", evt) && _is.not("obj", evt)) { evt = [evt]; } // Set evt to an array
 
-        _same = _intersect(evt, nativeEvents);
-        return this.forEach(function (el, i) {
-            if (_same.length > 0) {
-                _same.forEach(function (ev) {
-                    applyNative(this, el, ev, i);
-                }, this);
-            }
+        _same = _intersect(evt, nativeEvents).join(" ");
+        this.forEach(function (el, i) {
+            let $evts = el.getAttribute("event-list") || '';
+            let newEvts = _same.replace($evts.trim(), ""); // Avoid adding unnecessary native events
 
             $super(evt, callback, scope || el);
+            newEvts.split(" ").length && applyNative(this, el, newEvts, i);
         }, this);
+        return this;
     },
 
     length: _get("len"),

@@ -172,7 +172,12 @@ let _event = _class({
     mousedown mouseup mousemove mouseover mouseout mouseenter mouseleave 
     change select submit keydown keypress keyup contextmenu`.split(" "),
     applyNative(evt, el, ev, i) {
-        let _emit = _ev => (e => evt.emit(_ev, e, evt, i));
+        let $events = el.getAttribute('event-list') || '';
+        let _emit = _ev => {
+            el.setAttribute('event-list', `${$events} ${_ev}`);
+            return e => evt.emit(_ev, e, evt, i);
+        };
+
         if (/ready|load/.test(ev)) {
             if (!/in/.test(readyState)) { _emit("ready load") (); }
             else if (document.addEventListener) {
