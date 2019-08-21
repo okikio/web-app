@@ -16,7 +16,6 @@ try {
                 }
                 
                 res.text().then(data => {
-                    window.eval.call(window, data);
                     script.innerHTML = data;
                     body.appendChild(script);
                 });
