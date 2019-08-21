@@ -1,7 +1,9 @@
+import { children, define, html, parent, property, render } from "hybrids";
 import anime from "animejs";
-export let { timeline, remove, stagger, random } = anime;
 
 export let { assign, keys, values, getOwnPropertyNames } = Object;
+export { children, define, html, parent, property, render };
+export let { timeline, remove, stagger, random } = anime;
 export let { isArray, from, of } = Array;
 
 // Create an array of values that two array share in common
@@ -113,4 +115,4 @@ export let _new = function (ctor, args) {
     return new F();
 };
 
-export default { anime, random, timeline, remove, stagger, _capital, _is, _intersect, _fnval, _argNames, _path, _attr, _new, assign, keys, values, from, of, getOwnPropertyNames };
+export default { children, define, html, parent, property, render, random, timeline, remove, stagger, _capital, _is, _intersect, _fnval, _argNames, _path, _attr, _new, assign, keys, values, from, of, getOwnPropertyNames };

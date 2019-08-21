@@ -1,4 +1,4 @@
-import { _is, _path, _intersect, _fnval, _capital, timeline, remove, stagger, random, getOwnPropertyNames } from "./util";
+import { children, define, html, parent, property, render, _is, _path, _intersect, _fnval, _capital, timeline, remove, stagger, random, getOwnPropertyNames } from "./util"; // , hybrids
 import { _get } from "./class";
 import _event from './event';
 
@@ -7,6 +7,7 @@ const { createElement, documentElement } = document;
 let Ele;
 let tagRE = /^\s*<(\w+|!)[^>]*>/;
 let { applyNative, nativeEvents } = _event;
+let tagExpandRE = /<(?!area|br|col|embed|hr|img|input|link|meta|param)(([\w:]+)[^>]*)\/>/ig;
 let _cssNumber = ["column-count", "columns", "font-weight", "line-height", "opacity", "z-index", "zoom"];
 let _qsa = (dom = document, sel) => {
     let classes;
@@ -86,7 +87,7 @@ let _classRE = name => {
 let _createElem = html => {
     let dom, container;
     container = createElement('div');
-    container.innerHTML = '' + html;
+    container.innerHTML = '' + html.replace(tagExpandRE, "<$1></$2>");
     dom = [].slice.call(container.childNodes);
     dom.forEach(el => {
         container.removeChild(el);
@@ -664,6 +665,8 @@ nativeEvents.reduce((acc, name) => {
     };
 
     return acc;
-}, {}));
+}, {}))
+.static({ children, define, html, parent, property, render }); // hybrids
 
+export { children, define, html, parent, property, render };
 export default Ele;
