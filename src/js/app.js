@@ -5,7 +5,7 @@ import el from "./components/ele"; // , { define, html }
 // import scrollPlugin from "@swup/scroll-plugin";
 // import slideTheme from '@swup/slide-theme';
 // import preload from '@swup/preload-plugin';
-let _load = () => { };
+// let _load = () => { };
 let _log = (...args) => args.forEach(v => console.log(v));
 let ele = el(`<a class='Name'>Hello</a>`);
 ele.prependTo("#swup");
@@ -17,8 +17,8 @@ ele.on("click", function () {
 	});
 });
 
-el('main').find(`a.Name`).on("click hover", e => {
-	e.preventDefault();
+el('main').find(`a.Name`).on("click mouseenter", () => {
+	// e.preventDefault();
 	_log("Name");
 });
 

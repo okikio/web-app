@@ -171,13 +171,10 @@ let _event = _class({
     nativeEvents: `ready load blur focus focusin focusout resize click scroll dblclick 
     mousedown mouseup mousemove mouseover mouseout mouseenter mouseleave 
     change select submit keydown keypress keyup contextmenu`.split(" "),
-    applyNative(evt, el, ev, i) {
-        let $events = el.getAttribute('event-list') || '';
-        let _emit = _ev => {
-            el.setAttribute('event-list', `${$events} ${_ev}`);
-            return e => evt.emit(_ev, e, evt, i);
-        };
+    applyNative(evt, el, ev, i, action = "addEventListener") {
+        if (!ev.length) return;
 
+        let _emit = _ev => e => evt.emit(_ev, e, evt, i);
         if (/ready|load/.test(ev)) {
             if (!/in/.test(readyState)) { _emit("ready load") (); }
             else if (document.addEventListener) {
@@ -188,7 +185,9 @@ let _event = _class({
                 });
             }
         } else {
-            el.addEventListener(ev, _emit(ev), ev == "scroll" ? passive : {});
+            ev.split(" ").forEach(val => {
+                el[action](val, _emit(ev), ev == "scroll" ? passive : {});
+            });
         }
     }
 });

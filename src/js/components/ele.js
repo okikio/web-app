@@ -1,4 +1,4 @@
-import { children, define, html, parent, property, render, _is, _path, _intersect, _fnval, _capital, timeline, remove, stagger, random, getOwnPropertyNames } from "./util"; // , hybrids
+import { children, define, html, parent, property, render, _is, _path, keys, _fnval, _capital, timeline, remove, stagger, random, getOwnPropertyNames } from "./util"; // , hybrids
 import { _get } from "./class";
 import _event from './event';
 
@@ -174,18 +174,30 @@ Ele = _event.extend(arrProto, {
     },
 
     on($super, evt, callback, scope) {
-        let _same;
+        let _newEvts, _evt;
         if (_is.undef(evt)) { return; } // If there is no event break
         if (_is.str(evt)) { evt = evt.split(/\s/g); }
         if (_is.not("arr", evt) && _is.not("obj", evt)) { evt = [evt]; } // Set evt to an array
+        _evt = (_is.obj(evt) && _is.not("arr", evt) ? keys(evt) : evt);
 
-        _same = _intersect(evt, nativeEvents).join(" ");
+        _newEvts = _evt.filter(val => !(val in this._events), this).join(" ");
         this.forEach(function (el, i) {
-            let $evts = el.getAttribute("event-list") || '';
-            let newEvts = _same.replace($evts.trim(), ""); // Avoid adding unnecessary native events
-
             $super(evt, callback, scope || el);
-            newEvts.split(" ").length && applyNative(this, el, newEvts, i);
+            applyNative(this, el, _newEvts, i);
+        }, this);
+        return this;
+    },
+
+    off($super, evt, callback, scope) {
+        let _evt;
+        if (_is.undef(evt)) { return; } // If there is no event break
+        if (_is.str(evt)) { evt = evt.split(/\s/g); }
+        if (_is.not("arr", evt) && _is.not("obj", evt)) { evt = [evt]; } // Set evt to an array
+        _evt = (_is.obj(evt) && _is.not("arr", evt) ? keys(evt) : evt).join(" ");
+        
+        this.forEach(function (el, i) {
+            $super(evt, callback, scope || el);
+            applyNative(this, el, _evt, i, "removeEventListener");
         }, this);
         return this;
     },
