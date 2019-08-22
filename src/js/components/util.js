@@ -1,6 +1,12 @@
-
 export let { assign, keys, values, getOwnPropertyNames } = Object;
 export let { isArray, from, of } = Array;
+
+// Remove certain properties
+export let _removeProps = (prop, obj) => {
+    let newObj = assign({}, obj);
+    prop.forEach(key => delete newObj[key]);
+    return newObj;
+ };
 
 // Create an array of values that two array share in common
 export let _intersect = (a, b) => a.filter(val => b.includes(val));
