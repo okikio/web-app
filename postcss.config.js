@@ -1,4 +1,5 @@
 const purgecss = require('@fullhuman/postcss-purgecss');
+const flexibility = require('postcss-flexibility');
 const { general } = require("./browserlist");
 const autoprefixer = require('autoprefixer');
 
@@ -11,6 +12,7 @@ module.exports = {
         }),
         autoprefixer({
             overrideBrowserslist: general
-        })
+        }),
+        flexibility()
     ]
 };

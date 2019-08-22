@@ -1,13 +1,12 @@
-import { children, define, html, parent, property, render } from "hybrids";
-import anime from "animejs";
 
 export let { assign, keys, values, getOwnPropertyNames } = Object;
-export { children, define, html, parent, property, render };
-export let { timeline, remove, stagger, random } = anime;
 export let { isArray, from, of } = Array;
 
 // Create an array of values that two array share in common
 export let _intersect = (a, b) => a.filter(val => b.includes(val));
+
+// Log values
+export let _log = (...args) => args.forEach(v => console.log(v));
 
 // Capitalize strings
 export let _capital = val => val[0].toUpperCase() + val.slice(1);
@@ -39,7 +38,7 @@ assign(_is, {
     obj: _type("object"),
     str: _type("string"),
     nul: v => v == null,
-    inst: _isInst, 
+    inst: _isInst,
     arr: isArray,
     _type
 });
@@ -50,8 +49,8 @@ assign(_is, {
  * @param  {Object} ctxt
  */
 export let _fnval = (fn, args, ctxt) => {
-    if (_is.not("fn", fn) || 
-        keys(fn.prototype || {}).length > 0) 
+    if (_is.not("fn", fn) ||
+        keys(fn.prototype || {}).length > 0)
         { return fn; }
     return fn.apply(ctxt, args);
 };
@@ -70,7 +69,7 @@ export let _argNames = fn => {
         for (let i = 0; i < result.length; i ++) {
             stripped.push( result[i].replace(/[\s,]/g, '') );
         }
-        
+
         return stripped;
     }
 };
@@ -89,14 +88,14 @@ export let _path = (obj, path, val) => {
     return obj;
 };
 
-/* 
-    Builds on path and adds more power, 
+/*
+    Builds on path and adds more power,
     * Allows for multiple paths one value
     * Using Objects as paths and setting the values individually
     * Access values as an Array, from multiple paths
 */
 export let _attr = (obj, path, val) => {
-    if (_is.obj(path) && _is.not("arr", path)) 
+    if (_is.obj(path) && _is.not("arr", path))
         { return assign(obj, path); }
     else if (_is.arr(path)) {
         if (_is.undef(val)) {
@@ -115,4 +114,4 @@ export let _new = function (ctor, args) {
     return new F();
 };
 
-export default { children, define, html, parent, property, render, random, timeline, remove, stagger, _capital, _is, _intersect, _fnval, _argNames, _path, _attr, _new, assign, keys, values, from, of, getOwnPropertyNames };
+export default { _capital, _is, _intersect, _fnval, _argNames, _path, _attr, _new, assign, keys, values, from, of, getOwnPropertyNames };

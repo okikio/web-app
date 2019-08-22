@@ -14,23 +14,31 @@ html(lang="en")
       script(src='https://cdnjs.cloudflare.com/ajax/libs/html5shiv/3.7.3/html5shiv.min.js')
       script(src='https://cdnjs.cloudflare.com/ajax/libs/respond.js/1.4.2/respond.min.js')
       script(src='https://cdnjs.cloudflare.com/ajax/libs/es5-shim/4.5.13/es5-shim.min.js')
+      script(src='https://cdnjs.cloudflare.com/ajax/libs/flexibility/2.0.1/flexibility.js')
+      script.
+        flexibility(document.documentElement);
+    <![endif]-->
+
+    <!--[if lt IE 10]>
+      script(src='https://cdnjs.cloudflare.com/ajax/libs/flexibility/2.0.1/flexibility.js')
+      script.
+        flexibility(document.documentElement);
     <![endif]-->
 
     link(rel='preconnect' href='https://fonts.gstatic.com/')
     if staticSite
       link(rel='preconnect' href=`https://res.cloudinary.com/${cloud_name}/`)
 
-    link(rel="preload" href="https://fonts.gstatic.com/s/materialicons/v48/flUhRq6tzZclQEJ-Vdg-IuiaDsNc.woff2" as="font" type="font/woff2")
-    link(rel="preload" href="https://fonts.gstatic.com/s/bungeeinline/v5/Gg8zN58UcgnlCweMrih332VuPGV_-Q.woff2" as="font" type="font/woff2")
-    link(rel="preload" href="https://fonts.gstatic.com/s/montserrat/v14/JTURjIg1_i6t8kCHKm45_dJE3gnD_g.woff2" as="font" type="font/woff2")
-    link(rel="preload" href="https://fonts.gstatic.com/s/montserrat/v14/JTURjIg1_i6t8kCHKm45_c5H3gnD_g.woff2" as="font" type="font/woff2")
-    link(rel="preload" href="https://fonts.gstatic.com/s/varelaround/v12/w8gdH283Tvk__Lua32TysjIfp8uP.woff2" as="font" type="font/woff2")
-    link(rel="preload" href="https://fonts.gstatic.com/s/roboto/v20/KFOmCnqEu92Fr1Mu4mxK.woff2" as="font" type="font/woff2")
+    link(rel="preload" href="https://fonts.gstatic.com/s/materialicons/v48/flUhRq6tzZclQEJ-Vdg-IuiaDsNc.woff2" as="font" type="font/woff2" crossorigin="anonymous")
+    link(rel="preload" href="https://fonts.gstatic.com/s/bungeeinline/v5/Gg8zN58UcgnlCweMrih332VuPGV_-Q.woff2" as="font" type="font/woff2" crossorigin="anonymous")
+    link(rel="preload" href="https://fonts.gstatic.com/s/montserrat/v14/JTURjIg1_i6t8kCHKm45_dJE3gnD_g.woff2" as="font" type="font/woff2" crossorigin="anonymous")
+    link(rel="preload" href="https://fonts.gstatic.com/s/montserrat/v14/JTURjIg1_i6t8kCHKm45_c5H3gnD_g.woff2" as="font" type="font/woff2" crossorigin="anonymous")
+    link(rel="preload" href="https://fonts.gstatic.com/s/varelaround/v12/w8gdH283Tvk__Lua32TysjIfp8uP.woff2" as="font" type="font/woff2" crossorigin="anonymous")
+    link(rel="preload" href="https://fonts.gstatic.com/s/roboto/v20/KFOmCnqEu92Fr1Mu4mxK.woff2" as="font" type="font/woff2" crossorigin="anonymous")
     link(rel='stylesheet' href='./css/app.min.css' inline async)
 
-    script(src="https://cdnjs.cloudflare.com/ajax/libs/jquery/2.2.1/jquery.min.js")
-    script(src="https://cdnjs.cloudflare.com/ajax/libs/smoothState.js/0.7.2/jquery.smoothState.min.js")
-
+    //- script(src="https://cdnjs.cloudflare.com/ajax/libs/jquery/2.2.1/jquery.min.js")
+    //- script(src="https://cdnjs.cloudflare.com/ajax/libs/smoothState.js/0.7.2/jquery.smoothState.min.js")
 
     //- link(rel='preconnect' href='https://polyfill.io/v3/')
     //- link(rel='dns-prefetch' href='https://fonts.googleapis.com')
@@ -73,7 +81,7 @@ html(lang="en")
         each layers in layerLists
           - let layer = layers.layer;  //- Display Custom Layer if it exists
           - let hero = layers.hero; //- Display Hero Layer if it exists
-          
+
           if typeof hero == "object"
             +hero(hero)
 

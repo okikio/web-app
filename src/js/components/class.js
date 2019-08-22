@@ -1,12 +1,12 @@
 // Based on Prototype.js [#class] (api.prototypejs.org/language/Class/)
-import { _is, _fnval, _argNames, _path, _attr, _new, assign, keys } from "./util";
+import { _log, _is, _fnval, _argNames, _path, _attr, _new, assign, keys } from "./util";
 
 // Attach properties to class prototype or the class itself
 export let _attachProp = function (where) {
     let _prototype = where == "prototype";
     return function (_obj, ...args) {
         // If super class exists, set value of parent to `SuperClass` prototype
-        let parent = _obj.SuperClass && (_prototype ? _obj.SuperClass.prototype : _obj.SuperClass);
+        let parent = _obj.SuperClass && _obj.SuperClass.prototype;
 
         args.forEach(function (val) {
             // Transform functions to Objects
@@ -33,17 +33,17 @@ export let _attachProp = function (where) {
 
                 (_prototype ? _obj.prototype : _obj)[i] = _val; // Redefinition Error Fix
 
-                /* 
-                    Allows the use of `Object.defineProperty`, if an Object has any of these 
-                    { $$prop: true, get: function () { ... }, set: function () { ... } } 
+                /*
+                    Allows the use of `Object.defineProperty`, if an Object has any of these
+                    { $$prop: true, get: function () { ... }, set: function () { ... } }
                 */
-                if (_is.def(_val) && _is.obj(_val) && 
-                    (_val.$$prop || _is.fn(_val.get) || _is.fn(_val.set)) && 
+                if (_is.def(_val) && _is.obj(_val) &&
+                    (_val.$$prop || _is.fn(_val.get) || _is.fn(_val.set)) &&
                     !_val._class) {
                     Object.defineProperty(_prototype ? _obj.prototype : _obj, i, _val);
                 }
             });
-        });     
+        });
 
         return _obj;
     };
@@ -63,7 +63,7 @@ export let _alias = function (props = {}, opts) {
 
     for (let i in props) {
         let val = props[i], toStr;
-        
+
         if (_is.fn(val)) {
             // For more info: stackoverflow.com/questions/19696015
             result[i] = function (...args) {
@@ -112,7 +112,7 @@ export let _callsuper = function (obj, method, ...args) {
     // Climb prototype chain to find method not equal to callee's method
     while (_super) {
         let _method = _super.prototype[method];
-        if ($[method] != _method) 
+        if ($[method] != _method)
             { _parent = _method; break; }
 
         $ = _super.prototype;
@@ -124,7 +124,7 @@ export let _callsuper = function (obj, method, ...args) {
         console.error(`${method} method not found in prototype chain.`);
         return;
     }
-    
+
     return _parent.apply(obj, args);
 };
 
@@ -154,8 +154,8 @@ export let props = {
     _get,
     _set,
     _new,
-    _callsuper, 
-    assign, 
+    _callsuper,
+    assign,
     keys
 };
 
@@ -185,7 +185,7 @@ export let _create = function (...args) {
     // Class Object
     $class = function (..._args) {
         // Current Class
-        if (!_is.inst(this, $class)) 
+        if (!_is.inst(this, $class))
             { return _new($class, _args); }
         this._args = _args; // Arguments
 
@@ -200,13 +200,13 @@ export let _create = function (...args) {
     if (parent) {
         subclass.prototype = parent.prototype;
         $class.prototype = new subclass();
-        if (!_is.arr(parent.SubClasses)) 
+        if (!_is.arr(parent.SubClasses))
             parent.SubClasses = [];
         parent.SubClasses.push($class);
     }
 
     // Easily extend this class to create new subclasses
-    extend = function (...args) { 
+    extend = function (...args) {
         return _create.call(this, this, ...args);
     };
 

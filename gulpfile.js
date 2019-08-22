@@ -35,7 +35,7 @@ let { pages, cloud_name, imageURLConfig } = config;
 let assetURL = `https://res.cloudinary.com/${cloud_name}/`;
 assets.config({ cloud_name, secure: true });
 
-let srcMapsWrite = debug ? ["../maps"] : ["../maps", {
+let srcMapsWrite = ["../maps", {
     sourceMappingURL: file => {
         return `/maps/${file.relative}.map`;
     }
@@ -51,7 +51,7 @@ let htmlMinOpts = {
     processScripts: ["application/ld+json"]
 };
 
-let minifyOpts = { toplevel: !dev };
+let minifyOpts = { toplevel: !dev, mangle: { reserved: ["$super"] } };
 let minSuffix = { suffix: ".min" };
 let watchDelay = { delay: 500 };
 let publicDest = 'public';
@@ -61,17 +61,17 @@ let { assign } = Object;
 let stream = (_src, _opt = { }, done) => {
     let _end = _opt.end || [];
     let host = src(_src, _opt.opts), _pipes = _opt.pipes || [], _dest = _opt.dest || publicDest;
-    return new Promise((resolve, reject) => { 
-        _pipes.forEach(val => { 
-            if (val != undefined && val != null) 
+    return new Promise((resolve, reject) => {
+        _pipes.forEach(val => {
+            if (val != undefined && val != null)
                 { host = host.pipe(val).on('error', reject); }
         });
 
         host = host.pipe(dest(_dest))
-                   .on('end', typeof done == 'function' ? done : resolve); // Output  
+                   .on('end', typeof done == 'function' ? done : resolve); // Output
 
-        _end.forEach(val => { 
-            if (val != undefined && val != null) 
+        _end.forEach(val => {
+            if (val != undefined && val != null)
                 { host = host.pipe(val).on('error', reject); }
         });
     });
@@ -80,11 +80,11 @@ let stream = (_src, _opt = { }, done) => {
 // A list of streams
 let streamList = (...args) => {
     return Promise.all(
-        (Array.isArray(args[0]) ? args[0] : args).map(_stream => 
+        (Array.isArray(args[0]) ? args[0] : args).map(_stream =>
             Array.isArray(_stream) ? stream(..._stream) : _stream
         )
     );
-}; 
+};
 
 // Based on: [https://gist.github.com/millermedeiros/4724047]
 let _exec = cmd => {
@@ -104,7 +104,7 @@ let _execSeries = (...cmds) => {
             if (cmd != null && cmd != undefined)
                 acc[i] = typeof cmd == "string" ? _exec(cmd) : cmd;
             return acc;
-        }, []) 
+        }, [])
     );
 };
 
@@ -112,7 +112,7 @@ task('html', () => {
     let pageNames = Object.keys(pages);
     let pageValues = Object.values(pages);
     return streamList(
-        pageValues.map((page, i) => 
+        pageValues.map((page, i) =>
             ['views/app.pug', {
                 pipes: [
                     // Rename
@@ -162,7 +162,7 @@ task("css", () =>
     })
 );
 
-task("js", () => 
+task("js", () =>
     streamList([
         ...["modern"].concat(!dev ? "general" : [])
             .map(type => {
@@ -180,11 +180,11 @@ task("js", () =>
                                 nodeResolve(), // Bundle all Modules
                                 rollupJSON(), // Parse JSON Exports
                                 rollupBabel(babelConfig[type]) // Babelify file for uglifing
-                            ] 
+                            ]
                         }, gen ? 'umd' : 'es'),
                         // Minify the file
-                        debug ? null : terser( 
-                            assign(minifyOpts, gen ? { ie8: true, ecma: 5 } : {})
+                        terser(
+                            assign(minifyOpts, gen ? { toplevel: false, ie8: true, ecma: 5 } : { ecma: 8 })
                         ),
                         rename(`app${suffix}.min.js`), // Rename
                         write(...srcMapsWrite) // Put sourcemap in public folder
@@ -204,10 +204,10 @@ task("js", () =>
                         nodeResolve(), // Bundle all Modules
                         rollupJSON(), // Ability to Parse JSON
                         rollupBabel(babelConfig.node) // ES5 file for uglifing
-                    ] 
+                    ]
                 }, 'umd'),
                 // Minify the file
-                debug ? null : terser({ ...minifyOpts, ie8: true, ecma: 5 }), 
+                terser({ ...minifyOpts, ie8: true, ecma: 5 }),
                 rename(minSuffix), // Rename
                 write(...srcMapsWrite) // Put sourcemap in public folder
             ],
@@ -227,9 +227,9 @@ task("server", () =>
                         commonJS(), // Use CommonJS to compile file
                         rollupJSON(), // Parse JSON Exports
                         rollupBabel(babelConfig.node) // Babelify file for minifing
-                    ] 
+                    ]
                 }, 'cjs'),
-                terser({ ...minifyOpts, ecma: 7 }), // Minify the file
+                debug ? null : terser({ ...minifyOpts, ecma: 7 }), // Minify the file
                 rename(minSuffix) // Rename
             ],
             dest: '.' // Output
@@ -243,9 +243,9 @@ task("config", () =>
             // Create config.min
             writeFile(
                 "./config.min.js", `module.exports = ${stringify(config)};`,
-                err => { 
+                err => {
                     if (err) { reject(); throw err; }
-                    resolve(); 
+                    resolve();
                 }
             );
         }),
@@ -253,7 +253,7 @@ task("config", () =>
             opts: { allowEmpty: true },
             pipes: [
                 // Minify the file
-                terser({ ...minifyOpts, ie8: true, ecma: 5 }), 
+                terser({ ...minifyOpts }),
             ],
             dest: '.' // Output
         }],
@@ -272,7 +272,7 @@ task("config", () =>
     )
 );
 
-task("config:watch", () => 
+task("config:watch", () =>
     _exec("gulp config html css")
 );
 
@@ -282,11 +282,11 @@ task("update", () =>
         pipes: [
             // Bundle Modules
             rollup({
-                plugins: [ 
+                plugins: [
                     commonJS(), // Use CommonJS to compile file
                     rollupJSON(), // Parse JSON Exports
                     rollupBabel(babelConfig.node) // Babelify file for minifing
-                ] 
+                ]
             }, 'cjs'),
             debug ? null : terser({ ...minifyOpts, ecma: 7 }), // Minify the file
             rename(minSuffix) // Rename
@@ -336,7 +336,7 @@ task('watch', () => {
     watch('views/**/*.pug', watchDelay, series('html', 'css'));
     watch('src/**/*.scss', watchDelay, series('css'));
     watch(['src/**/*.js', '!src/**/app.vendor.js'], watchDelay, series('js'));
-        
+
     watch('src/**/app.vendor.js', watchDelay, series('js'));
     watch(['public/**/*', '!public/css/*.css'])
         .on('change', browserSync.reload);

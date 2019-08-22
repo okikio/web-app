@@ -48,7 +48,7 @@ let _event = _class({
         if (_is.str(evt)) { evt = evt.split(/\s/g); }
         if (_is.not("arr", evt) && _is.not("obj", evt)) { evt = [evt]; } // Set evt to an array
 
-        // Loop through the list of events 
+        // Loop through the list of events
         keys(evt).forEach(function (key) {
             $evt = evt[key];
             if (_is.obj(evt) && _is.not("arr", evt)) {
@@ -69,10 +69,10 @@ let _event = _class({
         if (_is.str(evt)) { evt = evt.split(/\s/g); }
         if (_is.not("arr", evt)) { evt = [evt]; } // Set evt to an array
 
-        // Loop through the list of events 
+        // Loop through the list of events
         evt.forEach(function ($evt) {
             $Evt = this._preEvent($evt);
-            if (!this._emit.includes($evt)) 
+            if (!this._emit.includes($evt))
                 { this._emit.push($evt); }
 
             $Evt.forEach(_evt => {
@@ -153,11 +153,11 @@ let _event = _class({
         { this._events[evt] = []; return this; },
 
     // Alias for the `on` method
-    add: _get("on"), 
+    add: _get("on"),
     bind: _get("on"),
 
     // Alias for the `off` method
-    remove: _get("off"), 
+    remove: _get("off"),
     unbind: _get("off"),
 
     // Alias for the `emit` method
@@ -168,8 +168,8 @@ let _event = _class({
     callbacks: _get("listeners")
 })
 .static({
-    nativeEvents: `ready load blur focus focusin focusout resize click scroll dblclick 
-    mousedown mouseup mousemove mouseover mouseout mouseenter mouseleave 
+    nativeEvents: `ready load blur focus focusin focusout resize click scroll dblclick
+    mousedown mouseup mousemove mouseover mouseout mouseenter mouseleave
     change select submit keydown keypress keyup contextmenu`.split(" "),
     applyNative(evt, el, ev, i, action = "addEventListener") {
         if (!ev.length) return;

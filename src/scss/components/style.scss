@@ -10,7 +10,7 @@
 
       &, &-sz, &-size {
          font-size: 14px;
-         
+
          @for $sz from 8 through 150 {
             &-#{$sz} {
                font-size: #{$sz}px;
@@ -20,19 +20,19 @@
          &-larger {
             font-size: 35px;
          }
-   
+
          &-large {
             font-size: 18px;
          }
-   
+
          &-normal {
             font-size: 15px;
          }
-   
+
          &-small {
             font-size: 12px;
          }
-         
+
          @include propertyList(font-size, "-font", $sizes);
       }
 
@@ -49,19 +49,19 @@
          &-bolder {
             font-weight: 900;
          }
-   
+
          &-bold {
             font-weight: 700;
          }
-   
+
          &-regular {
             font-weight: 600;
          }
-   
+
          &-thin {
             font-weight: 300;
          }
-   
+
          &-thiner {
             font-weight: 100;
          }
@@ -121,7 +121,7 @@
       &-large {
          line-height: 3em;
       }
-         
+
       @for $height from 8 through 150 {
          &-#{$height} {
             line-height: #{$height}px;
@@ -142,7 +142,7 @@
          text-align: right;
       }
    }
-   
+
    &, &-transform {
       &-capital {
          text-transform: capitalize;

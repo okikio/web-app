@@ -1,7 +1,9 @@
-import { children, define, html, parent, property, render, _is, _path, keys, _fnval, _capital, timeline, remove, stagger, random, getOwnPropertyNames } from "./util"; // , hybrids
+import { _log,  _is, _path, keys, _fnval, _capital, getOwnPropertyNames } from "./util";
 import { _get } from "./class";
 import _event from './event';
+import anime from "animejs";
 
+export const { timeline, remove, stagger, random } = anime;
 const { createElement, documentElement } = document;
 
 let Ele;
@@ -23,7 +25,7 @@ let _qsa = (dom = document, sel) => {
                 return [...dom.getElementsByTagName(sel)];
         }
     }
-    
+
     return [...dom.querySelectorAll(sel)];
 };
 
@@ -79,7 +81,7 @@ let _getclass = function classNme(node, value) {
 
 // Class name RegExp
 let _classRE = name => {
-    return name in _cache ? _cache[name] : 
+    return name in _cache ? _cache[name] :
         (_cache[name] = new RegExp('(^|\\s)' + name + '(\\s|$)'));
 };
 
@@ -103,7 +105,7 @@ let _elem = (sel, ctxt) => {
         if (tagRE.test(sel)) { return _createElem(sel); }
         else { return _qsa(ctxt, sel); }
     } else if (_is.inst(sel, Ele)) { return sel.ele; }
-    else if (_is.arr(sel) || _is.inst(sel, NodeList)) 
+    else if (_is.arr(sel) || _is.inst(sel, NodeList))
         { return [...sel].filter(item => _is.def(item)); }
     else if (_is.obj(sel) || _is.el(sel)) { return [sel]; }
     else if (_is.fn(sel)) { Ele(document).ready(sel); }
@@ -121,7 +123,7 @@ let traverseDF = (_node, fn, childType = "childNodes") => {
     recurse(_node); // Step 1
 };
 
-// Quickly filter nodes by a selector 
+// Quickly filter nodes by a selector
 let _filter = (nodes, sel) => !_is.def(sel) ? Ele(nodes) : Ele(nodes).filter(sel);
 
 // Select all the different values in an Array, based on underscorejs
@@ -138,12 +140,12 @@ let _valfix = value => {
     let _fn = v => Function(`"use strict"; return ${v};`) ();
     let objectType = /^[[{]([\s\S]+)?[\]}]$/;
     try {
-        return validTypes.test(value) ? _fn(value) : 
+        return validTypes.test(value) ? _fn(value) :
             objectType.test(value) ? JSON.parse(value.replace(/'/g, "\"")) : value;
     } catch (e) { return value; }
 };
 
-// Decide if the value deserves px at the 
+// Decide if the value deserves px at the
 let _maybeAddPx = (name, val) => {
     return _is.num(+val) && !_cssNumber.includes(name) ? `${val}px` : val;
 };
@@ -164,7 +166,7 @@ Ele = _event.extend(arrProto, {
         this.sel = sel; // Selector
         this.ele = _elem(this.sel, ctxt); // Element
 
-        for (let i = 0; i < this.length; i++) 
+        for (let i = 0; i < this.length; i++)
             this[i] = this.ele[i];
     },
 
@@ -194,7 +196,7 @@ Ele = _event.extend(arrProto, {
         if (_is.str(evt)) { evt = evt.split(/\s/g); }
         if (_is.not("arr", evt) && _is.not("obj", evt)) { evt = [evt]; } // Set evt to an array
         _evt = (_is.obj(evt) && _is.not("arr", evt) ? keys(evt) : evt).join(" ");
-        
+
         this.forEach(function (el, i) {
             $super(evt, callback, scope || el);
             applyNative(this, el, _evt, i, "removeEventListener");
@@ -205,7 +207,7 @@ Ele = _event.extend(arrProto, {
     length: _get("len"),
     len: _get("ele.length"),
     each(fn) {
-        [].every.call(this, function (el, idx) 
+        [].every.call(this, function (el, idx)
             { return fn.call(el, el, idx) != false; });
         return this;
     },
@@ -425,7 +427,7 @@ Ele = _event.extend(arrProto, {
         if (!this.length) return null;
         if (documentElement != this.get(0) && !_contains(documentElement, this.get(0)))
             return { top: 0, left: 0 };
-        
+
         obj = this.get(0).getBoundingClientRect();
         return {
             left: obj.left + window.pageXOffset,
@@ -578,7 +580,7 @@ Ele = _event.extend(arrProto, {
     getAnime() { return this.timeline; },
     animate(opt = {}, offset) {
         opt = _fnval(opt, [{ stagger, remove, random }, offset], this);
-        if (_is.undef(this.timeline)) { 
+        if (_is.undef(this.timeline)) {
             this.timeline = timeline({
                 targets: _toArr(this)
             });
@@ -589,18 +591,18 @@ Ele = _event.extend(arrProto, {
         tl.add(opts, offset);
         _is.def(play) && (play && tl.play() || tl.pause());
         return this;
-    }, 
-}, 
+    },
+},
 
-// Generate shortforms for events eg. .click(), .hover(), etc... 
+// Generate shortforms for events eg. .click(), .hover(), etc...
 nativeEvents.reduce((acc, name) => {
     // Handle event binding
     acc[name] = function (...args) { return this.on(name, ...args); };
     return acc;
 }, {
-    hover(fnOver, fnOut) 
+    hover(fnOver, fnOut)
         { return this.mouseenter(fnOver).mouseleave(fnOut || fnOver); }
-}), 
+}),
 
 // Generate the `width` and `height` methods
 ['width', 'height'].reduce((acc, sz) => {
@@ -608,7 +610,7 @@ nativeEvents.reduce((acc, name) => {
     acc[sz] = function (value) {
         let offset, el = this.get(0);
         if (_is.undef(value)) {
-            if (_is.win(el)) { 
+            if (_is.win(el)) {
                 return el[`inner${prop}`];
             } else if (_is.doc(el)) {
                 return el.documentElement[`scroll${prop}`];
@@ -622,7 +624,7 @@ nativeEvents.reduce((acc, name) => {
     };
 
     return acc;
-}, {}), 
+}, {}),
 
 // Generate the `after`, `prepend`, `before`, `append`, `insertAfter`, `insertBefore`, `appendTo`, and `prependTo` methods.
 [ 'after', 'prepend', 'before', 'append' ].reduce(function (acc, fn, idx) {
@@ -647,14 +649,14 @@ nativeEvents.reduce((acc, name) => {
             let parent = inside ? target : target.parentNode;
             let parentInDoc = _contains(documentElement, parent);
             let next = target.nextSibling, first = target.firstChild;
-            
+
             // Convert all methods to a "before" operation
             target = [next, first, target, null] [idx];
             nodes.forEach(function (node) {
                 if (clone) node = node.cloneNode(true);
                 else if (!parent) return Ele(node).remove();
                 parent.insertBefore(node, target);
-                
+
                 if (parentInDoc) {
                     traverseDF(node, function (el) {
                         if (!_is.nul(el.nodeName) && el.nodeName.toUpperCase() == 'SCRIPT' &&
@@ -676,8 +678,6 @@ nativeEvents.reduce((acc, name) => {
     };
 
     return acc;
-}, {}))
-.static({ children, define, html, parent, property, render }); // hybrids
+}, {}));
 
-export { children, define, html, parent, property, render };
 export default Ele;

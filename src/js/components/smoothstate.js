@@ -8,8 +8,6 @@
  * @see     https://github.com/miguel-perez/jquery.smoothState.js
  *
  */
- 
-import jQuery from 'jquery';
 
 ;(function ( $, window, document, undefined ) {
   'use strict';
