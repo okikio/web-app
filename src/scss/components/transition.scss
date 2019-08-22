@@ -4,7 +4,7 @@
     transform: translateY(0px);
     opacity: 1;
 
-    .is-animating & {
+    &.is-animating {
         transform: translateY(-20px) !important;
         opacity: 0 !important;
     }

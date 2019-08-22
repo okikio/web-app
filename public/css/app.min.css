@@ -1246,7 +1246,7 @@ li {
   opacity: 1;
 }
 
-.is-animating .transition-fade {
+.transition-fade.is-animating {
   transform: translateY(-20px) !important;
   opacity: 0 !important;
 }
