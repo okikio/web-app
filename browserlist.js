@@ -1,6 +1,6 @@
 let browserlist = {
     "modern": ["> 10%"],
-    "general": ["defaults, IE 10"]
+    "general": ["defaults, IE 8"]
 };
 
 let babelConfig = {

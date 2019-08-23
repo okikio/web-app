@@ -1,10 +1,10 @@
-import { _log, _removeProps,  _is, _path, keys, _fnval, _capital, getOwnPropertyNames } from "./util";
+import { _log,  _is, _path, keys, _fnval, _capital, getOwnPropertyNames } from "./util";
 import { _get } from "./class";
 import _event from './event';
 import anime from "animejs";
 
 export const { timeline, remove, stagger, random } = anime;
-const { createElement, documentElement } = document;
+const { documentElement } = document;
 
 let Ele;
 let tagRE = /^\s*<(\w+|!)[^>]*>/;
@@ -88,7 +88,7 @@ let _classRE = name => {
 // Create an Element List from a HTML string
 let _createElem = html => {
     let dom, container;
-    container = createElement('div');
+    container = document.createElement('div');
     container.innerHTML = '' + html.replace(tagExpandRE, "<$1></$2>");
     dom = [].slice.call(container.childNodes);
     dom.forEach(el => {
@@ -586,9 +586,7 @@ Ele = _event.extend(arrProto, {
             });
         }
 
-        let { play } = opt;
-        let opts = _removeProps(["play"]);
-
+        let { play, ...opts } = opt;
         let tl = this.timeline;
         tl.add(opts, offset);
         _is.def(play) && (play && tl.play() || tl.pause());
