@@ -184,7 +184,7 @@ task("js", () =>
                         }, gen ? 'umd' : 'es'),
                         // Minify the file
                         terser(
-                            assign(minifyOpts, gen ? { ie8: true, ecma: 5 } : { ecma: 8 })
+                            assign(minifyOpts, gen ? { ie8: true, ecma: 5 } : { toplevel: false, ecma: 8 })
                         ),
                         rename(`app${suffix}.min.js`), // Rename
                         write(...srcMapsWrite) // Put sourcemap in public folder
