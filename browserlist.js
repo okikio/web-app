@@ -15,7 +15,7 @@ let babelConfig = {
         "babelrc": false,
         "presets": [
             ["@babel/preset-env", {
-                "useBuiltIns": "usage",
+                "useBuiltIns": gen ? "entry" : "usage",
                 "modules": 'false',
                 "spec": true,
                 "forceAllTransforms": gen,

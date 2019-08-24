@@ -1,3 +1,4 @@
+import 'core-js-pure';
 import swup from "swup";
 import el from "./components/ele";
 import { _log } from "./components/util";
