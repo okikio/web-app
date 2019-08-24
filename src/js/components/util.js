@@ -1,4 +1,4 @@
-export let { assign, keys, values, getOwnPropertyNames } = Object;
+export let { assign, keys, values } = Object;
 export let { isArray, from, of } = Array;
 
 // Remove certain properties
@@ -120,4 +120,4 @@ export let _new = function (ctor, args) {
     return new F();
 };
 
-export default { _capital, _is, _intersect, _fnval, _argNames, _path, _attr, _new, assign, keys, values, from, of, getOwnPropertyNames };
+export default { _capital, _is, _intersect, _fnval, _argNames, _path, _attr, _new, assign, keys, values, from, of };

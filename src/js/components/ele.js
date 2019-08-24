@@ -1,4 +1,4 @@
-import { _log, _removeProps,  _is, _path, keys, _fnval, _capital, getOwnPropertyNames } from "./util";
+import { _log, _removeProps,  _is, _path, keys, _fnval, _capital } from "./util";
 import { _get } from "./class";
 import _event from './event';
 import anime from "animejs";
@@ -151,7 +151,7 @@ let _maybeAddPx = (name, val) => {
 };
 
 // Allow default Array methods to work as Element Object methods
-let arrProto = getOwnPropertyNames(Array.prototype)
+let arrProto = Object.getOwnPropertyNames(Array.prototype)
 .reduce(function (acc, i) {
     acc[i] = function (...args) {
         let _val = Array.prototype[i].apply(this, args);

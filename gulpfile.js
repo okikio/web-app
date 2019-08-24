@@ -181,7 +181,7 @@ task("js", () =>
                                 nodeResolve(), // Bundle all Modules
                                 rollupBabel(babelConfig[type]) // Babelify file for uglifing
                             ]
-                        }, gen ? 'iife' : 'es'),
+                        }, gen ? 'umd' : 'es'),
                         // Minify the file
                         debug ? null : terser(
                             assign(minifyOpts, gen ? { ie8: true, ecma: 5 } : { ecma: 8 })
@@ -205,7 +205,7 @@ task("js", () =>
                         nodeResolve(), // Bundle all Modules
                         rollupBabel(babelConfig.general) // ES5 file for uglifing
                     ]
-                }, 'iife'),
+                }, 'umd'),
                 // Minify the file
                 debug ? null : terser({ ...minifyOpts, ie8: true, ecma: 5 }),
                 rename(minSuffix), // Rename

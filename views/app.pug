@@ -96,4 +96,5 @@ html(lang="en")
     if !page.noFooter
       +footer("2019 Okiki Ojo")
 
-    script(src=`${dev ? './js/app.modern.min.js' : './js/app.vendor.min.js'}` inline defer)
+    script(src=`${'./js/app.min.js'}` defer)
+    //- inline  || dev ? './js/app.modern.min.js' : './js/app.vendor.min.js'

@@ -19,7 +19,7 @@ let babelConfig = {
                 "modules": 'false',
                 "spec": true,
                 "forceAllTransforms": gen,
-                "corejs": "3.2.1",
+                "corejs": 3,
                 "targets": {
                     "browsers": browserlist[type]
                 }
