@@ -35,6 +35,16 @@ let { pages, cloud_name, imageURLConfig } = config;
 let assetURL = `https://res.cloudinary.com/${cloud_name}/`;
 assets.config({ cloud_name, secure: true });
 
+// Rollup warnings are annoying
+let ignoreLog = ["CIRCULAR_DEPENDENCY", "UNRESOLVED_IMPORT", 'EXTERNAL_DEPENDENCY', 'THIS_IS_UNDEFINED'];
+let onwarn = ({ loc, message, code, frame }, warn) => {
+    if (ignoreLog.indexOf(code) > -1) return;
+    if (loc) {
+        warn(`${loc.file} (${loc.line}:${loc.column}) ${message}`);
+        if (frame) warn(frame);
+    } else warn(message);
+};
+
 let srcMapsWrite = ["../maps", {
     sourceMappingURL: file => {
         return `/maps/${file.relative}.map`;
@@ -180,7 +190,9 @@ task("js", () =>
                                 commonJS(), // Use CommonJS to compile the program
                                 nodeResolve(), // Bundle all Modules
                                 rollupBabel(babelConfig[type]) // Babelify file for uglifing
-                            ]
+                            ],
+                            cache: true,
+                            onwarn
                         }, gen ? 'umd' : 'es'),
                         // Minify the file
                         debug ? null : terser(
@@ -204,7 +216,9 @@ task("js", () =>
                         commonJS(), // Use CommonJS to compile the program
                         nodeResolve(), // Bundle all Modules
                         rollupBabel(babelConfig.general) // ES5 file for uglifing
-                    ]
+                    ],
+                    cache: true,
+                    onwarn
                 }, 'umd'),
                 // Minify the file
                 debug ? null : terser({ ...minifyOpts, ie8: true, ecma: 5 }),
@@ -227,7 +241,9 @@ task("server", () =>
                         rollupJSON(), // Parse JSON Exports
                         commonJS(), // Use CommonJS to compile file
                         rollupBabel(babelConfig.node) // Babelify file for minifing
-                    ]
+                    ],
+                    cache: true,
+                    onwarn
                 }, 'cjs'),
                 debug ? null : terser({ ...minifyOpts, ecma: 8 }), // Minify the file
                 rename(minSuffix) // Rename
@@ -286,7 +302,9 @@ task("update", () =>
                     rollupJSON(), // Parse JSON Exports
                     commonJS(), // Use CommonJS to compile file
                     rollupBabel(babelConfig.node) // Babelify file for minifing
-                ]
+                ],
+                cache: true,
+                onwarn
             }, 'cjs'),
             debug ? null : terser({ ...minifyOpts, ecma: 8 }), // Minify the file
             rename(minSuffix) // Rename
