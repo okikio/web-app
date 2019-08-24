@@ -51,7 +51,7 @@ let htmlMinOpts = {
     processScripts: ["application/ld+json"]
 };
 
-let minifyOpts = { toplevel: !dev, mangle: { reserved: ["$super"] } };
+let minifyOpts = { mangle: { reserved: ["$super"] } };
 let minSuffix = { suffix: ".min" };
 let watchDelay = { delay: 500 };
 let publicDest = 'public';
@@ -171,23 +171,23 @@ task("js", () =>
                 return ['src/js/app.js', {
                     opts: { allowEmpty: true },
                     pipes: [
-                        init(), // Sourcemaps init
+                        // init(), // Sourcemaps init
                         // Bundle Modules
                         rollup({
                             plugins: [
                                 builtins(), // Access to builtin Modules
+                                rollupJSON(), // Parse JSON Exports
                                 commonJS(), // Use CommonJS to compile the program
                                 nodeResolve(), // Bundle all Modules
-                                rollupJSON(), // Parse JSON Exports
                                 rollupBabel(babelConfig[type]) // Babelify file for uglifing
                             ]
-                        }, gen ? 'umd' : 'es'),
+                        }, gen ? 'iife' : 'es'),
                         // Minify the file
-                        terser(
-                            assign(minifyOpts, gen ? { ie8: true, ecma: 5 } : { toplevel: false, ecma: 8 })
+                        debug ? null : terser(
+                            assign(minifyOpts, gen ? { ie8: true, ecma: 5 } : { ecma: 8 })
                         ),
                         rename(`app${suffix}.min.js`), // Rename
-                        write(...srcMapsWrite) // Put sourcemap in public folder
+                        // write(...srcMapsWrite) // Put sourcemap in public folder
                     ],
                     dest: `${publicDest}/js` // Output
                 }];
@@ -200,14 +200,14 @@ task("js", () =>
                 rollup({
                     plugins: [
                         builtins(), // Access to builtin Modules
+                        rollupJSON(), // Parse JSON Exports
                         commonJS(), // Use CommonJS to compile the program
                         nodeResolve(), // Bundle all Modules
-                        rollupJSON(), // Ability to Parse JSON
-                        rollupBabel(babelConfig.node) // ES5 file for uglifing
+                        rollupBabel(babelConfig.general) // ES5 file for uglifing
                     ]
-                }, 'umd'),
+                }, 'iife'),
                 // Minify the file
-                terser({ ...minifyOpts, ie8: true, ecma: 5, toplevel: false }),
+                debug ? null : terser({ ...minifyOpts, ie8: true, ecma: 5 }),
                 rename(minSuffix), // Rename
                 write(...srcMapsWrite) // Put sourcemap in public folder
             ],
@@ -224,12 +224,12 @@ task("server", () =>
                 // Bundle Modules
                 rollup({
                     plugins: [
-                        commonJS(), // Use CommonJS to compile file
                         rollupJSON(), // Parse JSON Exports
+                        commonJS(), // Use CommonJS to compile file
                         rollupBabel(babelConfig.node) // Babelify file for minifing
                     ]
                 }, 'cjs'),
-                debug ? null : terser({ ...minifyOpts, ecma: 7 }), // Minify the file
+                debug ? null : terser({ ...minifyOpts, ecma: 8 }), // Minify the file
                 rename(minSuffix) // Rename
             ],
             dest: '.' // Output
@@ -283,12 +283,12 @@ task("update", () =>
             // Bundle Modules
             rollup({
                 plugins: [
-                    commonJS(), // Use CommonJS to compile file
                     rollupJSON(), // Parse JSON Exports
+                    commonJS(), // Use CommonJS to compile file
                     rollupBabel(babelConfig.node) // Babelify file for minifing
                 ]
             }, 'cjs'),
-            debug ? null : terser({ ...minifyOpts, ecma: 7 }), // Minify the file
+            debug ? null : terser({ ...minifyOpts, ecma: 8 }), // Minify the file
             rename(minSuffix) // Rename
         ],
         dest: '.' // Output

@@ -1,6 +1,6 @@
 let browserlist = {
     "modern": ["> 10%"],
-    "general": ["defaults, IE 8"]
+    "general": ["defaults, IE 11"]
 };
 
 let babelConfig = {
@@ -10,10 +10,15 @@ let babelConfig = {
 };
 
 ["modern", "general"].forEach(function (type) {
+    let gen = type == 'general';
     babelConfig[type] = {
+        "babelrc": false,
         "presets": [
             ["@babel/preset-env", {
                 "useBuiltIns": "usage",
+                "modules": 'false',
+                "spec": true,
+                "forceAllTransforms": gen,
                 "corejs": "3.2.1",
                 "targets": {
                     "browsers": browserlist[type]

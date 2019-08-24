@@ -1,4 +1,4 @@
-import { _log,  _is, _path, keys, _fnval, _capital, getOwnPropertyNames } from "./util";
+import { _log, _removeProps,  _is, _path, keys, _fnval, _capital, getOwnPropertyNames } from "./util";
 import { _get } from "./class";
 import _event from './event';
 import anime from "animejs";
@@ -586,7 +586,9 @@ Ele = _event.extend(arrProto, {
             });
         }
 
-        let { play, ...opts } = opt;
+        let opts = opt;
+        let play = _removeProps(["play"], opt);
+
         let tl = this.timeline;
         tl.add(opts, offset);
         _is.def(play) && (play && tl.play() || tl.pause());
