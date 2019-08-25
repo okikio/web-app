@@ -134,7 +134,7 @@ task('html', () => {
                     // Pug compiler
                     pug({ locals: { ...page, cloud_name, dev, staticSite } }),
                     // Minify or Beautify html
-                    // dev ? html({ indent_size: 4 }) : htmlmin(htmlMinOpts),
+                    dev ? html({ indent_size: 4 }) : htmlmin(htmlMinOpts),
                     // Replace /assets/... URLs
                     replace(/\/assets\/[^\s"']+/g, url => {
                         let URLObj = new URL(`${assetURL + url}`.replace("/assets/", ""));
