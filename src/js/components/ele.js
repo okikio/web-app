@@ -1,4 +1,4 @@
-import { _log, _removeProps,  _is, _path, keys, _fnval, _capital } from "./util";
+import { _log, _is, _path, keys, _fnval, _capital } from "./util";
 import { _get } from "./class";
 import _event from './event';
 import anime from "animejs";
