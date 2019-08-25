@@ -8,17 +8,13 @@ html(lang="en")
 
     <!--[if IE]>
       link(rel="preload" href="./js/app.min.js" as="script")
-      script(src="https://polyfill.io/v3/polyfill.min.js?features=default,es2015,es2017,es2018,fetch&flags=gated" async)
       script.
         window.polyfillNeeded = window.fetch !== undefined && window.Promise !== undefined;
         window.__old = true;
     <![endif]-->
-    div#polyfill
 
     script.
-      var ie=0;try{ie=navigator.userAgent.match(/(MSIE |Trident.*rv[ :])([0-9]+)/)[2]}catch(e){}if(ie&&!window.__old){var div=document.getElementById("polyfill");window.polyfillNeeded=void 0!==window.fetch&&void 0!==window.Promise,console.log("Polyfill"),div.innerHTML='<link rel="preload" href="./js/app.min.js" as="script" /> <script src="https://polyfill.io/v3/polyfill.min.js?features=default,es2015,es2017,es2018,fetch&amp;flags=gated" async><\/script>'}
-
-    //- script(src="https://polyfill.io/v3/polyfill.min.js?features=default,es2015,es2017,es2018,fetch&flags=gated" async)
+      var ie=0;try{ie=navigator.userAgent.match(/(MSIE |Trident.*rv[ :])([0-9]+)/)[2]}catch(e){}if(ie&&(!window.__old)){window.polyfillNeeded=void 0!==window.fetch&&void 0!==window.Promise;}
 
     <!--[if lt IE 9]>
       link(rel='preconnect' href='https://cdnjs.cloudflare.com/')
@@ -110,6 +106,5 @@ html(lang="en")
     if !page.noFooter
       +footer("2019 Okiki Ojo")
 
+    script(src="https://polyfill.io/v3/polyfill.min.js?features=default,es2015,es2017,es2018,fetch,Array.prototype.includes&flags=gated" async)
     script(src=`${dev ? './js/app.modern.min.js' : './js/app.vendor.min.js'}` inline defer)
-    script.
-      console.log(Object.assign);
