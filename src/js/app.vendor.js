@@ -5,6 +5,7 @@ let _src = v => `./js/${v}.min.js`;
 try {
     let script = document.createElement("script");
     let isModern = window.polyfillNeeded !== undefined || window.__old !== undefined ? false : fetch && Promise;
+    window._isModern = isModern;
     console.log("Is this browser old? " + !("assign" in Object));
 
     let src = _src(`app${isModern ? ".modern" : ""}`);

@@ -22,15 +22,18 @@ let _load = () => {
    el('main').find(`a.name`).on("click mouseenter", () => { _log(`Link - Hover/Clicked`); });
 };
 
- let trans = new swup({
-	requestHeaders: {
-		"X-Requested-With": "swup", // So we can tell request comes from swup
-		"x-partial": "swup" // Request a partial html page
-	},
-	plugins: [new preload()]
-});
+if (window._isModern) {
+   _load();
 
-_load();
+   let trans = new swup({
+      requestHeaders: {
+         "X-Requested-With": "swup", // So we can tell request comes from swup
+         "x-partial": "swup" // Request a partial html page
+      },
+      plugins: [new preload()]
+   });
 
-// this event runs for every page view after initial load
-trans.on('contentReplaced', _load);
+
+   // this event runs for every page view after initial load
+   trans.on('contentReplaced', _load);
+}
