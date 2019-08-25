@@ -8,20 +8,18 @@ import { _log } from "./components/util";
 
 import preload from '@swup/preload-plugin';
 let _load = () => {
-   let ele = el(`<a class='Name'>Hello</a>`);
+   let ele = el(`<a class='name'>Hello</a>`);
    ele.prependTo("#swup");
    ele.on("click", function () {
       _log(this);
       el(this).animate({
-         color: "#00eeaa",
-         translateX: 250
+         direction: 'alternate',
+         color: ["#008000", "#00eeaa"],
+         translateX: [0, 250]
       });
    });
 
-   el('main').find(`a.Name`).on("click mouseenter", () => {
-      // e.preventDefault();
-      _log("Name");
-   });
+   el('main').find(`a.name`).on("click mouseenter", () => { _log(`Link - Hover/Clicked`); });
 };
 
  let trans = new swup({

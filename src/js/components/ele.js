@@ -577,21 +577,20 @@ Ele = _event.extend(arrProto, {
         }
     },
 
-    getAnime() { return this.timeline; },
+    getAnime() { return this.anime; },
+    timeline(opt = {}) {
+        this.anime = timeline({
+            targets: _toArr(this),
+            ...opt
+        });
+
+        return this;
+    },
     animate(opt = {}, offset) {
         opt = _fnval(opt, [{ stagger, remove, random }, offset], this);
-        if (_is.undef(this.timeline)) {
-            this.timeline = timeline({
-                targets: _toArr(this)
-            });
-        }
+        _is.def(this.anime) && this.anime.add ? this.anime.add(opt, offset) :
+            (this.anime = anime({ targets: _toArr(this), ...opt }));
 
-        let { play } = opt;
-        let opts = _removeProps(["play"], opt);
-
-        let tl = this.timeline;
-        tl.add(opts, offset);
-        _is.def(play) && (play && tl.play() || tl.pause());
         return this;
     },
 },
