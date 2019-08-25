@@ -1,5 +1,8 @@
-// Based on Prototype.js [#class] (api.prototypejs.org/language/Class/)
-import { _log, _is, _fnval, _argNames, _path, _attr, _new, assign, keys } from "./util";
+/*
+   - Based on Prototype.js [#class] (api.prototypejs.org/language/Class/
+*/
+
+import { _log, _is, _removeProps, _fnval, _argNames, _path, _attr, _new, assign, keys } from "./util";
 
 // Attach properties to class prototype or the class itself
 export let _attachProp = function (where) {
@@ -14,7 +17,10 @@ export let _attachProp = function (where) {
 
             // Iterate through Object
             keys(obj).forEach(function (i) {
-                let _val = obj[i], preVal = _val;
+                let _val = obj[i], preVal = _val, $$val = {
+                    enumerable: true,
+                    configurable: true
+                };
 
                 // If a Parent Class is Present, Set any argument/params named `$super` to the `Parent`
                 if (_is.fn(preVal)) {
@@ -31,17 +37,23 @@ export let _attachProp = function (where) {
                     _val.toString = preVal.toString.bind(preVal);
                 }
 
-                (_prototype ? _obj.prototype : _obj)[i] = _val; // Redefinition Error Fix
-
                 /*
                     Allows the use of `Object.defineProperty`, if an Object has any of these
-                    { $$prop: true, get: function () { ... }, set: function () { ... } }
+                    { $$prop: true, get: function () { ... }, set: function () { ... }, ... }
                 */
-                if (_is.def(_val) && _is.obj(_val) &&
-                    (_val.$$prop || _is.fn(_val.get) || _is.fn(_val.set)) &&
-                    !_val._class) {
-                    Object.defineProperty(_prototype ? _obj.prototype : _obj, i, _val);
+                if (_is.def(_val) && _is.obj(_val) && _val.$$prop) {
+                    assign($$val, {
+                        set (v) { Object.defineProperty(this, i, { value: v }); },
+                        get () { return this[i]; }
+                    }, _removeProps(["$$prop"], _val));
+                } else {
+                    assign($$val, {
+                        writable: true,
+                        value: _val
+                    });
                 }
+
+                Object.defineProperty(_prototype ? _obj.prototype : _obj, i, $$val);
             });
         });
 
@@ -97,7 +109,8 @@ export let _configAttr = function (attr = "get", type = "function") {
             _val = Function(`with (this) return ${val}`);
             _val.toString = val.toString;
         }
-        return { [attr]: _val };
+
+        return { $$prop: true, [attr]: _val };
     };
 };
 

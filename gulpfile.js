@@ -27,6 +27,7 @@ const postcss = require('gulp-postcss');
 const terser = require('gulp-terser');
 const rename = require('gulp-rename');
 const { writeFile } = require("fs");
+const newer = require("gulp-newer");
 const config = require('./config');
 const sass = require('gulp-sass');
 const pug = require('gulp-pug');
@@ -191,7 +192,6 @@ task("js", () =>
                                 nodeResolve(), // Bundle all Modules
                                 rollupBabel(babelConfig[type]) // Babelify file for uglifing
                             ],
-                            cache: true,
                             onwarn
                         }, gen ? 'umd' : 'es'),
                         // Minify the file
@@ -204,9 +204,10 @@ task("js", () =>
                     dest: `${publicDest}/js` // Output
                 }];
             }),
-            dev && staticSite ? null : ['src/js/app.vendor.js', {
+            dev && staticSite ? null : [['src/js/@(app.vendor|polyfill).js'], {
             opts: { allowEmpty: true },
             pipes: [
+                newer(`${publicDest}/js`), // Check for changes
                 init(), // Sourcemaps init
                 // Bundle Modules
                 rollup({
@@ -217,7 +218,6 @@ task("js", () =>
                         nodeResolve(), // Bundle all Modules
                         rollupBabel(babelConfig.general) // ES5 file for uglifing
                     ],
-                    cache: true,
                     onwarn
                 }, 'umd'),
                 // Minify the file
@@ -242,7 +242,6 @@ task("server", () =>
                         commonJS(), // Use CommonJS to compile file
                         rollupBabel(babelConfig.node) // Babelify file for minifing
                     ],
-                    cache: true,
                     onwarn
                 }, 'cjs'),
                 debug ? null : terser({ ...minifyOpts, ecma: 8 }), // Minify the file
@@ -303,7 +302,6 @@ task("update", () =>
                     commonJS(), // Use CommonJS to compile file
                     rollupBabel(babelConfig.node) // Babelify file for minifing
                 ],
-                cache: true,
                 onwarn
             }, 'cjs'),
             debug ? null : terser({ ...minifyOpts, ecma: 8 }), // Minify the file

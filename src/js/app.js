@@ -1,4 +1,3 @@
-import 'core-js-pure';
 import swup from "swup";
 import el from "./components/ele";
 import { _log } from "./components/util";
@@ -14,7 +13,7 @@ let _load = () => {
    ele.on("click", function () {
       _log(this);
       el(this).animate({
-         color: "#ffeeaa",
+         color: "#00eeaa",
          translateX: 250
       });
    });

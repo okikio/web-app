@@ -586,8 +586,8 @@ Ele = _event.extend(arrProto, {
             });
         }
 
-        let opts = opt;
-        let play = _removeProps(["play"], opt);
+        let { play } = opt;
+        let opts = _removeProps(["play"], opt);
 
         let tl = this.timeline;
         tl.add(opts, offset);
