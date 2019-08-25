@@ -4,9 +4,9 @@ const { body } = document;
 let _src = v => `./js/${v}.min.js`;
 try {
     let script = document.createElement("script");
-    let isModern = fetch && Promise;
+    let isModern = window.polyfillNeeded !== undefined ? window.polyfillNeeded : fetch && Promise;
 
-    let src = _src(isModern ? `app.modern` : 'polyfill');
+    let src = _src(`app${isModern ? ".modern" : ""}`);
     script.setAttribute("src", src);
     if (isModern) {
         fetch(src)
@@ -25,12 +25,7 @@ try {
                 console.log('Fetch Error: ', err);
             });
     } else {
-        let src = _src('app');
-        let newScript = document.createElement("script");
-        newScript.setAttribute("src", src);
-
         body.appendChild(script);
-        body.appendChild(newScript);
     }
 } catch (e) {
     let err = "Your browser is outdated, I suggest updating or upgrading to a new one.";

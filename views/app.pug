@@ -6,6 +6,27 @@ html(lang="en")
     meta(http-equiv='Accept-CH' content='DPR, Viewport-Width, Width')
     meta(name="viewport", content="width=device-width, initial-scale=1.0")
 
+    <!--[if IE]>
+      link(rel="preload" href="./js/app.min.js" as="script")
+      script(src="https://polyfill.io/v3/polyfill.min.js?features=default,es2015,es2017,es2018,fetch&flags=gated" async)
+      script.
+        window.polyfillNeeded = window.fetch !== undefined && window.Promise !== undefined;
+        window.__old = true;
+    <![endif]-->
+
+    script.
+      var ie = 0;
+      try { ie = navigator.userAgent.match( /(MSIE |Trident.*rv[ :])([0-9]+)/ )[ 2 ]; }
+      catch(e){}
+      if (ie && !window.__old){
+        var _div = document.getElementById("polyfill");
+        window.polyfillNeeded = window.fetch !== undefined && window.Promise !== undefined;
+        console.log("Polyfill"); _div.innerHTML = "<link rel=\"preload\" href=\"./js/app.min.js\" as=\"script\" /> <script src=\"https://polyfill.io/v3/polyfill.min.js?features=default,es2015,es2017,es2018,fetch&amp;flags=gated\" async=\"async\"></script>";
+      }
+
+    div#polyfill
+    //- script(src="https://polyfill.io/v3/polyfill.min.js?features=default,es2015,es2017,es2018,fetch&flags=gated" async)
+
     <!--[if lt IE 9]>
       link(rel='preconnect' href='https://cdnjs.cloudflare.com/')
       script(src='https://cdnjs.cloudflare.com/ajax/libs/nwmatcher/1.4.2/nwmatcher.min.js')
@@ -32,11 +53,6 @@ html(lang="en")
       script(src='https://cdnjs.cloudflare.com/ajax/libs/flexibility/2.0.1/flexibility.js')
       script.
         flexibility(document.body);
-    <![endif]-->
-
-    <!--[if gt IE 6]>
-      link(rel="preload" href="./js/polyfill.min.js" as="script")
-      link(rel="preload" href="./js/app.min.js" as="script")
     <![endif]-->
 
     //- script(src="https://cdnjs.cloudflare.com/ajax/libs/jquery/2.2.1/jquery.min.js")
@@ -102,4 +118,5 @@ html(lang="en")
       +footer("2019 Okiki Ojo")
 
     script(src=`${dev ? './js/app.modern.min.js' : './js/app.vendor.min.js'}` inline defer)
-    //-   || dev ? './js/app.modern.min.js' : './js/app.vendor.min.js'
+    script.
+      console.log(Object.assign);
