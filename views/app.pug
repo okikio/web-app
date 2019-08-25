@@ -6,17 +6,6 @@ html(lang="en")
     meta(http-equiv='Accept-CH' content='DPR, Viewport-Width, Width')
     meta(name="viewport", content="width=device-width, initial-scale=1.0")
 
-    script.
-      var ie = 0;
-      try { ie = navigator.userAgent.match( /(MSIE |Trident.*rv[ :])([0-9]+)/ )[ 2 ]; }
-      catch(e){}
-      if (ie && !window.__old){
-        var div = document.getElementById("polyfill");
-        window.polyfillNeeded = window.fetch !== undefined && window.Promise !== undefined;
-        console.log("Polyfill");
-        div.innerHTML = '<link rel="preload" href="./js/app.min.js" as="script" /> <script src="https://polyfill.io/v3/polyfill.min.js?features=default,es2015,es2017,es2018,fetch&amp;flags=gated" async></script>';
-        }
-
     <!--[if IE]>
       link(rel="preload" href="./js/app.min.js" as="script")
       script(src="https://polyfill.io/v3/polyfill.min.js?features=default,es2015,es2017,es2018,fetch&flags=gated" async)
@@ -24,8 +13,11 @@ html(lang="en")
         window.polyfillNeeded = window.fetch !== undefined && window.Promise !== undefined;
         window.__old = true;
     <![endif]-->
-
     div#polyfill
+
+    script.
+      var ie=0;try{ie=navigator.userAgent.match(/(MSIE |Trident.*rv[ :])([0-9]+)/)[2]}catch(e){}if(ie&&!window.__old){var div=document.getElementById("polyfill");window.polyfillNeeded=void 0!==window.fetch&&void 0!==window.Promise,console.log("Polyfill"),div.innerHTML='<link rel="preload" href="./js/app.min.js" as="script" /> <script src="https://polyfill.io/v3/polyfill.min.js?features=default,es2015,es2017,es2018,fetch&amp;flags=gated" async><\/script>'}
+
     //- script(src="https://polyfill.io/v3/polyfill.min.js?features=default,es2015,es2017,es2018,fetch&flags=gated" async)
 
     <!--[if lt IE 9]>
