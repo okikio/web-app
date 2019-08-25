@@ -34,6 +34,11 @@ html(lang="en")
         flexibility(document.body);
     <![endif]-->
 
+    <!--[if gt IE 6]>
+      link(rel="preload" href="./js/polyfill.min.js" as="script")
+      link(rel="preload" href="./js/app.min.js" as="script")
+    <![endif]-->
+
     //- script(src="https://cdnjs.cloudflare.com/ajax/libs/jquery/2.2.1/jquery.min.js")
     //- script(src="https://cdnjs.cloudflare.com/ajax/libs/smoothState.js/0.7.2/jquery.smoothState.min.js")
 
