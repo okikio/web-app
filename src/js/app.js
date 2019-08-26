@@ -19,12 +19,17 @@ let _load = () => {
       });
    });
 
+   el('.navbar-menu').click(function (e) {
+      e.preventDefault();
+      el('.navbar-list').toggleClass("navbar-list-show");
+  });
+
    el('main').find(`a.name`).on("click mouseenter", () => { _log(`Link - Hover/Clicked`); });
 };
 
-if (window._isModern) {
-   _load();
+_load();
 
+if (window._isModern) {
    let trans = new swup({
       requestHeaders: {
          "X-Requested-With": "swup", // So we can tell request comes from swup
