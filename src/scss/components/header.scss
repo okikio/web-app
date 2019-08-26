@@ -51,7 +51,7 @@
        }
 
        &-list {
-           transition: max-height 0.55s ease-out;
+           transition: max-height 0.35s cubic-bezier(0.445, 0.05, 0.55, 0.95);
            justify-content: center;
            align-items: center;
            white-space: nowrap;
@@ -95,8 +95,6 @@
        //! purgecss start ignore
        // Mobile navbar settings
        @media (max-width: 600px) {
-          $parentSel: &;
-
            &-layout,
            &-list {
                flex-direction: column;
@@ -111,11 +109,11 @@
            }
 
            &-show {
-               & #{$parentSel}-list {
+               & .navbar-list {
                   max-height: 100vh !important;
                }
 
-               & #{$parentSel}-head {
+               & .navbar-head {
                   border-bottom: 1px solid $background;
                }
             }
