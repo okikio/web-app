@@ -51,7 +51,7 @@
        }
 
        &-list {
-           transition: max-height 0.35s ease;
+           transition: max-height 0.55s ease-out;
            justify-content: center;
            align-items: center;
            white-space: nowrap;
@@ -92,8 +92,11 @@
            display: block;
        }
 
+       //! purgecss start ignore
        // Mobile navbar settings
        @media (max-width: 600px) {
+          $parentSel: &;
+
            &-layout,
            &-list {
                flex-direction: column;
@@ -103,12 +106,22 @@
                padding-right: $size;
            }
 
+           &-menu {
+              cursor: pointer;
+           }
+
+           &-show {
+               & #{$parentSel}-list {
+                  max-height: 100vh !important;
+               }
+
+               & #{$parentSel}-head {
+                  border-bottom: 1px solid $background;
+               }
+            }
+
            &-list {
                max-height: 0;
-
-               &-show {
-                   max-height: 100vh;
-               }
 
                li {
                    text-align: center;
@@ -137,5 +150,6 @@
                height: $height;
            }
        }
+       //! purgecss end ignore
    }
 }

@@ -15,13 +15,10 @@ mixin header(_page)
             content: "JOSEPH!"
           })
           section.layout-spacer
-          section.navbar-foot
-            +link({
-              class: "navbar-menu style-font-family-bold style-black style-font-sz-14",
-              content: "Menu"
-            })
+          section.navbar-foot.navbar-mobile
+            span.navbar-menu.style-font-family-bold.style-black.style-font-sz-14 Menu
 
-        section.layout-spacer
+        section.layout-spacer.navbar-desktop
         section.navbar-main
           ul.navbar-list
             each tab in _tabs

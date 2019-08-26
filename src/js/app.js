@@ -21,7 +21,8 @@ let _load = () => {
 
    el('.navbar-menu').click(function (e) {
       e.preventDefault();
-      el('.navbar-list').toggleClass("navbar-list-show");
+      _log("Nabar-menu");
+      el('.navbar').toggleClass("navbar-show");
   });
 
    el('main').find(`a.name`).on("click mouseenter", () => { _log(`Link - Hover/Clicked`); });
