@@ -1,5 +1,5 @@
 /*
-   - Based on Prototype.js [#class] (api.prototypejs.org/language/Class/
+   - Based on Prototype.js [#class] (api.prototypejs.org/language/Class/)
 */
 
 import { _log, _is, _removeProps, _fnval, _argNames, _path, _attr, _new, assign, keys } from "./util";
@@ -37,10 +37,6 @@ export let _attachProp = function (where) {
                     _val.toString = preVal.toString.bind(preVal);
                 }
 
-                /*
-                    Allows the use of `Object.defineProperty`, if an Object has any of these
-                    { $$prop: true, get: function () { ... }, set: function () { ... }, ... }
-                */
                 if (_is.def(_val) && _is.obj(_val) && _val.$$prop) {
                     assign($$val, {
                         set (v) { Object.defineProperty(this, i, { value: v }); },

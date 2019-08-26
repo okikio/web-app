@@ -162,7 +162,8 @@ let arrProto = Object.getOwnPropertyNames(Array.prototype)
 
 // Element Object [Based on Zepto.js]
 Ele = _event.extend(arrProto, {
-    init(sel = '', ctxt) {
+    init($super, sel = '', ctxt) {
+        $super();
         this.sel = sel; // Selector
         this.ele = _elem(this.sel, ctxt); // Element
 

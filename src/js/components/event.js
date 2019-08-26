@@ -16,8 +16,10 @@ window.removeEventListener("PassiveEventsTest", noop, opts);
 // Event class
 let _event = _class({
     _class: "Event", // Class name
-    _events: {}, // Event info.
-    _emit: [],  // Store events set to be emitted
+    init() {
+        this._events = {}; // Event info.
+        this._emit = [];  // Store events set to be emitted
+    },
 
     // Name of all event's
     _names: _get("Object.keys(_events)"),

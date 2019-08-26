@@ -8,13 +8,19 @@ mixin header(_page)
   header.header
     nav.navbar.navbar-fixed
       article.layout-contain.navbar-layout
-        section.navbar-header
+        section.navbar-head
           +link({
             href: "/" + (dev && staticSite ? "index.html" : ""),
             class: "navbar-title",
             content: "JOSEPH!"
           })
-        
+          section.layout-spacer
+          section.navbar-foot
+            +link({
+              class: "style-font-family-bold style-black style-font-sz-14",
+              content: "Menu"
+            })
+
         section.layout-spacer
         section.navbar-main
           ul.navbar-list

@@ -3,7 +3,7 @@
    $styleParent: &;
    &, &-font {
       @each $name, $family in $fonts {
-         &-#{$name}, &-#{$name}-font {
+         &-#{$name}, &-#{$name}-font, &-family-#{$name}  {
             font-family: #{$family};
          }
       }
