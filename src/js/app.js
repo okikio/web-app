@@ -8,20 +8,9 @@ import { _log } from "./components/util";
 
 import preload from '@swup/preload-plugin';
 let _load = () => {
-   let ele = el(`<a class='name'>Hello</a>`);
-
    let _navbar = el('.navbar');
    let _global = el(window);
    let _height = _navbar.height() * 2;
-
-   ele.prependTo("#swup");
-   ele.on("click", function () {
-       el(this).animate({
-           direction: 'alternate',
-           color: ["#ff0266", "#00eeaa"],
-           translateX: [0, 250]
-       });
-   });
 
    el('.navbar-menu').click(function (e) {
        e.preventDefault();
