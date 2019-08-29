@@ -1,16 +1,17 @@
 import swup from "swup";
 import el from "./components/ele";
 import { _log } from "./components/util";
+import preload from '@swup/preload-plugin';
+
 // import './components/smoothstate';
 // import _class from "./components/class";
 // import _event from "./components/event";
 // import scrollPlugin from "@swup/scroll-plugin";
 
-import preload from '@swup/preload-plugin';
 let _load = () => {
    let _navbar = el('.navbar');
+   let _height = _navbar.height();
    let _global = el(window);
-   let _height = _navbar.height() * 2;
 
    el('.navbar-menu').click(function (e) {
        e.preventDefault();
