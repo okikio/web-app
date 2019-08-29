@@ -11,143 +11,141 @@
    }
 
    /* -- Navigation -- */
-   .navbar {
-       position: relative;
-       max-height: 1000px;
-       z-index: 1200;
-       width: 100%;
+    @at-root .navbar {
+        position: relative;
+        max-height: 1000px;
+        height: $height;
+        z-index: 1200;
+        width: 100%;
 
-       &-fixed {
-           position: fixed;
-           left: 0;
-           top: 0;
-       }
+        &-fixed {
+            position: fixed;
+            left: 0;
+            top: 0;
+        }
+        
+        &-layout {
+            $radius: 18px;
+            
+            transition: box-shadow .45s, background .45s;
+            box-shadow: 0 5px 25px rgba(0, 0, 0, 0);
+            border-radius: 0 0 $radius $radius;
+            background: transparent;
+            margin: 0 auto;
+        }
+        
+        &-focus, &-show, &:hover {
+            .navbar-layout {
+                box-shadow: 0 5px 25px rgba(0, 0, 50, 0.12);
+                background: $surface;
+            }
+        }
 
-       &-layout {
-           $radius: 18px;
+        &-head {
+            flex-direction: row;
+            align-items: center;
+            flex-wrap: nowrap;
+            display: flex;
+            width: 100%;
+        }
 
-           box-shadow: 0 5px 25px rgba(0, 0, 50, 0.12);
-           border-radius: 0 0 $radius $radius;
-           background: $surface;
-           margin: 0 auto;
-       }
+        &-title {
+            font-family: $title-font;
+            letter-spacing: 0.05em;
+            text-decoration: none;
+            line-height: $height;
+            padding-left: $size;
+            position: relative;
+            font-size: 17px;
+        }
 
-       &-head {
-           flex-direction: row;
-           align-items: center;
-           flex-wrap: nowrap;
-           display: flex;
-           width: 100%;
-       }
+        &-list {
+            transition: max-height .5s;
+            justify-content: center;
+            align-items: center;
+            white-space: nowrap;
+            overflow-y: hidden;
+            list-style: none;
+            max-height: 0;
+            display: flex; 
+            width: 100%;
+            margin: 0;
+        }
 
-       &-title {
-           font-family: $title-font;
-           letter-spacing: 0.05em;
-           text-decoration: none;
-           line-height: $height;
-           padding-left: $size;
-           position: relative;
-           font-size: 17px;
-       }
+        &-link {
+            font-family: $bold-font;
+            text-transform: uppercase;
+            line-height: $height;
+            letter-spacing: 1px;
+            font-weight: 300;
+            padding: 0 28px;
+            font-size: 14px;
+            display: block;
+            color: $black;
+            width: 100%;
 
-       &-list {
-           transition: max-height 0.6s cubic-bezier(0.645, 0.045, 0.355, 1);
-           justify-content: center;
-           align-items: center;
-           white-space: nowrap;
-           overflow-y: hidden;
-           list-style: none;
-           display: flex;
-           width: 100%;
-           margin: 0;
-       }
-
-       &-link {
-           font-family: $bold-font;
-           text-transform: uppercase;
-           line-height: $height;
-           letter-spacing: 1px;
-           font-weight: 300;
-           padding: 0 28px;
-           font-size: 14px;
-           display: block;
-           color: $black;
-           width: 100%;
-
-           &:hover {
-               color: $mid-light !important;
-           }
-
-           &-focus {
-               // text-decoration: line-through;
-               color: $mid-dark;
-           }
-       }
-
-       &-mobile {
-           display: none;
-       }
-
-       &-desktop {
-           display: block;
-       }
-
-       //! purgecss start ignore
-       // Mobile navbar settings
-       @media (max-width: 600px) {
-           &-layout,
-           &-list {
-               flex-direction: column;
-           }
-
-           &-head {
-               padding-right: $size;
-           }
-
-           &-menu {
-              cursor: pointer;
-           }
-
-           &-show {
-               & .navbar-list {
-                  max-height: 100vh !important;
-               }
-
-               & .navbar-head {
-                  border-bottom: 1px solid $background;
-               }
+            &:hover {
+                color: $mid-light !important;
             }
 
-           &-list {
-               max-height: 0;
+            &-focus {
+                // text-decoration: line-through;
+                color: $mid-dark;
+            }
+        }
+        
+        &-mobile {
+            display: none;
+        }
+        
+        &-desktop {
+            display: block;
+        }
+        
+        // Mobile navbar settings
+        @media (max-width: 600px) {
+            &-layout,
+            &-list {
+                flex-direction: column;
+            }
+            
+            &-head {
+                padding-right: $size;
+            }
+                
+            &-show &-list {
+                max-height: 100vh !important;
+            }
+            
+            &-list li {
+                text-align: center;
+                display: block;
+                width: 100%;
+            }
 
-               li {
-                   text-align: center;
-                   display: block;
-                   width: 100%;
-               }
-           }
-
-           &-desktop {
-               display: none;
-           }
-
-           &-mobile {
-               display: block;
-           }
-       }
-
-       // Desktop navbar settings
-       @media (min-width: 600px) {
-           &-layout {
-               padding: 0 $size;
-               display: flex;
-           }
-
-           &-list {
-               height: $height;
-           }
-       }
-       //! purgecss end ignore
-   }
+            &-menu {
+                cursor: pointer;
+            }
+        
+            &-desktop {
+                display: none;
+            }
+        
+            &-mobile {
+                display: block;
+            }
+        }
+        
+        // Desktop navbar settings
+        @media (min-width: 600px) {
+            &-layout {
+                padding: 0 $size;
+                display: flex;
+            }
+            
+            &-list {
+                height: $height;
+            }
+        }
+    }
 }
