@@ -113,6 +113,13 @@ export let _attr = (obj, path, val) => {
     return obj;
 };
 
+// The matches() method checks to see if the Element would be selected by the provided selectorString -- in other words -- checks if the element "is" the selector.
+export let _matches = (ele, sel) => {
+    if (_is.undef(ele)) return;
+    let matchSel = ele.matches || ele.msMatchesSelector || ele.webkitMatchesSelector;
+    if (matchSel) return matchSel.call(ele, sel);
+};
+
 // A more efficient `new` keyword that allows for arrays to be passed as arguments
 export let _new = function (ctor, args) {
     let F = function () { return ctor.apply(this, args); };
@@ -120,4 +127,4 @@ export let _new = function (ctor, args) {
     return new F();
 };
 
-export default { _capital, _is, _intersect, _fnval, _argNames, _path, _attr, _new, assign, keys, values, from, of };
+export default { _matches, _capital, _is, _intersect, _fnval, _argNames, _path, _attr, _new, assign, keys, values, from, of };

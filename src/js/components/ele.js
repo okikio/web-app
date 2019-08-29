@@ -1,4 +1,4 @@
-import { _log, _is, _path, keys, _fnval, _capital } from "./util";
+import { _matches, _log, _is, _path, keys, _fnval, _capital } from "./util";
 import { _get } from "./class";
 import _event from './event';
 import anime from "animejs";
@@ -27,12 +27,6 @@ let _qsa = (dom = document, sel) => {
     }
 
     return [...dom.querySelectorAll(sel)];
-};
-
-// The matches() method checks to see if the Element would be selected by the provided selectorString -- in other words -- checks if the element "is" the selector.
-let _matches = (ele, sel) => {
-    let matchSel = ele.matches || ele.msMatchesSelector || ele.webkitMatchesSelector;
-    if (matchSel) return matchSel.call(ele, sel);
 };
 
 // Check if the parent node contains the given DOM node. Returns false if both are the same node.
@@ -176,22 +170,26 @@ Ele = _event.extend(arrProto, {
         return Ele(_map(this, (el, i) => fn.call(el, el, i), this));
     },
 
-    on($super, evt, callback, scope) {
-        let _newEvts, _evt;
+    on($super, evt, opts, callback) {
+        let _newEvts, _evt, delegate;
         if (_is.undef(evt)) { return; } // If there is no event break
         if (_is.str(evt)) { evt = evt.split(/\s/g); }
         if (_is.not("arr", evt) && _is.not("obj", evt)) { evt = [evt]; } // Set evt to an array
-        _evt = (_is.obj(evt) && _is.not("arr", evt) ? keys(evt) : evt);
 
+        _evt = (_is.obj(evt) && _is.not("arr", evt) ? keys(evt) : evt);
         _newEvts = _evt.filter(val => !(val in this._events), this).join(" ");
+
+        if (_is.str(opts)) delegate = opts;
+        else callback = opts;
+
         this.forEach(function (el, i) {
-            $super(evt, callback, scope || el);
-            applyNative(this, el, _newEvts, i);
+            $super(evt, callback);
+            applyNative(this, el, _newEvts, i, "addEventListener", delegate);
         }, this);
         return this;
     },
 
-    off($super, evt, callback, scope) {
+    off($super, evt, callback) {
         let _evt;
         if (_is.undef(evt)) { return; } // If there is no event break
         if (_is.str(evt)) { evt = evt.split(/\s/g); }
@@ -199,7 +197,7 @@ Ele = _event.extend(arrProto, {
         _evt = (_is.obj(evt) && _is.not("arr", evt) ? keys(evt) : evt).join(" ");
 
         this.forEach(function (el, i) {
-            $super(evt, callback, scope || el);
+            $super(evt, callback);
             applyNative(this, el, _evt, i, "removeEventListener");
         }, this);
         return this;

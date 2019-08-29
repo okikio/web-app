@@ -4,9 +4,20 @@ const { body } = document;
 let _src = v => `./js/${v}.min.js`;
 try {
     let script = document.createElement("script");
-    let isModern = window.polyfillNeeded !== undefined || window.__old !== undefined ? false : fetch && Promise;
+    let check = function () {
+        "use strict";
+
+        if (typeof window.Symbol == "undefined") return false;
+        try {
+            Function("class Foo {}") ();
+            Function("var bar = (x) => x+1") ();
+        } catch (e) { return false; }
+
+        return true;
+    };
+
+    let isModern = check();
     window._isModern = isModern;
-    console.log("Is this browser old? " + !("assign" in Object));
 
     let src = _src(`app${isModern ? ".modern" : ""}`);
     script.setAttribute("src", src);

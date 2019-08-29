@@ -1,4 +1,5 @@
 import { _stringify } from "../../../util/stringify";
+import { _matches } from "./util";
 import _class from "./class";
 
 const { _get, _is, _argNames, keys } = _class;
@@ -38,7 +39,7 @@ let _event = _class({
     _eventApp(callback, scope, event) {
         return {
             callback: callback,
-            scope: scope || this,
+            scope: scope,
             event: event
         };
     },
@@ -65,7 +66,7 @@ let _event = _class({
     },
 
     // Call all function(s) within an event
-    emit(evt, ...args) {
+    emit(evt, args, scope) {
         let $Evt, $args = args;
         if (_is.undef(evt)) { return; } // If there is no event break
         if (_is.str(evt)) { evt = evt.split(/\s/g); }
@@ -81,7 +82,8 @@ let _event = _class({
                 $args = args;
                 if (_argNames(_evt.callback)[0] == "$evt")
                     { $args = [_evt, ...args]; }
-                _evt.callback.apply(_evt.scope, $args);
+                _evt.callback
+                    .apply(_is.undef(_evt.scope) ? scope : _evt.scope, $args);
             }, this);
         }, this);
         return this;
@@ -98,7 +100,7 @@ let _event = _class({
             let _Evt = this._preEvent($evt);
 
             if (callback) {
-                let i, app = this._eventApp(callback, scope || this, $evt);
+                let i, app = this._eventApp(callback, scope, $evt);
 
                 _Evt.forEach((val, _i) => {
                     if (_stringify(val) == _stringify(app)) { i = _i; }
@@ -173,10 +175,17 @@ let _event = _class({
     nativeEvents: `ready load blur focus focusin focusout resize click scroll dblclick
     mousedown mouseup mousemove mouseover mouseout mouseenter mouseleave
     change select submit keydown keypress keyup contextmenu`.split(" "),
-    applyNative(evt, el, ev, i, action = "addEventListener") {
+    applyNative(evt, el, ev, i, action = "addEventListener", delegate) {
         if (!ev.length) return;
 
-        let _emit = _ev => e => evt.emit(_ev, e, evt, i);
+        let useCapture;
+        let _emit = _ev => e => {
+            if (_is.str(delegate) && _matches(e.target, delegate))
+                evt.emit(_ev, [e, evt, i], e.target);
+            else if (!_is.str(delegate))
+                evt.emit(_ev, [e, evt, i], el);
+        };
+
         if (/ready|load/.test(ev)) {
             if (!/in/.test(readyState)) { _emit("ready load") (); }
             else if (document.addEventListener) {
@@ -188,7 +197,9 @@ let _event = _class({
             }
         } else {
             ev.split(" ").forEach(val => {
-                el[action](val, _emit(ev), ev == "scroll" ? passive : {});
+                useCapture = /blur|focus/.test(val);
+                el[action](val, _emit(ev), ev == "scroll" ? passive :
+                            { useCapture });
             });
         }
     }

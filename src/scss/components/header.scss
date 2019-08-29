@@ -23,17 +23,17 @@
             left: 0;
             top: 0;
         }
-        
+
         &-layout {
             $radius: 18px;
-            
+
             transition: box-shadow .45s, background .45s;
             box-shadow: 0 5px 25px rgba(0, 0, 0, 0);
             border-radius: 0 0 $radius $radius;
             background: transparent;
             margin: 0 auto;
         }
-        
+
         &-focus, &-show, &:hover {
             .navbar-layout {
                 box-shadow: 0 5px 25px rgba(0, 0, 50, 0.12);
@@ -66,7 +66,7 @@
             white-space: nowrap;
             overflow-y: hidden;
             list-style: none;
-            display: flex; 
+            display: flex;
             width: 100%;
             margin: 0;
         }
@@ -92,33 +92,42 @@
                 color: $mid-dark;
             }
         }
-        
+
         &-mobile {
             display: none;
         }
-        
+
         &-desktop {
             display: block;
         }
-        
+
         // Mobile navbar settings
         @media (max-width: 600px) {
             &-layout,
             &-list {
                 flex-direction: column;
             }
-            
+
             &-head {
+                transition: border-bottom-color .25s;
+                border-bottom: 1px solid transparent;
                 padding-right: $size;
             }
-                
-            &-show &-list {
-                max-height: 100vh !important;
+
+            &-show {
+                .navbar-head {
+                    border-bottom-color: darken($very-light, 0.5%);
+                }
+
+                .navbar-list {
+                    max-height: 100vh !important;
+                }
             }
-            
+
             &-list {
+                background: lighten($very-light, 2%);
                 max-height: 0;
-                
+
                 li {
                     text-align: center;
                     display: block;
@@ -129,23 +138,23 @@
             &-menu {
                 cursor: pointer;
             }
-        
+
             &-desktop {
                 display: none;
             }
-        
+
             &-mobile {
                 display: block;
             }
         }
-        
+
         // Desktop navbar settings
         @media (min-width: 600px) {
             &-layout {
                 padding: 0 $size;
                 display: flex;
             }
-            
+
             &-list {
                 height: $height;
             }
