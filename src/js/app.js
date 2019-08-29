@@ -8,10 +8,32 @@ import { _log } from "./components/util";
 
 import preload from '@swup/preload-plugin';
 let _load = () => {
+   let ele = el(`<a class='name'>Hello</a>`);
+
+   let _navbar = el('.navbar');
+   let _global = el(window);
+   let _height = _navbar.height() * 2;
+
+   ele.prependTo("#swup");
+   ele.on("click", function () {
+       el(this).animate({
+           direction: 'alternate',
+           color: ["#ff0266", "#00eeaa"],
+           translateX: [0, 250]
+       });
+   });
+
    el('.navbar-menu').click(function (e) {
-      e.preventDefault();
-      el('.navbar').toggleClass("navbar-show");
-  });
+       e.preventDefault();
+       _navbar.toggleClass("navbar-show");
+   });
+
+   el('main').find(`a.name`).on("click mouseenter", () => { _log(`Link - Hover/Clicked`); });
+
+   _global.scroll(function () {
+       _navbar.toggleClass("navbar-focus", _global.scrollTop() > _height);
+       _navbar.hasClass("navbar-show") && _navbar.removeClass("navbar-show");
+   });
 };
 
 _load();
