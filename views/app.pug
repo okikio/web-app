@@ -8,13 +8,7 @@ html(lang="en")
 
     <!--[if IE]>
       link(rel="preload" href="./js/app.min.js" as="script")
-      script.
-        window.polyfillNeeded = window.fetch !== undefined && window.Promise !== undefined;
-        window.__old = true;
     <![endif]-->
-
-    script.
-      var ie=0;try{ie=navigator.userAgent.match(/(MSIE |Trident.*rv[ :])([0-9]+)/)[2]}catch(e){}if(ie&&(!window.__old)){window.polyfillNeeded=void 0!==window.fetch&&void 0!==window.Promise;}
 
     <!--[if lt IE 9]>
       link(rel='preconnect' href='https://cdnjs.cloudflare.com/')
