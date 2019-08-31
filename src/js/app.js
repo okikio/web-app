@@ -8,19 +8,17 @@ import { _log } from "./components/util";
 // import _event from "./components/event";
 // import scrollPlugin from "@swup/scroll-plugin";
 
+let _copyright = el('#copyright-btn');
 let _navbar = el('.navbar');
 let _global = el(window);
 
 let _height = _navbar.height();
 let _focusPt = _height + 20;
 
-_copyright.addClass("btn-strict").addClass("btn-radial");
 _copyright.hover(function () {
     _copyright.addClass("btn-show").addClass("btn-round");
-    _copyright.removeClass("btn-strict").removeClass("btn-radial");
 }, function () {
     _copyright.removeClass("btn-show").removeClass("btn-round");
-    _copyright.addClass("btn-strict").addClass("btn-radial");
 });
 
 _navbar.mousedown('.navbar-menu', function(e) {
