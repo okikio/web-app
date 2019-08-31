@@ -14,7 +14,7 @@ let _global = el(window);
 let _height = _navbar.height();
 let _focusPt = _height + 20;
 
-_navbar.click('.navbar-menu', function(e) {
+_navbar.mousedown('.navbar-menu', function(e) {
     e.preventDefault();
     _navbar.toggleClass("navbar-show");
 });

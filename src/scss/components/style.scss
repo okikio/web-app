@@ -16,25 +16,9 @@
                font-size: #{$sz}px;
             }
          }
-
-         &-larger {
-            font-size: 35px;
-         }
-
-         &-large {
-            font-size: 18px;
-         }
-
-         &-normal {
-            font-size: 15px;
-         }
-
-         &-small {
-            font-size: 12px;
-         }
-
-         @include propertyList(font-size, "-font", $sizes);
       }
+
+      @include propertyList(font-size, "sz", $sizes);
 
       &, &-weight {
          font-weight: 400;
@@ -157,5 +141,6 @@
       }
    }
 
-   @include colorList(color);
+   @include colorList;
 }
+

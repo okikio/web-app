@@ -10,16 +10,16 @@
    display: block;
    width: 100%;
    z-index: 0;
-   
+
    // /* &-title {
    //    // overflow-wrap: break-word;
    // } */
-      
+
    &-content {
       position: relative;
       z-index: 25;
    }
-      
+
    &-image {
       position: absolute;
       overflow: hidden;
@@ -40,87 +40,155 @@
           left: 0;
           top: 0;
       }
-      
+
       &-blur {
          filter: blur(3px);
       }
    }
 
-   
+
    &-shadow,
    %shadow {
       box-shadow: 0 40px 85px rgba(0, 0, 40, 0.3);
-      
+
       &--1 {
          box-shadow: 0 20px 65px rgba(0, 0, 40, 0.12);
       }
-      
+
       &--2 {
          box-shadow: 0 10px 85px rgba(0, 0, 40, 0.35);
       }
    }
-   
+
    &-hero {
       // @extend %shadow;
-      // background: $surface; 
+      // background: $surface;
       position: relative;
       max-height: 700px;
       z-index: 125;
-      
+
       .layer-image {
-         border-radius: 25px; 
+         border-radius: 25px;
       }
-      
+
       &-scroll-down {
-         background: $white;
-         position: relative;
-         margin-bottom: -150px;
-         z-index: 250;
-         
-         :hover {
-            color: $primary-dark !important;
-         }
-      }
-      
+            margin-bottom: -216px;
+            background: $white;
+            position: relative;
+            z-index: 250;
+        }
+
       @media (max-width: 500px) {
          .layer-title {
             font-size: 6vmax;
          }
-         
+
          .layer-image img {
             min-width: 500px;
          }
       }
-      
+
       @media (min-width: 700px) {
          .layer-title {
             font-size: 12vmax;
          }
       }
-      
+
       @media (min-width: 1000px) {
          .layer-title {
             font-size: 105px;
          }
       }
    }
-   
-   &, &-bkg {
+
+   &,
+   &-bkg,
+   &-background {
       @include colorList(background-color);
    }
-   
+
+    &-border {
+        $borderStyles: (
+            "solid": solid,
+            "dotted": dotted,
+            "dashed": dashed,
+            "double": double,
+            "groove": groove,
+            "ridge": ridge,
+            "inset": inset,
+            "outset": outset,
+            "hidden": hidden,
+            "none": none
+        );
+        $borderDirs: (
+            "top",
+            "left",
+            "right",
+            "bottom"
+        );
+        border: 1px solid $mid;
+
+        @for $sz from 1 through 10 {
+            &-#{$sz},
+            &-sz-#{$sz},
+            &-wid-#{$sz},
+            &-width-#{$sz} {
+                border-width: #{$sz}px;
+            }
+        }
+
+        @for $sz from 1 through 20 {
+            &-rad-#{$sz},
+            &-radius-#{$sz} {
+                border-radius: #{$sz}px;
+            }
+        }
+
+        @include colorList(border-color);
+        @include propertyList(border-width, "sz", $sizes);
+        @include propertyList(border-radius, "rad", $sizes);
+        @include propertyList(border-radius, "radius", $sizes);
+        @include propertyList(border-style, "style", $borderStyles);
+
+        @each $val in $borderDirs {
+            &-#{$val} {
+                @include colorList(border-color-#{$val});
+                @include propertyList(border-width-#{$val}, "sz", $sizes);
+                @include propertyList(border-style-#{$val}, "style", $borderStyles);
+            }
+            @each $otherVal in $borderDirs {
+                @for $sz from 1 through 20 {
+                    &-rad-#{$val}-#{$otherVal}-#{$sz},
+                    &-radius-#{$val}-#{$otherVal}-#{$sz} {
+                        border-radius-#{$val}-#{$otherVal}: #{$sz}px;
+                    }
+                }
+
+                @include propertyList(border-radius-#{$val}-#{$otherVal}, "rad-#{$val}-#{$otherVal}", $sizes);
+                @include propertyList(border-radius-#{$val}-#{$otherVal}, "radius-#{$val}-#{$otherVal}", $sizes);
+            }
+            @include colorList(border-color-#{$val}, "color-#{$val}");
+            @include propertyList(border-width-#{$val}, "sz-#{$val}", $sizes);
+            @include propertyList(border-style-#{$val}, "style-#{$val}", $borderStyles);
+        }
+    }
+
+	&-round {
+        border-radius: 20em;
+	}
+
    &-tile {
       position: relative;
       min-height: 300px;
       cursor: pointer;
       display: block;
       width: 100%;
-      
+
       &,
       .layer-image {
          overflow: hidden;
       }
-      
+
       &-footer {
          position: absolute;
          color: $white;
@@ -128,29 +196,38 @@
          bottom: 0;
       }
    }
-   
+
    &-box {
       position: relative;
       min-height: 400px;
       height: auto;
       width: 100%;
-      
-      &, 
+
+      &,
       .layer-image {
          border-radius: 8px;
       }
-      
+
       &-flat {
          border-radius: 0 !important;
       }
-      
+
       &-tall {
          min-height: 800px;
       }
    }
-   
+
    &-main {
       line-height: 2em;
       z-index: 25;
    }
+
+    &-action-center {
+        font-size: 24px;
+        position: fixed;
+        bottom: 15px;
+        z-index: 250;
+        width: 100%;
+        right: 0;
+    }
 }

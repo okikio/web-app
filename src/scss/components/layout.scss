@@ -320,190 +320,184 @@
      * dull = the value is 0
    */
    $spaceTypes: ("margin", "padding");
-   @each $spacing in $spaceTypes {
-      &-#{$spacing} {
-         $spacing-parent: &;
-         #{$spacing}: {
-            bottom: $size;
-            right: $size;
-            left: $size;
-            top: $size;
-         };
+    @each $spacing in $spaceTypes {
+        &-#{$spacing} {
+            $spacing-parent: &;
+            #{$spacing}: {
+                bottom: $size;
+                right: $size;
+                left: $size;
+                top: $size;
+            };
 
-         $types: (
-            "dull": 0px !important,
-            "small": $size-small,
-            "mid": $size-mid,
-            "large": $size-large,
-            "default": $size
-         );
+            @each $type, $val in $sizes {
+                &-#{$type} {
+                    $type-parent: &;
+                    $basic-dirs: (
+                        "horz": ("left", "right"),
+                        "vert": ("top", "bottom")
+                    );
 
-         @each $type, $val in $types {
-            &-#{$type} {
-               $type-parent: &;
-               $basic-dirs: (
-                  "horz": ("left", "right"),
-                  "vert": ("top", "bottom")
-               );
-
-               @each $basic-dir, $dirs in $basic-dirs {
-                  &, &-#{$basic-dir} {
-                     @each $dir in $dirs {
+                    @each $basic-dir, $dirs in $basic-dirs {
                         &,
-                        &-#{$dir} {
-                           #{$spacing}-#{$dir}: $val;
+                        &-#{$basic-dir} {
+                            @each $dir in $dirs {
+                                &,
+                                &-#{$dir} {
+                                    #{$spacing}-#{$dir}: $val;
+                                }
+
+                                @at-root #{$spacing-parent}-#{$type},
+                                    #{$spacing-parent}-#{$type}-#{$dir},
+                                    #{$type-parent}-#{$basic-dir}-#{$dir},
+                                    #{$type-parent}-#{$dir}-#{$basic-dir},
+                                    #{$spacing-parent}-#{$basic-dir}-#{$type},
+                                    #{$spacing-parent}-#{$basic-dir}-#{$type}-#{$dir},
+                                    #{$spacing-parent}-#{$basic-dir}-#{$dir}-#{$type} {
+                                    #{$spacing}-#{$dir}: $val;
+                                }
+                            }
                         }
+                    }
+                }
 
-                        @at-root
-                        #{$spacing-parent}-#{$type},
-                        #{$spacing-parent}-#{$type}-#{$dir},
-                        #{$type-parent}-#{$basic-dir}-#{$dir},
-                        #{$type-parent}-#{$dir}-#{$basic-dir},
-                        #{$spacing-parent}-#{$basic-dir}-#{$type},
-                        #{$spacing-parent}-#{$basic-dir}-#{$type}-#{$dir},
-                        #{$spacing-parent}-#{$basic-dir}-#{$dir}-#{$type} {
-                           #{$spacing}-#{$dir}: $val;
-                        }
-                     }
-                  }
-               }
+                // Padding sizes
+                &-small {
+                    #{$spacing}: {
+                        bottom: $size-small;
+                        right: $size-small;
+                        left: $size-small;
+                        top: $size-small;
+                    }
+
+                    &-horz {
+                        padding-right: $size-small;
+                        padding-left: $size-small;
+                    }
+                }
             }
 
-            // Padding sizes
-            &-small {
-               #{$spacing}: {
-                  bottom: $size-small;
-                  right: $size-small;
-                  left: $size-small;
-                  top: $size-small;
-               };
+            /* -- Horizontal Padding -- */
+            &,
+            &-horz {
+                #{$spacing}-right: $size;
+                #{$spacing}-left: $size;
 
-               &-horz {
-                  padding-right: $size-small;
-                  padding-left: $size-small;
-               }
-            }
-         }
+                &-small {
+                    #{$spacing}-right: $size-small;
+                    #{$spacing}-left: $size-small;
+                }
 
-         /* -- Horizontal Padding -- */
-         &, &-horz {
-            #{$spacing}-right: $size;
-            #{$spacing}-left: $size;
+                &-mid {
+                    #{$spacing}-right: $size-mid;
+                    #{$spacing}-left: $size-mid;
+                }
 
-            &-small {
-               #{$spacing}-right: $size-small;
-               #{$spacing}-left: $size-small;
-            }
+                &-large {
+                    #{$spacing}-right: $size-large;
+                    #{$spacing}-left: $size-large;
+                }
 
-            &-mid {
-               #{$spacing}-right: $size-mid;
-               #{$spacing}-left: $size-mid;
-            }
+                &-left {
+                    #{$spacing}-left: $size;
+                }
 
-            &-large {
-               #{$spacing}-right: $size-large;
-               #{$spacing}-left: $size-large;
-            }
+                &-right {
+                    #{$spacing}-right: $size;
+                }
 
-            &-left {
-               #{$spacing}-left: $size;
-            }
+                &-left-small,
+                &-small-left {
+                    #{$spacing}-left: $size-small;
+                }
 
-            &-right {
-               #{$spacing}-right: $size;
-            }
+                &-right-small,
+                &-small-right {
+                    #{$spacing}-right: $size-small;
+                }
 
-            &-left-small,
-            &-small-left {
-               #{$spacing}-left: $size-small;
-            }
+                &-left-mid,
+                &-mid-left {
+                    #{$spacing}-left: $size-mid;
+                }
 
-            &-right-small,
-            &-small-right {
-               #{$spacing}-right: $size-small;
-            }
+                &-right-mid,
+                &-mid-right {
+                    #{$spacing}-right: $size-mid;
+                }
 
-            &-left-mid,
-            &-mid-left {
-               #{$spacing}-left: $size-mid;
-            }
+                &-left-large,
+                &-large-left {
+                    #{$spacing}-left: $size-large;
+                }
 
-            &-right-mid,
-            &-mid-right {
-               #{$spacing}-right: $size-mid;
+                &-right-large,
+                &-large-right {
+                    #{$spacing}-right: $size-large;
+                }
             }
 
-            &-left-large,
-            &-large-left {
-               #{$spacing}-left: $size-large;
-            }
+            /* -- Vertical Padding -- */
+            &,
+            &-vert {
+                #{$spacing}-bottom: $size;
+                #{$spacing}-top: $size;
 
-            &-right-large,
-            &-large-right {
-               #{$spacing}-right: $size-large;
-            }
-         }
+                &-small {
+                    #{$spacing}-bottom: $size-small;
+                    #{$spacing}-top: $size-small;
+                }
 
-         /* -- Vertical Padding -- */
-         &, &-vert {
-            #{$spacing}-bottom: $size;
-            #{$spacing}-top: $size;
+                &-mid {
+                    #{$spacing}-bottom: $size-mid;
+                    #{$spacing}-top: $size-mid;
+                }
 
-            &-small {
-               #{$spacing}-bottom: $size-small;
-               #{$spacing}-top: $size-small;
-            }
+                &-large {
+                    #{$spacing}-bottom: $size-large;
+                    #{$spacing}-top: $size-large;
+                }
 
-            &-mid {
-               #{$spacing}-bottom: $size-mid;
-               #{$spacing}-top: $size-mid;
-            }
+                &-top {
+                    #{$spacing}-top: $size;
+                }
 
-            &-large {
-               #{$spacing}-bottom: $size-large;
-               #{$spacing}-top: $size-large;
-            }
+                &-bottom {
+                    #{$spacing}-bottom: $size;
+                }
 
-            &-top {
-               #{$spacing}-top: $size;
-            }
+                &-top-small,
+                &-small-top {
+                    #{$spacing}-top: $size-small;
+                }
 
-            &-bottom {
-               #{$spacing}-bottom: $size;
-            }
+                &-bottom-small,
+                &-small-bottom {
+                    #{$spacing}-bottom: $size-small;
+                }
 
-            &-top-small,
-            &-small-top {
-               #{$spacing}-top: $size-small;
-            }
+                &-top-mid,
+                &-mid-top {
+                    #{$spacing}-top: $size-mid;
+                }
 
-            &-bottom-small,
-            &-small-bottom {
-               #{$spacing}-bottom: $size-small;
-            }
+                &-bottom-mid,
+                &-mid-bottom {
+                    #{$spacing}-bottom: $size-mid;
+                }
 
-            &-top-mid,
-            &-mid-top {
-               #{$spacing}-top: $size-mid;
-            }
+                &-top-large,
+                &-large-top {
+                    #{$spacing}-top: $size-large;
+                }
 
-            &-bottom-mid,
-            &-mid-bottom {
-               #{$spacing}-bottom: $size-mid;
+                &-bottom-large,
+                &-large-bottom {
+                    #{$spacing}-bottom: $size-large;
+                }
             }
-
-            &-top-large,
-            &-large-top {
-               #{$spacing}-top: $size-large;
-            }
-
-            &-bottom-large,
-            &-large-bottom {
-               #{$spacing}-bottom: $size-large;
-            }
-         }
-      }
-   }
+        }
+    }
 
    /* -- Clearfix (fix for using float) -- */
    &-clearfix:after,

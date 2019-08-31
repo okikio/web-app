@@ -1,6 +1,6 @@
 /*! purgecss start ignore */
 .transition-fade {
-    transition: opacity 0.2s ease, transform 0.4s ease 0.1s;
+    transition: opacity 0.2s ease 0s, transform 0.4s ease 0.1s;
     transform: translateY(0px);
     opacity: 1;
 

@@ -5,7 +5,7 @@
      * Presets & Resets
          * Elements
      * Styles & Font
-     * Icons
+     * Icons & Buttons
      * Header
          * Navbar
      * Main Content
@@ -40,9 +40,9 @@
 $primary: #4500ff;
 $primary-dark: #2d22ca;
 $secondary: #ff0266;
-$secondary-dark: #0ccc00;
+$secondary-dark: #e5015b;
 $tertiary: #ffde03;
-$tertiary-dark: #ffde03;
+$tertiary-dark: #e5c702;
 $background: #f5f8fc;
 $surface: #fff;
 
@@ -73,6 +73,9 @@ $size-sub-large: 40px;
 $size: 25px;
 $size-mid: 20px;
 $size-small: 15px;
+$size-smaller: 10px;
+$size-mini: 5px;
+$size-nano: 2px;
 
 // --google-blue: #3367d6
 $colors: (
@@ -106,6 +109,7 @@ $fonts: (
 );
 
 $sizes: (
+    "dull": 0 !important,
     "gigantic": $size-gigantic,
     "huge": $size-huge,
     "extra-xl": $size-extra-xl,
@@ -116,20 +120,35 @@ $sizes: (
     "sub-large": $size-sub-large,
     "default": $size,
     "mid": $size-mid,
-    "small": $size-small
+    "small": $size-small,
+    "smaller": $size-smaller,
+    "mini": $size-mini,
+    "nano": $size-nano
 );
 
-@mixin propertyList($property, $prefix, $list) {
+@mixin propertyList($property, $prefix, $list, $action: "") {
     @each $name, $value in $list {
-        &-#{$name},
-        &-#{$prefix}-#{$name} {
-            #{$property}: $value;
+        @if str-length($action) > 0 {
+            &-#{$action}-#{$name}:#{$action},
+            &-#{$name}-#{$action}:#{$action},
+            &-#{$action}-#{$prefix}-#{$name}:#{$action},
+            &-#{$prefix}-#{$action}-#{$name}:#{$action},
+            &-#{$prefix}-#{$name}-#{$action}:#{$action} {
+                #{$property}: $value;
+            }
+        } @else {
+            &-#{$name},
+            &-#{$prefix}-#{$name} {
+                #{$property}: $value;
+            }
         }
     }
 }
 
-@mixin colorList($property) {
-    @include propertyList($property, "color", $colors);
+@mixin colorList($property: color, $name: "color") {
+    @include propertyList($property, $name, $colors);
+    @include propertyList($property, $name, $colors, "hover");
+    @include propertyList($property, $name, $colors, "focus");
 }
 
 @import "./components/base.scss";
@@ -140,9 +159,3 @@ $sizes: (
 @import "./components/layout.scss";
 @import "./components/layer.scss";
 @import "./components/transition.scss";
-
-// Pages (Style specific to pages seperate pages)
-// @import "./pages/about.scss";
-// @import "./pages/contact.scss";
-// @import "./pages/project.scss";
-// @import "./pages/project-list.scss";

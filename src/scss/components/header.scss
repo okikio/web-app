@@ -27,7 +27,7 @@
         &-layout {
             $radius: 18px;
 
-            transition: box-shadow .45s, background .45s;
+            transition: box-shadow .3s linear 0s, background .3s ease 0s;
             box-shadow: 0 5px 25px rgba(0, 0, 0, 0);
             border-radius: 0 0 $radius $radius;
             background: transparent;
@@ -42,6 +42,8 @@
         }
 
         &-head {
+            transition: border-bottom-color .25s linear 0s;
+            border-bottom: 1px solid transparent;
             flex-direction: row;
             align-items: center;
             flex-wrap: nowrap;
@@ -60,7 +62,7 @@
         }
 
         &-list {
-            transition: max-height .5s;
+            transition: max-height .25s linear 0s;
             justify-content: center;
             align-items: center;
             white-space: nowrap;
@@ -72,8 +74,8 @@
         }
 
         &-link {
-            font-family: $bold-font;
             text-transform: uppercase;
+            font-family: $bold-font;
             line-height: $height;
             letter-spacing: 1px;
             font-weight: 300;
@@ -84,7 +86,8 @@
             width: 100%;
 
             &:hover {
-                color: $mid-light !important;
+                text-decoration: none;
+                color: $primary-dark;
             }
 
             &-focus {
@@ -109,8 +112,6 @@
             }
 
             &-head {
-                transition: border-bottom-color .25s;
-                border-bottom: 1px solid transparent;
                 padding-right: $size;
             }
 
@@ -129,7 +130,7 @@
                 max-height: 0;
 
                 li {
-                    text-align: center;
+                    // text-align: center;
                     display: block;
                     width: 100%;
                 }

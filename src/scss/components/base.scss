@@ -114,15 +114,13 @@ load-img {
 }
 
 a {
-    transition: color 0.25s ease;
     text-decoration: none;
     display: inline-block;
     color: $secondary;
-    overflow: hidden;
     cursor: pointer;
 
-    :hover,
-    :focus {
+    &:hover,
+    &:focus {
         text-decoration: underline;
         color: $secondary-dark;
     }
