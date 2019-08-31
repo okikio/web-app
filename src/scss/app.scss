@@ -162,7 +162,7 @@ $sizes: (
 
 #copyright-btn {
     .btn-section {
-        transition: max-width .55s ease 0.2s, opacity .45s ease 0s;
+        transition: max-width 1s ease 0.2s, opacity .55s ease 0.2s;
         overflow: hidden;
         display: flex;
         max-width: 0;
