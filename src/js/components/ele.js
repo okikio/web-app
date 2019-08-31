@@ -1,9 +1,9 @@
 import { _matches, _log, _is, _path, keys, _fnval, _capital } from "./util";
 import { _get } from "./class";
 import _event from './event';
-import anime from "animejs";
+// import anime from "animejs";
 
-export const { timeline, remove, stagger, random } = anime;
+// export const { timeline, remove, stagger, random } = anime;
 const { documentElement } = document;
 
 let Ele;
@@ -70,7 +70,7 @@ let _getclass = function classNme(node, value) {
     let svg  = name && !_is.undef(name.baseVal);
 
     if (_is.undef(value)) return svg ? name.baseVal : name;
-    svg ? (name.baseVal = value) : (node.className = value)
+    svg ? (name.baseVal = value) : (node.className = value);
 };
 
 // Class name RegExp
@@ -328,8 +328,8 @@ Ele = _event.extend(arrProto, {
         ), sel);
     },
 
-    replaceWith: content => this.before(content).remove(),
-    clone: () => this.map(el => el.cloneNode(true)),
+    replaceWith(content) { return this.before(content).remove(); },
+    clone() { return this.map(el => el.cloneNode(true)); },
 
     toggle(opt) {
         return this.each(el => {
@@ -339,8 +339,8 @@ Ele = _event.extend(arrProto, {
         });
     },
 
-    prev: sel => Ele(this.pluck('previousElementSibling')).filter(sel || '*'),
-    next: sel => Ele(this.pluck('nextElementSibling')).filter(sel || '*'),
+    prev(sel){ return Ele(this.pluck('previousElementSibling')).filter(sel || '*'); },
+    next(sel){ return Ele(this.pluck('nextElementSibling')).filter(sel || '*'); },
     html(...args) {
         let [html] = args;
         return args.length ?
@@ -472,9 +472,9 @@ Ele = _event.extend(arrProto, {
         return this.each(el => { el.style.cssText += ';' + css; });
     },
 
-    show: () => this.style("display", ""),
-    hide: () => this.style("display", "none"),
-    empty: () => this.each(el => { el.innerHTML = ''; }),
+    show() { return this.style("display", ""); },
+    hide() { return this.style("display", "none"); },
+    empty() { return this.each(el => { el.innerHTML = ''; }); },
     index(el) {
         return el ? this.indexOf(Ele(el).get(0)) : this.parent().children().indexOf(this.get(0));
     },
@@ -576,6 +576,7 @@ Ele = _event.extend(arrProto, {
         }
     },
 
+    /*
     getAnime() { return this.anime; },
     timeline(opt = {}) {
         this.anime = timeline({
@@ -591,7 +592,7 @@ Ele = _event.extend(arrProto, {
             (this.anime = anime({ targets: _toArr(this), ...opt }));
 
         return this;
-    },
+    },*/
 },
 
 // Generate shortforms for events eg. .click(), .hover(), etc...

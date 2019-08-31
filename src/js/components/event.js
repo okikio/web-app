@@ -172,9 +172,7 @@ let _event = _class({
     callbacks: _get("listeners")
 })
 .static({
-    nativeEvents: `ready load blur focus focusin focusout resize click scroll dblclick
-    mousedown mouseup mousemove mouseover mouseout mouseenter mouseleave
-    change select submit keydown keypress keyup contextmenu`.split(" "),
+    nativeEvents: `ready load blur focus focusin focusout resize click scroll dblclick mousedown mouseup mousemove mouseover mouseout mouseenter mouseleave change select submit keydown keypress keyup contextmenu`.replace(/\s+/g, " ").split(" "),
     applyNative(evt, el, ev, i, action = "addEventListener", delegate) {
         if (!ev.length) return;
 
