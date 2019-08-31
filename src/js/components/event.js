@@ -179,9 +179,9 @@ let _event = _class({
         let useCapture;
         let _emit = _ev => e => {
             if (_is.str(delegate) && _matches(e.target, delegate))
-                evt.emit(_ev, [e, evt, i], e.target);
+                evt.emit(_ev, [e, e.target, evt, i], e.target);
             else if (!_is.str(delegate))
-                evt.emit(_ev, [e, evt, i], el);
+                evt.emit(_ev, [e, el, evt, i], el);
         };
 
         if (/ready|load/.test(ev)) {

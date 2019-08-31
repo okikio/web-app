@@ -16,20 +16,19 @@ let _height = _navbar.height();
 let _focusPt = _height + 20;
 
 let _links = _navbar.find(".navbar-list li");
-_copyright.hover(function () {
+_copyright.hover(() => {
     _copyright.addClass("btn-show").addClass("btn-round");
-}, function () {
+}, () => {
     _copyright.removeClass("btn-show").removeClass("btn-round");
 });
 
-_navbar.mousedown('.navbar-menu', function(e) {
+_navbar.mousedown('.navbar-menu', e => {
     e.preventDefault();
     _navbar.toggleClass("navbar-show");
 });
 
-_navbar.click('li', function(e, _el) {
-    _log("Work");
-    e.preventDefault();
+
+_navbar.click('.navbar-link', (e, _el) => {
     _links.removeClass("navbar-link-focus");
     el(_el).addClass("navbar-link-focus");
 });
