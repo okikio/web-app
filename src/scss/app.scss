@@ -148,7 +148,6 @@ $sizes: (
 @mixin colorList($property: color, $name: "color") {
     @include propertyList($property, $name, $colors);
     @include propertyList($property, $name, $colors, "hover");
-    @include propertyList($property, $name, $colors, "focus");
 }
 
 @import "./components/base.scss";
