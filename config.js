@@ -1,5 +1,5 @@
 let { attr, section, _img, background, _tile, _col, _style, _layer, _layout, _header, _main, values, title, row, page, padding, margin, _link, layout, layer, _hero, font, _content, color, col, _class } = require('./containers');
-let carImg = "/assets/white_car.webp?w=400&h=400";
+let carImg = "/assets/white_car.webp?w=970&h=566";
 
 let _name = attr("name", "index");
 let noFooter = attr("noFooter", true);
@@ -63,12 +63,47 @@ module.exports = {
             ]),
             noFooter()
         ]),
+        "projects": page([
+            _name("projects"),
+            title("Projects"),
+            values([
+                // Hero Layer
+                _hero([ "Projects.", ["/assets/blue-sky.webp?w=970&h=566", "A city Image"] ]),
+                // End Hero Layer
+
+                // Intro layer
+                layer([
+                    _class([ padding("horz", "large-top") ]),
+                    layout([
+                        _class([ _layout("shorten", "contain") ]),
+                        values([
+                            _header(title("Lorem itpsuim")),
+                            _main([
+                                values([
+                                    indent,
+                                    `Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy text ever since the 1500s, when an unknown printer
+                                        took a galley of type and scrambled it to make a type specimen book. It has survived not only five centuries, but also the leap into electronic typesetting, remaining essentially unchanged.
+                                        It was popularised in the 1960s with the release of Letraset sheets
+                                        containing Lorem Ipsum passages, and more recently with desktop publishing software like Aldus PageMaker including versions of Lorem Ipsum, `,
+                                    _link("home", "/")
+                                ])
+                            ])
+                        ])
+                    ])
+                ]),
+                // End Intro Layer
+
+                // Footer
+                newFooter()
+            ]),
+            noFooter()
+        ]),
         "about": page([
             _name("about"),
             title("The Sub Page"),
             values([
                 // Hero Layer
-                _hero([ "Subpage.", [carImg, "A city Image"] ]),
+                _hero([ "Subpage.", ["/assets/white-flower.webp?w=970&h=566", "A city Image"] ]),
                 // End Hero Layer
 
                 // Intro layer
@@ -147,7 +182,7 @@ module.exports = {
                                                         _content(`03/03`, [ _style("bold"), font("16") ])
                                                     ])
                                                 ]),
-                                                
+
                                                 col([
                                                     _class([ _col("3"), padding("bottom") ]),
                                                     values([
@@ -172,7 +207,7 @@ module.exports = {
                                                     values([
                                                         _content(`Lorem Ipsum is simply dummy text of the printing and typesetting industry.
                                                         Lorem Ipsum has been the industry's standard dummy text ever since the 1500s, when an
-                                                        unknown printer took a galley of type and scrambled it to make a type specimen book.`, 
+                                                        unknown printer took a galley of type and scrambled it to make a type specimen book.`,
                                                         [ _style("line-height-double"), font("16") ])
                                                     ])
                                                 ])
@@ -263,7 +298,7 @@ module.exports = {
                     ])
                 ]),
                 // End Banner layer 4
-                
+
                 // Breakthrough layer
                 layer([
                     layout([
@@ -304,7 +339,7 @@ module.exports = {
                     ])
                 ]),
                 // End Breakthrough layer
-                
+
                 // Image Column layer
                 layer([
                     layout([
@@ -358,7 +393,7 @@ module.exports = {
                     ])
                 ]),
                 // End Image Column layer
-                
+
                 // Image Banner layer
                 layer([
                     layout([
@@ -391,7 +426,7 @@ module.exports = {
 
                 // Footer
                 // newFooter(),
-                
+
                 // Next Page layer
                 layer([
                     _class([ background("black") ]),
@@ -411,22 +446,22 @@ module.exports = {
                                             _content(`NASA Rocket Ship`, [ "h1", _style("bold", "primary") ]),
                                         ])
                                     ])
-                                
+
                                 ])
                             ]),
                             section([
-                                _class([ 
+                                _class([
                                     _layer("box", "box-flat", "surface", "shadow"),
-                                    _layout("block") 
+                                    _layout("block")
                                 ])
                             ])
-                        
+
                         ])
                     ])
                 ]),
                 // End Next Page layer
             ]), noFooter()
-        ]) 
+        ])
     },
     "routes": {
         "/": "index",

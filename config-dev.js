@@ -72,6 +72,76 @@ module.exports = {
                 "noFooter": true
             }
         },
+        "projects": {
+            "page": {
+                "title": "Projects",
+                "tabs": {
+                    "values": [{
+                        "a": {
+                            "href": "/about.html",
+                            "content": "about"
+                        }
+                    }, {
+                        "a": {
+                            "href": "/projects.html",
+                            "content": "projects"
+                        }
+                    }, {
+                        "a": {
+                            "href": "/contact.html",
+                            "content": "contact"
+                        }
+                    }]
+                },
+                "name": "projects",
+                "values": [{
+                    "hero": {
+                        "title": "Projects.",
+                        "img": {
+                            "src": "/assets/blue-sky.webp?w=970&h=566",
+                            "alt": "A city Image"
+                        }
+                    }
+                }, {
+                    "layer": {
+                        "class": "layout-padding-horz layout-padding-large-top",
+                        "layout": {
+                            "class": "layout-shorten layout-contain",
+                            "values": [{
+                                "section": {
+                                    "title": "Lorem itpsuim",
+                                    "type": "header"
+                                }
+                            }, {
+                                "section": {
+                                    "values": [{
+                                        "content": " ",
+                                        "class": "layout-padding-top layout-margin-left-large layout-inline-block"
+                                    }, "Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy text ever since the 1500s, when an unknown printer\n                                        took a galley of type and scrambled it to make a type specimen book. It has survived not only five centuries, but also the leap into electronic typesetting, remaining essentially unchanged.\n                                        It was popularised in the 1960s with the release of Letraset sheets\n                                        containing Lorem Ipsum passages, and more recently with desktop publishing software like Aldus PageMaker including versions of Lorem Ipsum, ", {
+                                        "a": {
+                                            "href": "/index.html",
+                                            "content": "home"
+                                        }
+                                    }],
+                                    "type": "main"
+                                }
+                            }]
+                        }
+                    }
+                }, {
+                    "layer": {
+                        "class": "footer",
+                        "layout": {
+                            "section": {
+                                "class": "layout-padding style-center style-spaceout-small style-font-weight-bold style-font-title",
+                                "values": ["2019 Okiki Ojo"]
+                            }
+                        }
+                    }
+                }],
+                "noFooter": true
+            }
+        },
         "about": {
             "page": {
                 "title": "The Sub Page",
@@ -98,7 +168,7 @@ module.exports = {
                     "hero": {
                         "title": "Subpage.",
                         "img": {
-                            "src": "/assets/white_car.webp?w=400&h=400",
+                            "src": "/assets/white-flower.webp?w=970&h=566",
                             "alt": "A city Image"
                         }
                     }
@@ -168,7 +238,7 @@ module.exports = {
                     "hero": {
                         "title": "Relax.",
                         "img": {
-                            "src": "/assets/white_car.webp?w=400&h=400",
+                            "src": "/assets/white_car.webp?w=970&h=566",
                             "alt": "A city Image"
                         }
                     }

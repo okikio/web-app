@@ -15,7 +15,7 @@ let _global = el(window);
 let _height = _navbar.height();
 let _focusPt = _height + 20;
 
-let _links = _navbar.find(".navbar-list li");
+let _links = _navbar.find(".navbar-link");
 _copyright.hover(() => {
     _copyright.addClass("btn-show").addClass("btn-round");
 }, () => {
@@ -26,7 +26,6 @@ _navbar.mousedown('.navbar-menu', e => {
     e.preventDefault();
     _navbar.toggleClass("navbar-show");
 });
-
 
 _navbar.click('.navbar-link', (e, _el) => {
     _links.removeClass("navbar-link-focus");
@@ -39,7 +38,11 @@ _global.scroll(() => {
 });
 
 if (window._isModern) {
-    let trans = new swup(/*{
+    let trans = new swup({
+        containers: ["#swup", ".swup"],
+        animateHistoryBrowsing: true,
+        cache: true
+    }/*{
         requestHeaders: {
             "X-Requested-With": "swup", // So we can tell request comes from swup
             "x-partial": "swup" // Request a partial html page
