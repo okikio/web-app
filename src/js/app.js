@@ -15,6 +15,7 @@ let _global = el(window);
 let _height = _navbar.height();
 let _focusPt = _height + 20;
 
+let _links = _navbar.find(".navbar-link");
 _copyright.hover(function () {
     _copyright.addClass("btn-show").addClass("btn-round");
 }, function () {
@@ -24,6 +25,12 @@ _copyright.hover(function () {
 _navbar.mousedown('.navbar-menu', function(e) {
     e.preventDefault();
     _navbar.toggleClass("navbar-show");
+});
+
+_navbar.click('.navbar-link', function(e, _el) {
+    e.preventDefault();
+    _links.removeClass("navbar-link-focus");
+    el(_el).addClass("navbar-link-focus");
 });
 
 _global.scroll(() => {
