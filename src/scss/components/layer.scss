@@ -69,23 +69,21 @@
 
       .layer-image {
          border-radius: 25px;
+
+         img {
+            min-width: 500px;
+         }
       }
 
       &-scroll-down {
-            margin-bottom: -216px;
-            background: $white;
-            position: relative;
-            z-index: 250;
-        }
+        margin-bottom: -216px;
+        background: $white;
+        position: relative;
+        z-index: 250;
+      }
 
-      @media (max-width: 500px) {
-         .layer-title {
-            font-size: 6vmax;
-         }
-
-         .layer-image img {
-            min-width: 500px;
-         }
+      .layer-title {
+        font-size: 6vmax;
       }
 
       @media (min-width: 700px) {

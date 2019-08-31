@@ -27,7 +27,7 @@
         &-layout {
             $radius: 18px;
 
-            transition: box-shadow .3s linear 0s, background .3s ease 0s;
+            transition: box-shadow .3s ease .1s, background .3s ease .1s;
             box-shadow: 0 5px 25px rgba(0, 0, 0, 0);
             border-radius: 0 0 $radius $radius;
             background: transparent;

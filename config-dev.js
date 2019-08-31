@@ -2,9 +2,10 @@ module.exports = {
     "websiteURL": "https://app-fast.herokuapp.com/",
     "cloud_name": "okikio-assets",
     "imageURLConfig": {
+        "flags": "progressive:steep",
         "fetch_format": "auto",
         "client_hints": true,
-        "crop": "scale",
+        "crop": "crop",
         "quality": 30,
         "dpr": "auto"
     },
@@ -98,13 +99,13 @@ module.exports = {
                     "hero": {
                         "title": "Projects.",
                         "img": {
-                            "src": "/assets/blue-sky.webp?w=970&h=566",
+                            "src": "/assets/blue-sky.jpg?w=970&h=566",
                             "alt": "A city Image"
                         }
                     }
                 }, {
                     "layer": {
-                        "class": "layout-padding-horz layout-padding-large-top",
+                        "class": "layout-padding-horz",
                         "layout": {
                             "class": "layout-shorten layout-contain",
                             "values": [{
@@ -168,13 +169,13 @@ module.exports = {
                     "hero": {
                         "title": "Subpage.",
                         "img": {
-                            "src": "/assets/white-flower.webp?w=970&h=566",
+                            "src": "/assets/white-flower.jpg?w=970&h=566",
                             "alt": "A city Image"
                         }
                     }
                 }, {
                     "layer": {
-                        "class": "layout-padding-horz layout-padding-large-top",
+                        "class": "layout-padding-horz",
                         "layout": {
                             "class": "layout-shorten layout-contain",
                             "values": [{
@@ -238,13 +239,13 @@ module.exports = {
                     "hero": {
                         "title": "Relax.",
                         "img": {
-                            "src": "/assets/white_car.webp?w=970&h=566",
+                            "src": "/assets/white_car.jpg?w=970&h=566",
                             "alt": "A city Image"
                         }
                     }
                 }, {
                     "layer": {
-                        "class": "layout-padding-horz layout-padding-large-top",
+                        "class": "layout-padding-horz",
                         "layout": {
                             "class": "layout-shorten layout-contain",
                             "values": [{
@@ -465,7 +466,7 @@ module.exports = {
                                                             "title": "Google Designs",
                                                             "content": "",
                                                             "img": {
-                                                                "src": "/assets/city.webp?w=250",
+                                                                "src": "/assets/blue-sky.jpg?w=970&h=566",
                                                                 "alt": "City Alt"
                                                             },
                                                             "class": "layer-box layer-surface layer-shadow--1 layout-block"
@@ -551,7 +552,8 @@ module.exports = {
     },
     "routes": {
         "/": "index",
-        "/about": "about"
+        "/about": "about",
+        "/projects": "project"
     },
     "social_links": [{
         "name": ["Twitter", "Tw"],
@@ -575,7 +577,7 @@ module.exports = {
         "detail": "Lorem itpsim",
         "info": "The nature of leadership",
         "img": {
-            "src": "/assets/white-flower.jpg",
+            "src": "/assets/white-flower.jpg?w=970&h=566",
             "alt": ""
         }
     }, {
@@ -584,7 +586,7 @@ module.exports = {
         "detail": "Lorem itpsim",
         "info": "Info about Leukemia",
         "img": {
-            "src": "/assets/city.jpg",
+            "src": "/assets/city.jpg?w=970&h=566",
             "alt": ""
         }
     }, {
@@ -593,7 +595,7 @@ module.exports = {
         "detail": "Lorem itpsim",
         "info": "A little about renewable sources of energy",
         "img": {
-            "src": "/assets/blue-sky.jpg",
+            "src": "/assets/blue-sky.jpg?w=970&h=566",
             "alt": ""
         }
     }]

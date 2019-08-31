@@ -1,5 +1,8 @@
 let { attr, section, _img, background, _tile, _col, _style, _layer, _layout, _header, _main, values, title, row, page, padding, margin, _link, layout, layer, _hero, font, _content, color, col, _class } = require('./containers');
-let carImg = "/assets/white_car.webp?w=970&h=566";
+let cityImg = "/assets/city.jpg?w=970&h=566";
+let carImg = "/assets/white_car.jpg?w=970&h=566";
+let blueSkyImg = "/assets/blue-sky.jpg?w=970&h=566";
+let flowerImg = "/assets/white-flower.jpg?w=970&h=566";
 
 let _name = attr("name", "index");
 let noFooter = attr("noFooter", true);
@@ -26,10 +29,10 @@ module.exports = {
     "websiteURL": "https://app-fast.herokuapp.com/",
     "cloud_name": "okikio-assets",
     "imageURLConfig": {
+        "flags": "progressive:steep",
         "fetch_format": "auto",
         "client_hints": true,
-        // "flags": "lossy",
-        "crop": "scale",
+        "crop": "crop",
         "quality": 30,
         "dpr": "auto"
     },
@@ -68,12 +71,12 @@ module.exports = {
             title("Projects"),
             values([
                 // Hero Layer
-                _hero([ "Projects.", ["/assets/blue-sky.webp?w=970&h=566", "A city Image"] ]),
+                _hero([ "Projects.", [blueSkyImg, "A city Image"] ]),
                 // End Hero Layer
 
                 // Intro layer
                 layer([
-                    _class([ padding("horz", "large-top") ]),
+                    _class([ padding("horz") ]),
                     layout([
                         _class([ _layout("shorten", "contain") ]),
                         values([
@@ -103,12 +106,12 @@ module.exports = {
             title("The Sub Page"),
             values([
                 // Hero Layer
-                _hero([ "Subpage.", ["/assets/white-flower.webp?w=970&h=566", "A city Image"] ]),
+                _hero([ "Subpage.", [flowerImg, "A city Image"] ]),
                 // End Hero Layer
 
                 // Intro layer
                 layer([
-                    _class([ padding("horz", "large-top") ]),
+                    _class([ padding("horz") ]),
                     layout([
                         _class([ _layout("shorten", "contain") ]),
                         values([
@@ -143,7 +146,7 @@ module.exports = {
 
                 // Intro layer
                 layer([
-                    _class([ padding("horz", "large-top") ]),
+                    _class([ padding("horz") ]),
                     layout([
                         _class([ _layout("shorten", "contain") ]),
                         values([
@@ -375,7 +378,7 @@ module.exports = {
                                                 values([
                                                     _tile([
                                                         "Google Designs", "",
-                                                        _img("/assets/city.webp?w=250", "City Alt"),
+                                                        _img(blueSkyImg, "City Alt"),
                                                         _class([
                                                             _layer("box", "surface", "shadow--1"),
                                                             _layout("block")
@@ -465,7 +468,8 @@ module.exports = {
     },
     "routes": {
         "/": "index",
-        "/about": "about"
+        "/about": "about",
+        "/projects": "project"
     },
     "social_links": [
         {
@@ -511,7 +515,7 @@ module.exports = {
             "detail": "Lorem itpsim",
             "info": "The nature of leadership",
             "img": {
-                "src": "/assets/white-flower.jpg",
+                "src": flowerImg,
                 "alt": ""
             }
         },
@@ -521,7 +525,7 @@ module.exports = {
             "detail": "Lorem itpsim",
             "info": "Info about Leukemia",
             "img": {
-                "src": "/assets/city.jpg",
+                "src": cityImg,
                 "alt": ""
             }
         },
@@ -531,7 +535,7 @@ module.exports = {
             "detail": "Lorem itpsim",
             "info": "A little about renewable sources of energy",
             "img": {
-                "src": "/assets/blue-sky.jpg",
+                "src": blueSkyImg,
                 "alt": ""
             }
         }

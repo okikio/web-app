@@ -20,15 +20,12 @@ body {
     text-rendering: optimizeLegibility;
     font-family: $regular-font;
     background: $background;
+    word-wrap: break-word;
     line-height: 1.15;
     font-weight: 400;
     font-size: 15px;
     // height: 100vh;
     color: $dark;
-
-    @media (min-width: 300px) {
-        word-wrap: break-word;
-    }
 
     @media (max-width: 300px) {
         word-break: break-all;

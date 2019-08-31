@@ -27,10 +27,10 @@ _navbar.mousedown('.navbar-menu', e => {
     _navbar.toggleClass("navbar-show");
 });
 
-_navbar.click('.navbar-link', (e, _el) => {
-    _links.removeClass("navbar-link-focus");
-    el(_el).addClass("navbar-link-focus");
-});
+// _navbar.click('.navbar-link', (e, _el) => {
+//     _links.removeClass("navbar-link-focus");
+//     el(_el).addClass("navbar-link-focus");
+// });
 
 _global.scroll(() => {
     _navbar.toggleClass("navbar-focus", (_global.scrollTop() + _height) >= _focusPt);
@@ -38,11 +38,7 @@ _global.scroll(() => {
 });
 
 if (window._isModern) {
-    let trans = new swup({
-        containers: ["#swup", ".swup"],
-        animateHistoryBrowsing: true,
-        cache: true
-    }/*{
+    let trans = new swup(/*{
         requestHeaders: {
             "X-Requested-With": "swup", // So we can tell request comes from swup
             "x-partial": "swup" // Request a partial html page
