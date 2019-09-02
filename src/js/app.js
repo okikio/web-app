@@ -14,20 +14,7 @@ let _global = el(window);
 
 let _height = _navbar.height();
 let _focusPt = _height + 20;
-
-let _links = _navbar.find(".navbar-link");
-let _load = () => {
-    let _img = el(".load-img");
-
-    if (_img.length) {
-        let _core_img = _img.find(".core-img").get(0);
-        let _placeholder_img = _img.find(".placeholder-img");
-
-        if (_core_img.complete) {
-            _placeholder_img.addClass("core-img-show");
-        }
-    }
-};
+let _load;
 
 _navbar.mousedown('.navbar-menu', e => {
     e.preventDefault();
@@ -45,7 +32,21 @@ _global.scroll(() => {
     _navbar.hasClass("navbar-show") && _navbar.removeClass("navbar-show");
 });
 
-el(_load);
+el((_load = () => {
+    let _img = el(".load-img");
+
+    if (_img.length) {
+        _img.each($img => {
+            let img = el($img);
+            let _core_img = img.find(".core-img").get(0);
+            let _placeholder_img = img.find(".placeholder-img");
+
+            if (_core_img.complete) {
+                _placeholder_img.addClass("core-img-show");
+            }
+        });
+    }
+}));
 
 new swup({
     requestHeaders: {

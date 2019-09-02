@@ -40,8 +40,8 @@ module.exports._render = plugin((app, opts, next) => {
                 .on("data", val => { data += val; })
                 .on("error", err => { res.log.error(err); })
                 .on("close", () => {
-                    dom = DOM.parse(data).querySelector(partialSel);
-                    app.cache[key] = dom.outerHTML;
+                    dom = [...DOM.parse(data).querySelectorAll(partialSel)];
+                    app.cache[key] = dom.filter(v => v.outerHTML).join("");
                     res.type("text/html").send(app.cache[key]);
                 });
         }

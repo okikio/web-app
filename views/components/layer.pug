@@ -1,8 +1,7 @@
 mixin layer(value)
-  - let _value = value || { class: "", id: "" };
+  - let _value = value || { class: "" };
   - let _class = _value.class;
-  - let _id = _value.id;
 
-  section.layer(class=_class id=_id)
+  section.layer(class=_class)
     block
 

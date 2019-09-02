@@ -17,8 +17,6 @@ try {
     };
 
     let isModern = check();
-    window._isModern = isModern;
-
     let src = _src(`app${isModern ? ".modern" : ""}`);
     script.setAttribute("src", src);
     if (isModern) {
