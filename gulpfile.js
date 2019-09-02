@@ -62,7 +62,12 @@ let htmlMinOpts = {
     processScripts: ["application/ld+json"]
 };
 
-let minifyOpts = { mangle: { reserved: ["$super"] } };
+let minifyOpts = {
+    mangle: { reserved: ["$super"] },
+    keep_fnames: true, // change to true here
+    toplevel: true,
+    ecma: 8
+};
 let minSuffix = { suffix: ".min" };
 let watchDelay = { delay: 500 };
 let publicDest = 'public';
@@ -198,7 +203,7 @@ task("js", () =>
                         }, gen ? 'umd' : 'es'),
                         // Minify the file
                         debug ? null : terser(
-                            assign(minifyOpts, gen ? { ie8: true, ecma: 5 } : { ecma: 8 })
+                            assign({}, minifyOpts, gen ? { ie8: true, ecma: 5 } : {})
                         ),
                         rename(`app${suffix}.min.js`), // Rename
                         // write(...srcMapsWrite) // Put sourcemap in public folder
@@ -223,7 +228,9 @@ task("js", () =>
                     onwarn
                 }, 'umd'),
                 // Minify the file
-                debug ? null : terser({ ...minifyOpts, ie8: true, ecma: 5 }),
+                debug ? null : terser(
+                    assign({}, minifyOpts, { ie8: true, ecma: 5 })
+                ),
                 rename(minSuffix), // Rename
                 write(...srcMapsWrite) // Put sourcemap in public folder
             ],
@@ -246,7 +253,7 @@ task("server", () =>
                     ],
                     onwarn
                 }, 'cjs'),
-                debug ? null : terser({ ...minifyOpts, ecma: 8 }), // Minify the file
+                debug ? null : terser(minifyOpts), // Minify the file
                 rename(minSuffix) // Rename
             ],
             dest: '.' // Output
@@ -270,7 +277,7 @@ task("config", () =>
             opts: { allowEmpty: true },
             pipes: [
                 // Minify the file
-                terser({ ...minifyOpts }),
+                terser(minifyOpts),
             ],
             dest: '.' // Output
         }],
@@ -306,7 +313,7 @@ task("update", () =>
                 ],
                 onwarn
             }, 'cjs'),
-            debug ? null : terser({ ...minifyOpts, ecma: 8 }), // Minify the file
+            debug ? null : terser(minifyOpts), // Minify the file
             rename(minSuffix) // Rename
         ],
         dest: '.' // Output
@@ -330,7 +337,7 @@ task('inline', () =>
         pipes: [
             // Inline external sources
             inlineSrc({
-                compress: true,
+                compress: false,
                 ignore: !staticSite ? ["img"] : []
             })
         ]

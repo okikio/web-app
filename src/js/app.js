@@ -18,10 +18,14 @@ let _focusPt = _height + 20;
 let _links = _navbar.find(".navbar-link");
 let _load = () => {
     let _img = el(".load-img");
-    let _core_img = _img.find(".core-img").get(0);
-    let _placeholder_img = _img.find(".placeholder-img");
-    if (_core_img.complete) {
-        _placeholder_img.addClass("core-img-show");
+
+    if (_img.length) {
+        let _core_img = _img.find(".core-img").get(0);
+        let _placeholder_img = _img.find(".placeholder-img");
+
+        if (_core_img.complete) {
+            _placeholder_img.addClass("core-img-show");
+        }
     }
 };
 
@@ -41,7 +45,7 @@ _global.scroll(() => {
     _navbar.hasClass("navbar-show") && _navbar.removeClass("navbar-show");
 });
 
-el(load);
+el(_load);
 
 new swup({
     requestHeaders: {
@@ -52,4 +56,4 @@ new swup({
 })
 
 // This event runs for every page view after initial load
-.on('contentReplaced', _load);
+.on('contentReplaced', () => { el(_load); });

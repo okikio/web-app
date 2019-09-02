@@ -7,6 +7,7 @@ let flowerImg = "/assets/white-flower";
 let _name = attr("name", "index");
 let noFooter = attr("noFooter", true);
 let newFooter = (value = "2019 Okiki Ojo") => layer([
+    { id: "swup" },
     _class([ "footer" ]),
     layout([
         section([
@@ -29,7 +30,7 @@ module.exports = {
     "websiteURL": "https://app-fast.herokuapp.com/",
     "cloud_name": "okikio-assets",
     "imageURLConfig": {
-        "flags": "progressive:steep",
+        // "flags": "progressive:steep",
         "fetch_format": "auto",
         "client_hints": true,
         "crop": "scale",
