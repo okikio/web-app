@@ -5,7 +5,7 @@ module.exports = {
         "flags": "progressive:steep",
         "fetch_format": "auto",
         "client_hints": true,
-        "crop": "crop",
+        "crop": "scale",
         "quality": 30,
         "dpr": "auto"
     },

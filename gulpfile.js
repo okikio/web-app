@@ -143,8 +143,9 @@ task('html', () => {
 
                         let height = query.get("h");
                         let width = query.get("w") || 'auto';
+                        let crop = query.get("crop") || imageURLConfig.crop;
                         let quality = query.get("quality") || imageURLConfig.quality;
-                        let _imgURLConfig = { ...imageURLConfig, width, height, quality };
+                        let _imgURLConfig = { ...imageURLConfig, width, height, quality, crop };
 
                         return staticSite ?
                                 (/\/raw\/[^\s"']+/.test(url) ?
@@ -328,7 +329,10 @@ task('inline', () =>
     stream('public/*.html', {
         pipes: [
             // Inline external sources
-            inlineSrc({ compress: true })
+            inlineSrc({
+                compress: true,
+                ignore: !staticSite ? ["img"] : []
+            })
         ]
     })
 );

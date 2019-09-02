@@ -3,27 +3,23 @@ mixin image(value)
   - let _class = _value.class;
   - let _src = _value.src || "default.jpg";
   - let _alt = _value.alt || "Alternate text";
-
-  //- .layer-image(class=_class)
-    img.load-img(src=_src alt=_alt)
-
   .layer-image(class=_class)
     .load-img
       picture
-        source(media='(min-width: 500px)' srcset=`${_src}.webp?w=500&quality=70` type='image/webp')
-        source(media='(min-width: 500px)' srcset=`${_src}.jpg?w=500&quality=70` type='image/jpeg')
+        source(media='(min-width: 500px)' srcset!=`${_src}.webp?w=500&quality=70` type='image/webp')
+        source(media='(min-width: 500px)' srcset!=`${_src}.jpg?w=500&quality=70` type='image/jpeg')
 
-        source(media='(min-width: 700px)' srcset=`${_src}.webp?w=700&quality=30` type='image/webp')
-        source(media='(min-width: 700px)' srcset=`${_src}.jpg?w=700&quality=30` type='image/jpeg')
+        source(media='(min-width: 700px)' srcset!=`${_src}.webp?w=700&quality=30` type='image/webp')
+        source(media='(min-width: 700px)' srcset!=`${_src}.jpg?w=700&quality=30` type='image/jpeg')
 
-        source(media='(min-width: 900px)' srcset=`${_src}.webp?w=900&quality=30` type='image/webp')
-        source(media='(min-width: 900px)' srcset=`${_src}.jpg?w=900&quality=30` type='image/jpeg')
+        source(media='(min-width: 900px)' srcset!=`${_src}.webp?w=900&quality=30` type='image/webp')
+        source(media='(min-width: 900px)' srcset!=`${_src}.jpg?w=900&quality=30` type='image/jpeg')
 
-        source(media='(max-width: 900px)' srcset=`${_src}.webp` type='image/webp')
-        img.core-img(src=`${_src}.jpg` alt=_alt)
+        source(media='(max-width: 900px)' srcset!=`${_src}.webp` type='image/webp')
+        img.core-img(src!=`${_src}.jpg` alt=_alt)
       picture
-        source(srcset=`${_src}.webp?w=25&quality=1` type='image/webp' inline)
-        img.placeholder-img(src=`${_src}.jpg?w=25&quality=1`, alt=_alt inline)
+        source(srcset!=`${_src}.webp?w=25&quality=1` type='image/webp' inline)
+        img.placeholder-img(src!=`${_src}.jpg?w=25&quality=1`, alt=_alt inline)
 
 
 mixin link(value)

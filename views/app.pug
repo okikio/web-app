@@ -7,11 +7,13 @@ html(lang="en")
     meta(name="viewport", content="width=device-width, initial-scale=1.0")
 
     <!--[if IE]>
+      link(rel='preconnect' href='https://cdnjs.cloudflare.com/')
+      link(rel="preload" href="https://cdnjs.cloudflare.com/ajax/libs/picturefill/3.0.3/picturefill.min.js" as="script")
       link(rel="preload" href="./js/app.min.js" as="script")
+      script(src="https://cdnjs.cloudflare.com/ajax/libs/picturefill/3.0.3/picturefill.min.js" async)
     <![endif]-->
 
     <!--[if lt IE 9]>
-      link(rel='preconnect' href='https://cdnjs.cloudflare.com/')
       script(src='https://cdnjs.cloudflare.com/ajax/libs/nwmatcher/1.4.2/nwmatcher.min.js')
       script(src='https://cdnjs.cloudflare.com/ajax/libs/json2/20160511/json2.min.js')
       script(src='https://cdnjs.cloudflare.com/ajax/libs/selectivizr/1.0.2/selectivizr-min.js')
