@@ -161,8 +161,9 @@ Ele = _event.extend(arrProto, {
         this.sel = sel; // Selector
         this.ele = _elem(this.sel, ctxt); // Element
 
-        for (let i = 0; i < this.length; i++)
+        for (let i = 0; i < this.ele.length; i++) {
             this[i] = this.ele[i];
+        }
     },
 
     slice(...args) { return Ele([].slice.apply(this, args)); },
