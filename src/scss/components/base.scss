@@ -90,23 +90,34 @@ $headerSizes: (4.2rem, 3.56rem, 2.92rem, 2.28rem, 1.64rem, 1rem);
     .h#{$i} { font-size: $sz !important; }
 }
 
-img,
-load-img {
+
+
+img {
     min-height: 200px;
     display: block;
     border: none;
     width: 100%;
 }
 
-load-img {
-    animation: load 0.5s ease infinite alternate;
-    background: $mid-light;
-    min-height: 300px;
+.load-img {
+    background: $dark;
 }
 
-@keyframes load {
-    to {
-        background: $mid-dark;
+.placeholder-img {
+    transition: transform .5s ease, opacity .5s ease;
+    transform: scale(1.2);
+    filter: blur(25px);
+    opacity: 1;
+}
+
+.core-img {
+    position: absolute;
+    left: 0;
+    top: 0;
+
+    &-show {
+        transform: scale(1) !important;
+        opacity: 0 !important;
     }
 }
 

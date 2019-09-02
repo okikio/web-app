@@ -143,12 +143,13 @@ task('html', () => {
 
                         let height = query.get("h");
                         let width = query.get("w") || 'auto';
-                        let imgURLConfig = { ...imageURLConfig, width, height };
+                        let quality = query.get("quality") || imageURLConfig.quality;
+                        let _imgURLConfig = { ...imageURLConfig, width, height, quality };
 
                         return staticSite ?
                                 (/\/raw\/[^\s"']+/.test(url) ?
                                     `${assetURL + url.replace(queryString, '')}` :
-                                    assets.url(url.replace(queryString, ''), imgURLConfig)
+                                    assets.url(url.replace(queryString, ''), _imgURLConfig)
                                 ).replace("/assets/", "") : url;
                     })
                 ]
@@ -327,7 +328,7 @@ task('inline', () =>
     stream('public/*.html', {
         pipes: [
             // Inline external sources
-            inlineSrc({ compress: false })
+            inlineSrc({ compress: true })
         ]
     })
 );

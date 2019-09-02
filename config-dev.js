@@ -99,7 +99,7 @@ module.exports = {
                     "hero": {
                         "title": "Projects.",
                         "img": {
-                            "src": "/assets/blue-sky.jpg?w=970&h=566",
+                            "src": "/assets/blue-sky",
                             "alt": "A city Image"
                         }
                     }
@@ -169,7 +169,7 @@ module.exports = {
                     "hero": {
                         "title": "Subpage.",
                         "img": {
-                            "src": "/assets/white-flower.jpg?w=970&h=566",
+                            "src": "/assets/white-flower",
                             "alt": "A city Image"
                         }
                     }
@@ -239,7 +239,7 @@ module.exports = {
                     "hero": {
                         "title": "Relax.",
                         "img": {
-                            "src": "/assets/white_car.jpg?w=970&h=566",
+                            "src": "/assets/white_car",
                             "alt": "A city Image"
                         }
                     }
@@ -466,7 +466,7 @@ module.exports = {
                                                             "title": "Google Designs",
                                                             "content": "",
                                                             "img": {
-                                                                "src": "/assets/blue-sky.jpg?w=970&h=566",
+                                                                "src": "/assets/blue-sky",
                                                                 "alt": "City Alt"
                                                             },
                                                             "class": "layer-box layer-surface layer-shadow--1 layout-block"
@@ -577,7 +577,7 @@ module.exports = {
         "detail": "Lorem itpsim",
         "info": "The nature of leadership",
         "img": {
-            "src": "/assets/white-flower.jpg?w=970&h=566",
+            "src": "/assets/white-flower",
             "alt": ""
         }
     }, {
@@ -586,7 +586,7 @@ module.exports = {
         "detail": "Lorem itpsim",
         "info": "Info about Leukemia",
         "img": {
-            "src": "/assets/city.jpg?w=970&h=566",
+            "src": "/assets/city",
             "alt": ""
         }
     }, {
@@ -595,7 +595,7 @@ module.exports = {
         "detail": "Lorem itpsim",
         "info": "A little about renewable sources of energy",
         "img": {
-            "src": "/assets/blue-sky.jpg?w=970&h=566",
+            "src": "/assets/blue-sky",
             "alt": ""
         }
     }]

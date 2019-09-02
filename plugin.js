@@ -260,15 +260,16 @@ module.exports._assets = plugin((app, opts, next) => {
             asset = asset.replace(queryStr, '');
             let type = lookup(asset) || 'text/plain';
             let media = /image|video|audio/g.test(type);
-            let _url, height, width, imgURLConfig;
+            let _url, height, width, quality, imgURLConfig;
 
             if (media) {
                 height = query.h;
                 width = query.w || 'auto';
-                imgURLConfig = { ...imageURLConfig, width, height };
+                quality = query.quality || imgURLConfig.quality;
+                imgURLConfig = { ...imageURLConfig, width, height, quality };
                 _url = assets.url(asset, imgURLConfig);
-            } else { 
-                _url = assets.url(asset).replace("image", "raw"); 
+            } else {
+                _url = assets.url(asset).replace("image", "raw");
             }
 
             axios.get(_url, media ? { responseType: 'arraybuffer' } : undefined)

@@ -1,8 +1,8 @@
 let { attr, section, _img, background, _tile, _col, _style, _layer, _layout, _header, _main, values, title, row, page, padding, margin, _link, layout, layer, _hero, font, _content, color, col, _class } = require('./containers');
-let cityImg = "/assets/city.jpg?w=970&h=566";
-let carImg = "/assets/white_car.jpg?w=970&h=566";
-let blueSkyImg = "/assets/blue-sky.jpg?w=970&h=566";
-let flowerImg = "/assets/white-flower.jpg?w=970&h=566";
+let cityImg = "/assets/city";
+let carImg = "/assets/white_car";
+let blueSkyImg = "/assets/blue-sky";
+let flowerImg = "/assets/white-flower";
 
 let _name = attr("name", "index");
 let noFooter = attr("noFooter", true);

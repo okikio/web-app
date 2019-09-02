@@ -1,13 +1,29 @@
 mixin image(value)
   - let _value = Object.assign({ class: "" }, value);
   - let _class = _value.class;
-  - let _overlay = _value.overlay;
   - let _src = _value.src || "default.jpg";
   - let _alt = _value.alt || "Alternate text";
 
-  .layer-image(class=_class)
+  //- .layer-image(class=_class)
     img.load-img(src=_src alt=_alt)
-    .layer-image-overlay(class=_overlay)
+
+  .layer-image(class=_class)
+    .load-img
+      picture
+        source(media='(min-width: 500px)' srcset=`${_src}.webp?w=500&quality=70` type='image/webp')
+        source(media='(min-width: 500px)' srcset=`${_src}.jpg?w=500&quality=70` type='image/jpeg')
+
+        source(media='(min-width: 700px)' srcset=`${_src}.webp?w=700&quality=30` type='image/webp')
+        source(media='(min-width: 700px)' srcset=`${_src}.jpg?w=700&quality=30` type='image/jpeg')
+
+        source(media='(min-width: 900px)' srcset=`${_src}.webp?w=900&quality=30` type='image/webp')
+        source(media='(min-width: 900px)' srcset=`${_src}.jpg?w=900&quality=30` type='image/jpeg')
+
+        source(media='(max-width: 900px)' srcset=`${_src}.webp` type='image/webp')
+        img.core-img(src=`${_src}.jpg` alt=_alt)
+      picture
+        source(srcset=`${_src}.webp?w=25&quality=1` type='image/webp' inline)
+        img.placeholder-img(src=`${_src}.jpg?w=25&quality=1`, alt=_alt inline)
 
 
 mixin link(value)
@@ -15,7 +31,7 @@ mixin link(value)
   - let _content = _value.content;
   - let _class = _value.class;
   - let _href = _value.href;
-  
+
   a(href=_href class=_class)= _content
     block
 
@@ -43,7 +59,7 @@ mixin basicContent(value)
   - let content = value.content;
   - let image = value.img;
   - let link = value.a;
-  
+
   if typeof value == "string" || typeof content == "string"
     +span(value)
 
@@ -59,7 +75,7 @@ mixin tileContent(value)
   - let _title = value.title;
   - let _class = value.class;
   - let _image = value.img;
-  
+
   .layer-tile(class=_class)
     if _image
       +image(_image)
@@ -79,14 +95,14 @@ mixin tile(value)
     +link(_link)
       +tileContent(value)
 
-  else 
+  else
     +tileContent(value)
 
 
 mixin column(value)
   - let _class = value.class || "layout-col";
   - let _values = value.values;
-  
+
   section(class=_class)
     if Array.isArray(_values)
       each _value in _values
@@ -123,12 +139,12 @@ mixin row(value)
 mixin content(value)
   - let column = value.col;
   - let row = value.row;
-  
+
   if typeof column == "object"
     +column(column)
 
   else if typeof row == "object"
     +row(row)
 
-  else 
+  else
     +basicContent(value)

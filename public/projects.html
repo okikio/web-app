@@ -45,8 +45,19 @@
     <main class="main transition-fade" id="swup">
         <article class="layout-contain layout-padding-horz-small layout-padding-bottom layout-padding-dull-top">
             <div class="layer-hero">
-                <div class="layer-image"><img class="load-img" src="https://res.cloudinary.com/okikio-assets/image/upload/c_crop,dpr_auto,f_auto,fl_progressive:steep,q_30,w_970/blue-sky.jpg" alt="A city Image">
-                    <div class="layer-image-overlay"></div>
+                <div class="layer-image">
+                    <div class="load-img">
+                        <picture>
+                            <source media="(min-width: 500px)" srcset="https://res.cloudinary.com/okikio-assets/image/upload/c_crop,dpr_auto,f_auto,fl_progressive:steep,q_30,w_500/blue-sky.webp" type="image/webp">
+                            <source media="(min-width: 500px)" srcset="https://res.cloudinary.com/okikio-assets/image/upload/c_crop,dpr_auto,f_auto,fl_progressive:steep,q_30,w_500/blue-sky.jpg" type="image/jpeg">
+                            <source media="(min-width: 700px)" srcset="https://res.cloudinary.com/okikio-assets/image/upload/c_crop,dpr_auto,f_auto,fl_progressive:steep,q_30,w_700/blue-sky.webp" type="image/webp">
+                            <source media="(min-width: 700px)" srcset="https://res.cloudinary.com/okikio-assets/image/upload/c_crop,dpr_auto,f_auto,fl_progressive:steep,q_30,w_700/blue-sky.jpg" type="image/jpeg">
+                            <source media="(min-width: 900px)" srcset="https://res.cloudinary.com/okikio-assets/image/upload/c_crop,dpr_auto,f_auto,fl_progressive:steep,q_30,w_900/blue-sky.webp" type="image/webp">
+                            <source media="(min-width: 900px)" srcset="https://res.cloudinary.com/okikio-assets/image/upload/c_crop,dpr_auto,f_auto,fl_progressive:steep,q_30,w_900/blue-sky.jpg" type="image/jpeg">
+                            <source media="(max-width: 900px)" srcset="https://res.cloudinary.com/okikio-assets/image/upload/c_crop,dpr_auto,f_auto,fl_progressive:steep,q_30,w_auto/blue-sky.webp" type="image/webp"><img class="core-img" src="https://res.cloudinary.com/okikio-assets/image/upload/c_crop,dpr_auto,f_auto,fl_progressive:steep,q_30,w_auto/blue-sky.jpg" alt="A city Image"></picture>
+                        <picture>
+                            <source srcset="https://res.cloudinary.com/okikio-assets/image/upload/c_crop,dpr_auto,f_auto,fl_progressive:steep,q_30,w_25/blue-sky.webp" type="image/webp" inline><img class="placeholder-img" src="https://res.cloudinary.com/okikio-assets/image/upload/c_crop,dpr_auto,f_auto,fl_progressive:steep,q_30,w_25/blue-sky.jpg" alt="A city Image" inline></picture>
+                    </div>
                 </div>
                 <section class="layout-enlarge">
                     <div class="layer-content style-center">
@@ -80,7 +91,7 @@
     <article>
         <div class="layout-flex layout-padding-horz">
             <section class="layout-spacer"></section>
-            <section><button class="btn layer-round layout-padding-small layer-surface layer-shadow layer-secondary-hover style-secondary style-hover-black" tabindex="1" type="button"><span class="btn-group"><i class="icon style-font-sz-24">expand_less</i></span></button><button class="swup btn btn-default layer-round layout-padding-small layer-surface layer-shadow layer-secondary-hover style-secondary style-hover-black" id="copyright-btn" tabindex="0" type="button"><span class="btn-group style-font-sz-24"><i class="icon">copyright</i><span class="btn-section"><span class="btn-spacer"></span><span class="btn-content">Copyright</span></span></span></button></section>
+            <section><button class="btn layer-round layout-padding-small layer-surface layer-shadow layer-secondary-hover style-secondary style-hover-black" tabindex="1" type="button"><span class="btn-group"><i class="icon style-font-sz-24">expand_less</i></span></button><button class="copyright-btn btn btn-default layer-round layout-padding-small layer-surface layer-shadow layer-secondary-hover style-secondary style-hover-black" id="swup" tabindex="0" type="button"><span class="btn-group style-font-sz-24"><i class="icon">copyright</i><span class="btn-section"><span class="btn-spacer"></span><span class="btn-content">Copyright</span></span></span></button></section>
         </div>
     </article>
     <script src="./js/app.modern.min.js" inline defer></script>

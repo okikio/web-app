@@ -159,7 +159,7 @@ $sizes: (
 @import "./components/layer.scss";
 @import "./components/transition.scss";
 
-#copyright-btn {
+.copyright-btn {
     .btn-section {
         transition: max-width .5s ease 0s, opacity .4s ease 0s;
         overflow: hidden;
