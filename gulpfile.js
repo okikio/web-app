@@ -249,7 +249,7 @@ task("js", () =>
                 return ['src/js/app.js', {
                     opts: { allowEmpty: true },
                     pipes: [
-                        // init(), // Sourcemaps init
+                        init(), // Sourcemaps init
                         // Bundle Modules
                         rollup({
                             plugins: [
@@ -266,7 +266,7 @@ task("js", () =>
                             assign({}, minifyOpts, gen ? { ie8: true, ecma: 5 } : {})
                         ),
                         rename(`app${suffix}.min.js`), // Rename
-                        // write(...srcMapsWrite) // Put sourcemap in public folder
+                        write(...srcMapsWrite) // Put sourcemap in public folder
                     ],
                     dest: `${publicDest}/js` // Output
                 }];

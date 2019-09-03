@@ -34,6 +34,7 @@ _global.scroll(() => {
 
 el((_load = () => {
     let _img = el(".load-img");
+    _log("Content Ready");
 
     if (_img.length) {
         _img.each($img => {
@@ -57,4 +58,4 @@ new swup({
 })
 
 // This event runs for every page view after initial load
-.on('contentReplaced', () => { el(_load); });
+.on('contentReplaced', _load);
