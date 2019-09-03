@@ -62,9 +62,9 @@ module.exports = {
                 // End Intro Layer
 
                 // Footer
-                // newFooter()
+                newFooter()
             ]),
-            // noFooter()
+            noFooter()
         ]),
         "projects": page([
             _name("projects"),
@@ -97,7 +97,7 @@ module.exports = {
                 // End Intro Layer
 
                 // Footer
-                // newFooter()
+                newFooter()
             ]),
             noFooter()
         ]),
@@ -132,9 +132,9 @@ module.exports = {
                 // End Intro Layer
 
                 // Footer
-                // newFooter()
+                newFooter()
             ]),
-            // noFooter()
+            noFooter()
         ]),
         "index": page([
             _name(),
@@ -428,7 +428,7 @@ module.exports = {
                 // End Image Banner layer
 
                 // Footer
-                // newFooter(),
+                newFooter(),
 
                 // Next Page layer
                 layer([
