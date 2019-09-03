@@ -70,10 +70,9 @@
     "gulp-beautify": "^3.0.0",
     "gulp-better-rollup": "^4.0.1",
     "gulp-htmlmin": "^5.0.1",
-    "gulp-image-inline": "^1.1.1",
-    "gulp-inline-source": "^4.0.0",
     "gulp-newer": "^1.4.0",
     "gulp-postcss": "^8.0.0",
+    "gulp-posthtml": "^3.0.4",
     "gulp-pug": "^4.0.1",
     "gulp-rename": "^1.4.0",
     "gulp-sass": "^4.0.2",
@@ -84,6 +83,12 @@
     "postcss": "^7.0.17",
     "postcss-csso": "^3.0.0",
     "postcss-flexibility": "^2.0.0",
+    "posthtml-doctype": "^1.1.1",
+    "posthtml-inline-assets": "^3.0.0",
+    "posthtml-lazyload": "^1.0.3",
+    "posthtml-link-noreferrer": "^1.0.4",
+    "posthtml-lorem": "^1.0.0",
+    "posthtml-textr": "^1.0.5",
     "rollup": "^1.20.1",
     "rollup-plugin-babel": "^4.3.3",
     "rollup-plugin-commonjs": "^10.0.2",
@@ -91,6 +96,7 @@
     "rollup-plugin-node-builtins": "^2.1.2",
     "rollup-plugin-node-resolve": "^5.2.0",
     "smoothstate": "^0.7.2",
-    "swup": "^2.0.5"
+    "swup": "^2.0.5",
+    "typographic-single-spaces": "^1.0.2"
   }
 }

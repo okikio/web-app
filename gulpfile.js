@@ -16,12 +16,12 @@ const rollupBabel = require('rollup-plugin-babel');
 const { stringify } = require('./util/stringify');
 const rollupJSON = require("rollup-plugin-json");
 const { babelConfig } = require("./browserlist");
-const inlineSrc = require("gulp-inline-source");
-const inlineImg = require("gulp-image-inline");
 const replace = require('gulp-string-replace');
 const { html, js } = require('gulp-beautify');
 const rollup = require('gulp-better-rollup');
 const { spawn } = require('child_process');
+const posthtml = require('gulp-posthtml');
+const { lookup } = require("mime-types");
 const htmlmin = require('gulp-htmlmin');
 const assets = require("cloudinary").v2;
 const postcss = require('gulp-postcss');
@@ -32,6 +32,7 @@ const newer = require("gulp-newer");
 const config = require('./config');
 const sass = require('gulp-sass');
 const pug = require('gulp-pug');
+const axios = require("axios");
 
 let { pages, cloud_name, imageURLConfig } = config;
 let assetURL = `https://res.cloudinary.com/${cloud_name}/`;
@@ -62,6 +63,63 @@ let htmlMinOpts = {
     removeRedundantAttributes: false,
     processScripts: ["application/ld+json"]
 };
+
+let posthtmlOpts = [
+    // Test processes
+    require('posthtml-textr')({}, [
+        require('typographic-single-spaces')
+    ]),
+    tree => {
+        tree.match(/\n\s\w/gim, node => node.replace(/\n\s/gim, ' '));
+    },
+    tree => {
+        let buf, warnings, mime, promises = [];
+        tree.walk(node => {
+            if (node.tag == 'img' && node.attrs && node.attrs.src && node.attrs.class &&
+                node.attrs.class.includes("placeholder-img")) {
+                mime = lookup(node.attrs.src) || 'text/plain';
+
+                promises.push(
+                    axios.get(node.attrs.src, { responseType: 'arraybuffer' })
+                        .then(val => {
+                            buf = Buffer.from(val.data, 'base64');
+                            node.attrs.src = `data:${mime};base64,${buf.toString('base64')}`;
+                        }).catch(err => {
+                            console.error(`The image with the src: ${node.attrs.src} `, err);
+                        })
+                );
+            }
+
+		    return node;
+		});
+
+        return Promise.all(promises).then(() => {
+            // Filter errors from messages as warnings
+            warnings = tree.messages.filter(msg => msg instanceof Error);
+
+            if (warnings.length) {
+                // Conditionally warn the user about any issues
+                console.warn(`\nWarnings (${warnings.length}):\n${
+                    warnings.map(msg => `  ${msg.message}`).join('\n') }\n`);
+            }
+
+            // Return the ast
+            return tree;
+        });
+    },
+
+    // Dom process
+    require('posthtml-doctype')({ doctype: 'HTML 5' }),
+    require('posthtml-link-noreferrer')({
+      attr: ['noopener', 'noreferrer']
+    }),
+    require('posthtml-lazyload')({
+      loading: 'auto',
+      class: 'core-img',
+    }),
+    require('posthtml-inline-assets')(),
+    require('posthtml-lorem')(),
+];
 
 let minifyOpts = {
     mangle: { reserved: ["$super"] },
@@ -337,14 +395,7 @@ task("git", () =>
 task('inline', () =>
     stream('public/*.html', {
         pipes: [
-            // Inline external sources
-            inlineSrc({
-                compress: false,
-                ignore: ["img"]
-            }),
-
-            // Inline Image
-            !staticSite ? inlineImg() : null
+            posthtml(posthtmlOpts)
         ]
     })
 );
