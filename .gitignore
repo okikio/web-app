@@ -93,3 +93,4 @@ npm-debug.log
 push-git*
 .cache
 .c9
+core.node.*

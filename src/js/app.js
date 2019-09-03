@@ -8,7 +8,6 @@ import preload from '@swup/preload-plugin';
 // import _event from "./components/event";
 // import scrollPlugin from "@swup/scroll-plugin";
 
-let _copyright = el('.copyright-btn');
 let _navbar = el('.navbar');
 let _global = el(window);
 
@@ -16,15 +15,9 @@ let _height = _navbar.height();
 let _focusPt = _height + 20;
 let _load;
 
-_navbar.mousedown('.navbar-menu', e => {
+_navbar.click('.navbar-menu', e => {
     e.preventDefault();
     _navbar.toggleClass("navbar-show");
-});
-
-_copyright.hover(() => {
-    _copyright.addClass("btn-show").addClass("btn-round");
-}, () => {
-    _copyright.removeClass("btn-show").removeClass("btn-round");
 });
 
 _global.scroll(() => {
@@ -32,22 +25,28 @@ _global.scroll(() => {
     _navbar.hasClass("navbar-show") && _navbar.removeClass("navbar-show");
 });
 
-el((_load = () => {
+_load = () => {
+    let _copyright = el('.copyright-btn');
     let _img = el(".load-img");
-    _log("Content Ready");
 
-    if (_img.length) {
-        _img.each($img => {
-            let img = el($img);
-            let _core_img = img.find(".core-img").get(0);
-            let _placeholder_img = img.find(".placeholder-img");
+    _img.each($img => {
+        let img = el($img);
+        let _core_img = img.find(".core-img").get(0);
+        let _placeholder_img = img.find(".placeholder-img");
 
-            if (_core_img.complete) {
-                _placeholder_img.addClass("core-img-show");
-            }
-        });
-    }
-}));
+        _core_img.onload = function () {
+            _placeholder_img.addClass("core-img-show");
+        };
+    });
+
+    _copyright.hover(() => {
+        _copyright.addClass("btn-show").addClass("btn-round");
+    }, () => {
+        _copyright.removeClass("btn-show").removeClass("btn-round");
+    });
+};
+
+el(_load);
 
 new swup({
     requestHeaders: {
