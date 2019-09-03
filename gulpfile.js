@@ -149,8 +149,9 @@ task('html', () => {
                         let height = query.get("h");
                         let width = query.get("w") || 'auto';
                         let crop = query.get("crop") || imageURLConfig.crop;
+                        let effect = query.get("effect") || imageURLConfig.effect;
                         let quality = query.get("quality") || imageURLConfig.quality;
-                        let _imgURLConfig = { ...imageURLConfig, width, height, quality, crop };
+                        let _imgURLConfig = { ...imageURLConfig, width, height, quality, crop, effect };
 
                         return staticSite ?
                                 (/\/raw\/[^\s"']+/.test(url) ?

@@ -260,14 +260,15 @@ module.exports._assets = plugin((app, opts, next) => {
             asset = asset.replace(queryStr, '');
             let type = lookup(asset) || 'text/plain';
             let media = /image|video|audio/g.test(type);
-            let _url, height, width, quality, crop, imgURLConfig;
+            let _url, height, width, quality, effect, crop, imgURLConfig;
 
             if (media) {
                 height = query.get("h");
                 width = query.get("w") || 'auto';
                 crop = query.get("crop") || imageURLConfig.crop;
+                effect = query.get("effect") || imageURLConfig.effect;
                 quality = query.get("quality") || imageURLConfig.quality;
-                imgURLConfig = { ...imageURLConfig, width, height, quality, crop };
+                imgURLConfig = { ...imageURLConfig, width, height, quality, crop, effect };
                 _url = assets.url(asset, imgURLConfig);
             } else {
                 _url = assets.url(asset).replace("image", "raw");
