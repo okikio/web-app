@@ -17,6 +17,7 @@ const { stringify } = require('./util/stringify');
 const rollupJSON = require("rollup-plugin-json");
 const { babelConfig } = require("./browserlist");
 const inlineSrc = require("gulp-inline-source");
+const inlineImg = require("gulp-image-inline");
 const replace = require('gulp-string-replace');
 const { html, js } = require('gulp-beautify');
 const rollup = require('gulp-better-rollup');
@@ -65,7 +66,7 @@ let htmlMinOpts = {
 let minifyOpts = {
     mangle: { reserved: ["$super"] },
     keep_fnames: true, // change to true here
-    toplevel: true,
+    toplevel: false,
     ecma: 8
 };
 let minSuffix = { suffix: ".min" };
@@ -339,8 +340,11 @@ task('inline', () =>
             // Inline external sources
             inlineSrc({
                 compress: false,
-                ignore: !staticSite ? ["img"] : []
-            })
+                ignore: ["img"]
+            }),
+
+            // Inline Image
+            !staticSite ? inlineImg() : null
         ]
     })
 );
