@@ -11,7 +11,7 @@ let tagRE = /^\s*<(\w+|!)[^>]*>/;
 let { applyNative, nativeEvents } = _event;
 let tagExpandRE = /<(?!area|br|col|embed|hr|img|input|link|meta|param)(([\w:]+)[^>]*)\/>/ig;
 let _cssNumber = ["column-count", "columns", "font-weight", "line-height", "opacity", "z-index", "zoom"];
-let _qsa = (dom = document, sel) => {
+export let _qsa = (dom = document, sel) => {
     let classes;
     if (!_is.str(sel) && sel.length == 0) return [];
     if (/^(#?[\w-]+|\.[\w-.]+)$/.test(sel)) {
@@ -30,7 +30,7 @@ let _qsa = (dom = document, sel) => {
 };
 
 // Check if the parent node contains the given DOM node. Returns false if both are the same node.
-let _contains = (parent, node) => {
+export let _contains = (parent, node) => {
     if (parent.contains) return parent != node && parent.contains(node);
     while (node && (node = node.parentNode))
         if (node == parent) return true;
@@ -38,17 +38,17 @@ let _contains = (parent, node) => {
 };
 
 // Support the Element Object as an Array
-let _toArr = val => (_is.inst(val, Ele) ? val.toArray() : val);
-let _concat = function (args) {
+export let _toArr = val => (_is.inst(val, Ele) ? val.toArray() : val);
+export let _concat = function (...args) {
     [].map.call(args, val => _toArr(val));
     return [].concat.apply(_toArr(this), args);
 };
 
 // Create a flat Array
-let _flatten = arr => (arr.length > 0 ? _concat.apply([], arr) : arr);
+export let _flatten = arr => (arr.length > 0 ? _concat.apply([], arr) : arr);
 
 // Map Objects
-let _map = (obj, fn, ctxt) => {
+export let _map = (obj, fn, ctxt) => {
     return _flatten([].map.call(obj, fn, ctxt)
         .filter(item => _is.def(item)));
 };
@@ -118,10 +118,10 @@ let traverseDF = (_node, fn, childType = "childNodes") => {
 };
 
 // Quickly filter nodes by a selector
-let _filter = (nodes, sel) => !_is.def(sel) ? Ele(nodes) : Ele(nodes).filter(sel);
+export let _filter = (nodes, sel) => !_is.def(sel) ? Ele(nodes) : Ele(nodes).filter(sel);
 
 // Select all the different values in an Array, based on underscorejs
-let _uniq = arr => {
+export let _uniq = arr => {
     return [].filter.call(arr, (val, idx) => arr.indexOf(val) == idx);
 };
 
@@ -147,10 +147,14 @@ let _maybeAddPx = (name, val) => {
 // Allow default Array methods to work as Element Object methods
 let arrProto = Object.getOwnPropertyNames(Array.prototype)
 .reduce(function (acc, i) {
-    acc[i] = function (...args) {
-        let _val = Array.prototype[i].apply(this, args);
-        return _is.undef(_val) ? this : _val;
-    };
+    let _fn = Array.prototype[i];
+    if (_is.fn(_fn) && !/map|slice|filter|find/.test(i)) {
+        acc[i] = function (...args) {
+            let _val = _fn.apply(this, args);
+            return _is.undef(_val) ? this : _val;
+        };
+    }
+
     return acc;
 }, {});
 
@@ -681,4 +685,5 @@ nativeEvents.reduce((acc, name) => {
     return acc;
 }, {}));
 
+export let el = Ele;
 export default Ele;

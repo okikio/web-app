@@ -41,7 +41,7 @@ _global.scroll(_scroll = () => {
 _load = () => {
     let _next_layer_btn = el(".next-layer"), _next_layer;
     let _img = el(".load-img");
-    // let _main = el(".main");
+    let _main = el(".main");
     _scroll();
 
     _img.each($img => {
@@ -60,10 +60,9 @@ _load = () => {
 
     _next_layer_btn.click((e, _el) => {
         e.preventDefault();
-        _next_layer = el(_el).closest(".layer");
-        _log(_next_layer.pluck("nextElementSibling"));
+        _next_layer = el(_el).closest(".layer", _main).next(".layer");
         _scrollEle.animate({
-            scrollTop: 50,// _next_layer.position().top,
+            scrollTop: el(_next_layer).offset().top - _height,
             duration: 500,
             easing: 'easeInOutQuad'
         });

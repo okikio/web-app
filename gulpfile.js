@@ -28,7 +28,6 @@ const postcss = require('gulp-postcss');
 const terser = require('gulp-terser');
 const rename = require('gulp-rename');
 const { writeFile } = require("fs");
-const newer = require("gulp-newer");
 const config = require('./config');
 const sass = require('gulp-sass');
 const pug = require('gulp-pug');
@@ -128,7 +127,7 @@ let minifyOpts = {
     ecma: 8
 };
 let minSuffix = { suffix: ".min" };
-let watchDelay = { delay: 500 };
+let watchDelay = { delay: 1000 };
 let publicDest = 'public';
 let { assign } = Object;
 
@@ -271,10 +270,9 @@ task("js", () =>
                     dest: `${publicDest}/js` // Output
                 }];
             }),
-            dev && staticSite ? null : [['src/js/app.vendor.js'], {
+            dev && staticSite ? null : ['src/js/app.vendor.js', {
             opts: { allowEmpty: true },
             pipes: [
-                newer(`${publicDest}/js`), // Check for changes
                 init(), // Sourcemaps init
                 // Bundle Modules
                 rollup({
