@@ -104,7 +104,7 @@ img {
 }
 
 .placeholder-img {
-    transition: transform .5s ease, opacity .5s ease;
+    transition: transform 3s ease, opacity .8s ease;
     transform: scale(1.2);
     // filter: blur(25px);
     opacity: 1;
