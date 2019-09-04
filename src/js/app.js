@@ -19,7 +19,7 @@ let _load, _scroll, _scrollEle;
 _scrollEle = window.document.scrollingElement || window.document.body || window.document.documentElement;
 _scrollEle = el(_scrollEle);
 
-_navbar.click('.navbar-menu, .navbar-menu *', e => {
+_navbar.click('.navbar-menu', e => {
     e.preventDefault();
     _navbar.toggleClass("navbar-show");
 });
