@@ -74,11 +74,12 @@ html(lang="en")
       if (/msie|trident|edge/g.test(navigator.userAgent.toLowerCase()) || !check()) {
         _require("https://cdnjs.cloudflare.com/ajax/libs/picturefill/3.0.3/picturefill.min.js");
         _require("https://cdnjs.cloudflare.com/ajax/libs/html5-history-api/4.2.10/history.ielte7.min.js");
-        document.write('<link rel="preload" href="./js/app.min.js" as="script" async="async" />';)
+        document.write('<link rel="preload" href="./js/app.min.js" as="script" async="async" />');
+       } else {
+        document.write('<link rel="preload" href="./js/app.modern.min.js" as="script" async="async" />');
        }
 
     link(rel="preload" href='./js/app.vendor.min.js' as="script" async)
-    link(rel="preload" href='./js/app.modern.min.js' as="script" async)
 
     //- script(src="https://cdnjs.cloudflare.com/ajax/libs/jquery/2.2.1/jquery.min.js")
     //- script(src="https://cdnjs.cloudflare.com/ajax/libs/smoothState.js/0.7.2/jquery.smoothState.min.js")
