@@ -35,9 +35,13 @@ _load = () => {
         let _core_img = img.find(".core-img").get(0);
         let _placeholder_img = img.find(".placeholder-img");
 
-        _core_img.onload = function () {
+        if (_core_img.complete) {
             _placeholder_img.addClass("core-img-show");
-        };
+        } else {
+            _core_img.addEventListener("load", function () {
+                _placeholder_img.addClass("core-img-show");
+            }, false);
+        }
     });
 
     _copyright.hover(() => {
