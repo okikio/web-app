@@ -27,12 +27,10 @@ html(lang="en")
     link(rel="preload" href="https://fonts.gstatic.com/s/varelaround/v12/w8gdH283Tvk__Lua32TysjIfp8uP.woff2" as="font" type="font/woff2" crossorigin="anonymous" async)
     link(rel="preload" href="https://fonts.gstatic.com/s/roboto/v20/KFOmCnqEu92Fr1Mu4mxK.woff2" as="font" type="font/woff2" crossorigin="anonymous" async)
 
-    //- link(rel="preload" href='./css/app.min.css' as="style" async)
+    link(rel="preload" href='./css/app.min.css' as="style" async)
     link(rel="preload" href='https://polyfill.io/v3/polyfill.min.js?features=default,es2015,es2017,es2018,fetch,Array.prototype.includes' as="script" async)
+    script(src='https://polyfill.io/v3/polyfill.min.js?features=default,es2015,es2017,es2018,fetch,Array.prototype.includes' async)
 
-    <!--[if IE]>
-      script(src='https://cdnjs.cloudflare.com/ajax/libs/picturefill/3.0.3/picturefill.min.js' async)
-    <![endif]-->
 
     <!--[if lt IE 9]>
       script(src='https://cdnjs.cloudflare.com/ajax/libs/nwmatcher/1.4.2/nwmatcher.min.js' async)
@@ -44,19 +42,43 @@ html(lang="en")
     <![endif]-->
 
     link(rel='stylesheet' href='./css/app.min.css' inline async)
-    script(src='https://polyfill.io/v3/polyfill.min.js?features=default,es2015,es2017,es2018,fetch,Array.prototype.includes' async)
-
     <!--[if lt IE 10]>
       script(src='https://cdnjs.cloudflare.com/ajax/libs/flexibility/2.0.1/flexibility.js' async)
       script.
         flexibility(document.documentElement);
     <![endif]-->
 
-    //- link(rel="preload" href='./js/app.vendor.min.js' as="script" async)
+    script.
+      var check = function () {
+          "use strict";
+
+          if (typeof window.Symbol == "undefined") return false;
+          try {
+              Function("class Foo {}") ();
+              Function("let bar = x => x+1;") ();
+              Function("let bez = { a: 'b' }; let box = { b: 'a', ...bez };") ();
+          } catch (e) { return false; }
+
+          return true;
+      };
+
+      var _require = function (src) {
+        var head = document.getElementsByTagName('head')[0];
+        var script = document.createElement('script');
+        script.setAttribute("async", "");
+        script.type = 'text/javascript';
+        script.src = src;
+        head.appendChild(script);
+      };
+
+      if (/msie|trident|edge/g.test(navigator.userAgent.toLowerCase()) || !check()) {
+        _require("https://cdnjs.cloudflare.com/ajax/libs/picturefill/3.0.3/picturefill.min.js");
+        _require("https://cdnjs.cloudflare.com/ajax/libs/html5-history-api/4.2.10/history.ielte7.min.js");
+        document.write('<link rel="preload" href="./js/app.min.js" as="script" async="async" />';)
+       }
+
+    link(rel="preload" href='./js/app.vendor.min.js' as="script" async)
     link(rel="preload" href='./js/app.modern.min.js' as="script" async)
-    <!--[if IE]>
-      link(rel="preload" href="./js/app.min.js" as="script" async)
-    <![endif]-->
 
     //- script(src="https://cdnjs.cloudflare.com/ajax/libs/jquery/2.2.1/jquery.min.js")
     //- script(src="https://cdnjs.cloudflare.com/ajax/libs/smoothState.js/0.7.2/jquery.smoothState.min.js")

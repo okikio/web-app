@@ -10,7 +10,8 @@ try {
         if (typeof window.Symbol == "undefined") return false;
         try {
             Function("class Foo {}") ();
-            Function("var bar = (x) => x+1") ();
+            Function("let bar = x => x+1;") ();
+            Function("let bez = { a: 'b' }; let box = { b: 'a', ...bez };") ();
         } catch (e) { return false; }
 
         return true;
