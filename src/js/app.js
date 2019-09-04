@@ -13,14 +13,14 @@ let _global = el(window);
 
 let _height = _navbar.height();
 let _focusPt = _height + 20;
-let _load;
+let _load, _scroll;
 
 _navbar.click('.navbar-menu *', e => {
     e.preventDefault();
     _navbar.toggleClass("navbar-show");
 });
 
-_global.scroll(() => {
+_global.scroll(_scroll = () => {
     _navbar.toggleClass("navbar-focus", (_global.scrollTop() + _height) >= _focusPt);
     _navbar.hasClass("navbar-show") && _navbar.removeClass("navbar-show");
 });
@@ -28,6 +28,7 @@ _global.scroll(() => {
 _load = () => {
     let _copyright = el('.copyright-btn');
     let _img = el(".load-img");
+    _scroll();
 
     _img.each($img => {
         let img = el($img);
