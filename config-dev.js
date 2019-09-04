@@ -2,6 +2,7 @@ module.exports = {
     "websiteURL": "https://app-fast.herokuapp.com/",
     "cloud_name": "okikio-assets",
     "imageURLConfig": {
+        "flags": "progressive:steep",
         "fetch_format": "auto",
         "client_hints": true,
         "crop": "scale",
@@ -60,7 +61,6 @@ module.exports = {
                     }
                 }, {
                     "layer": {
-                        "id": "swup",
                         "class": "footer",
                         "layout": {
                             "section": {
@@ -131,7 +131,6 @@ module.exports = {
                     }
                 }, {
                     "layer": {
-                        "id": "swup",
                         "class": "footer",
                         "layout": {
                             "section": {
@@ -202,7 +201,6 @@ module.exports = {
                     }
                 }, {
                     "layer": {
-                        "id": "swup",
                         "class": "footer",
                         "layout": {
                             "section": {

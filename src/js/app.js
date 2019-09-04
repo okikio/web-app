@@ -46,8 +46,7 @@ _load = () => {
     });
 };
 
-el(_load);
-
+_load();
 new swup({
     requestHeaders: {
         "X-Requested-With": "swup", // So we can tell request comes from swup
