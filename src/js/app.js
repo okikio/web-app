@@ -15,7 +15,7 @@ let _height = _navbar.height();
 let _focusPt = _height + 20;
 let _load;
 
-_navbar.click('.navbar-menu', e => {
+_navbar.click('.navbar-menu *', e => {
     e.preventDefault();
     _navbar.toggleClass("navbar-show");
 });
