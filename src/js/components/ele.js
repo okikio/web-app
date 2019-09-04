@@ -1,9 +1,9 @@
-import { _matches, _log, _is, _path, keys, _fnval, _capital } from "./util";
+import { _matches, _log, _is, keys, _fnval, _capital } from "./util";
 import { _get } from "./class";
 import _event from './event';
-// import anime from "animejs";
+import anime from "animejs";
 
-// export const { timeline, remove, stagger, random } = anime;
+export const { timeline, remove, stagger, random } = anime;
 const { documentElement } = document;
 
 let Ele;
@@ -307,7 +307,7 @@ Ele = _event.extend(arrProto, {
     },
 
     // `pluck` based on underscore.js, but way more powerful
-    pluck(prop) { return this.map(el => _path(el, prop)); },
+    pluck(prop) { return this.map(el => el[prop]); },
     parent(sel) {
         return _filter(_uniq(this.pluck('parentNode')), sel);
     },
@@ -577,7 +577,6 @@ Ele = _event.extend(arrProto, {
         }
     },
 
-    /*
     getAnime() { return this.anime; },
     timeline(opt = {}) {
         this.anime = timeline({
@@ -593,7 +592,7 @@ Ele = _event.extend(arrProto, {
             (this.anime = anime({ targets: _toArr(this), ...opt }));
 
         return this;
-    },*/
+    },
 },
 
 // Generate shortforms for events eg. .click(), .hover(), etc...

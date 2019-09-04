@@ -158,18 +158,3 @@ $sizes: (
 @import "./components/layout.scss";
 @import "./components/layer.scss";
 @import "./components/transition.scss";
-
-.copyright-btn {
-    .btn-section {
-        transition: max-width .5s ease 0s, opacity .4s ease 0s;
-        overflow: hidden;
-        display: flex;
-        max-width: 0;
-        opacity: 0;
-    }
-
-    &.btn-show .btn-section {
-        max-width: 50vw;
-        opacity: 1;
-    }
-}

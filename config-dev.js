@@ -65,7 +65,7 @@ module.exports = {
                         "layout": {
                             "section": {
                                 "class": "layout-padding style-center style-spaceout-small style-font-weight-bold style-font-title",
-                                "values": ["2019 Okiki Ojo"]
+                                "values": ["Made with ❤ by Okiki Ojo."]
                             }
                         }
                     }
@@ -135,7 +135,7 @@ module.exports = {
                         "layout": {
                             "section": {
                                 "class": "layout-padding style-center style-spaceout-small style-font-weight-bold style-font-title",
-                                "values": ["2019 Okiki Ojo"]
+                                "values": ["Made with ❤ by Okiki Ojo."]
                             }
                         }
                     }
@@ -205,7 +205,7 @@ module.exports = {
                         "layout": {
                             "section": {
                                 "class": "layout-padding style-center style-spaceout-small style-font-weight-bold style-font-title",
-                                "values": ["2019 Okiki Ojo"]
+                                "values": ["Made with ❤ by Okiki Ojo."]
                             }
                         }
                     }

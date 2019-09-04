@@ -117,12 +117,12 @@ html(lang="en")
                   - let layout = layouts.layout;
                   +layoutView(layout)
 
-  .layer-action-center
+  .layer-action-center.layer-action-center-show
     article
       .layout-flex.layout-padding-horz
         section.layout-spacer
         section
-          button.btn.layer-round.layout-padding-small.layer-surface.layer-shadow.layer-secondary-hover.style-secondary.style-hover-black(tabindex='1', type='button')
+          button#back-to-top.btn.layer-round.layout-padding-small.layer-surface.layer-shadow.layer-secondary-hover.style-secondary.style-hover-black(tabindex='1', type='button')
             span.btn-group
               i.icon.style-font-sz-24 expand_less
 
@@ -130,11 +130,10 @@ html(lang="en")
             button.copyright-btn#swup.btn.btn-default.layer-round.layout-padding-small.layer-surface.layer-shadow.layer-secondary-hover.style-secondary.style-hover-black(tabindex='0', type='button')
               span.btn-group.style-font-sz-24
                 i.icon copyright
-                span.btn-section
-                  span.btn-spacer
-                  span.btn-content Copyright
+                span.btn-spacer
+                span.btn-content 2019 Okiki Ojo
 
     if !page.noFooter
-      +footer("2019 Okiki Ojo")
+      +footer("Made with ❤ by Okiki Ojo.")
 
     script(src=`${dev ? './js/app.modern.min.js' : './js/app.vendor.min.js'}` inline defer)

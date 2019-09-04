@@ -6,7 +6,7 @@ let flowerImg = "/assets/white-flower";
 
 let _name = attr("name", "index");
 let noFooter = attr("noFooter", true);
-let newFooter = (value = "2019 Okiki Ojo") => layer([
+let newFooter = (value = "Made with ❤ by Okiki Ojo.") => layer([
     _class([ "footer" ]),
     layout([
         section([
