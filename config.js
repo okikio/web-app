@@ -428,7 +428,7 @@ module.exports = {
                 // End Image Banner layer
 
                 // Footer
-                newFooter(),
+                // newFooter(),
 
                 // Next Page layer
                 layer([
