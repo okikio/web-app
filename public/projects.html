@@ -42,28 +42,31 @@
             return true;
         };
 
-        var _require = function(src) {
+        var _require = function(src, fn) {
             var head = document.getElementsByTagName('head')[0];
             var script = document.createElement('script');
             script.setAttribute("async", "");
             script.type = 'text/javascript';
+            script.onload = fn;
+            script.onreadystatechange = function() {
+                if (this.readyState === 'complete') {
+                    fn();
+                }
+            };
             script.src = src;
             head.appendChild(script);
         };
 
         if (/msie|trident|edge/g.test(navigator.userAgent.toLowerCase()) || !check()) {
-            _require("https://cdnjs.cloudflare.com/ajax/libs/flexibility/2.0.1/flexibility.js");
+            _require("https://cdnjs.cloudflare.com/ajax/libs/flexibility/2.0.1/flexibility.js", function() {
+                flexibility(document.documentElement);
+            });
             _require("https://cdnjs.cloudflare.com/ajax/libs/picturefill/3.0.3/picturefill.min.js");
             _require("https://cdnjs.cloudflare.com/ajax/libs/html5-history-api/4.2.10/history.min.js");
             _require("https://cdnjs.cloudflare.com/ajax/libs/html5-history-api/4.2.10/history.ielte7.min.js");
             document.write('<link rel="preload" href="./js/app.min.js" as="script" async="async" />');
         } else {
             document.write('<link rel="preload" href="./js/app.modern.min.js" as="script" async="async" />');
-        }
-    </script>
-    <script>
-        if (window.flexibility) {
-            window.flexibility(document.documentElement);
         }
     </script>
     <title>Projects</title>
