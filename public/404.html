@@ -62,7 +62,9 @@
         }
     </script>
     <script>
-        flexibility(document.documentElement);
+        if (window.flexibility) {
+            flexibility(document.documentElement);
+        }
     </script>
     <title>Ooops!</title>
 </head>
