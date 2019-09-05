@@ -48,7 +48,6 @@
             align-items: center;
             flex-wrap: nowrap;
             display: flex;
-            width: 100%;
         }
 
         &-title {
@@ -113,6 +112,7 @@
 
             &-head {
                 padding-right: $size-small;
+                width: 100%;
             }
 
             &-show {

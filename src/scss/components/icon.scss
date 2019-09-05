@@ -8,7 +8,7 @@
     position: relative;
     align-items: center;
     user-select: none;
-    line-height: 1.75;
+    // line-height: 1.75;
     cursor: pointer;
 
     min-height: auto;
@@ -45,10 +45,10 @@
     }
 
     &-group {
-        justify-content: inherit;
-        align-items: inherit;
-        display: inherit;
-        width: 100%;
+        // justify-content: inherit;
+        // align-items: inherit;
+        // display: inherit;
+        // width: 100%;
 
         .icon {
             display: inline-block;
