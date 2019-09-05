@@ -1,7 +1,7 @@
+import anime from "animejs";
 import { _matches, _log, _is, keys, _fnval, _capital } from "./util";
 import { _get } from "./class";
 import _event from './event';
-import anime from "animejs";
 
 export const { timeline, remove, stagger, random } = anime;
 const { documentElement } = document;

@@ -8,8 +8,8 @@
     position: relative;
     align-items: center;
     user-select: none;
-    // line-height: 1.75;
     cursor: pointer;
+    line-height: 1;
 
     min-height: auto;
     width: auto;
@@ -45,10 +45,10 @@
     }
 
     &-group {
-        // justify-content: inherit;
-        // align-items: inherit;
-        // display: inherit;
-        // width: 100%;
+        justify-content: inherit;
+        align-items: inherit;
+        display: inherit;
+        width: 100%;
 
         .icon {
             display: inline-block;
@@ -59,12 +59,12 @@
     }
 
     &-content {
-        font-family: $bold-font;
-        font-weight: 500;
-        line-height: 1.75;
-        font-size: 0.875rem;
-        letter-spacing: 0.02857em;
         text-transform: uppercase;
+        letter-spacing: 0.02857em;
+        font-family: $bold-font;
+        font-size: 0.875rem;
+        font-weight: 500;
+        line-height: 1;
     }
 }
 
