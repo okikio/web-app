@@ -13,7 +13,7 @@ let tagExpandRE = /<(?!area|br|col|embed|hr|img|input|link|meta|param)(([\w:]+)[
 let _cssNumber = ["column-count", "columns", "font-weight", "line-height", "opacity", "z-index", "zoom"];
 export let _qsa = (dom = document, sel) => {
     let classes;
-    if (!_is.str(sel) && sel.length == 0) return [];
+    if (!_is.str(sel) && sel.length === 0) return [];
     if (/^(#?[\w-]+|\.[\w-.]+)$/.test(sel)) {
         switch (sel.charAt(0)) {
             case '#':
@@ -31,9 +31,9 @@ export let _qsa = (dom = document, sel) => {
 
 // Check if the parent node contains the given DOM node. Returns false if both are the same node.
 export let _contains = (parent, node) => {
-    if (parent.contains) return parent != node && parent.contains(node);
+    if (parent.contains) return parent !== node && parent.contains(node);
     while (node && (node = node.parentNode))
-        if (node == parent) return true;
+        if (node === parent) return true;
     return false;
 };
 
@@ -57,7 +57,7 @@ export let _map = (obj, fn, ctxt) => {
 let _children = el => {
     return 'children' in el ? [].slice.call(el.children) :
         _map(el.childNodes, node => {
-            if (node.nodeType == 1) return node;
+            if (node.nodeType === 1) return node;
         });
 };
 
@@ -122,11 +122,11 @@ export let _filter = (nodes, sel) => !_is.def(sel) ? Ele(nodes) : Ele(nodes).fil
 
 // Select all the different values in an Array, based on underscorejs
 export let _uniq = arr => {
-    return [].filter.call(arr, (val, idx) => arr.indexOf(val) == idx);
+    return [].filter.call(arr, (val, idx) => arr.indexOf(val) === idx);
 };
 
 // Quickly set the value of an attribute or remove the attribute completely from a node
-let _setAttr = (node, name, value) => value == null ? node.removeAttribute(name) : node.setAttribute(name, value);
+let _setAttr = (node, name, value) => value === null ? node.removeAttribute(name) : node.setAttribute(name, value);
 
 // Transform  string value to the proper type of value eg. "12" = 12, "[12, 'xyz']" = [12, 'xyz']
 let _valfix = value => {
@@ -212,7 +212,7 @@ Ele = _event.extend(arrProto, {
     len: _get("ele.length"),
     each(fn) {
         [].every.call(this, function (el, idx)
-            { return fn.call(el, el, idx) != false; });
+            { return fn.call(el, el, idx) !== false; });
         return this;
     },
 
@@ -258,7 +258,7 @@ Ele = _event.extend(arrProto, {
     },
 
     eq(idx) {
-        return idx == -1 ? this.slice(idx) : this.slice(idx, +idx + 1);
+        return idx === -1 ? this.slice(idx) : this.slice(idx, +idx + 1);
     },
 
     first() {
@@ -278,7 +278,7 @@ Ele = _event.extend(arrProto, {
             result = Ele(sel).filter(el => {
                 return [].some.call($this, parent => _contains(parent, el));
             });
-        } else if (this.length == 1) { result = Ele(_qsa(this.get(0), sel)); }
+        } else if (this.length === 1) { result = Ele(_qsa(this.get(0), sel)); }
         else { result = this.map(el => _qsa(el, sel)); }
         return result;
     },
@@ -289,7 +289,7 @@ Ele = _event.extend(arrProto, {
             this.reduce((acc, ele) => {
                 do {
                     if (list ? list.indexOf(ele) >= 0 : _matches(ele, sel)) break;
-                    ele = ele != ctxt && _is.not("doc", ele) && ele.parentNode;
+                    ele = ele !== ctxt && _is.not("doc", ele) && ele.parentNode;
                 } while (ele !== null && ele.nodeType === 1);
                 if (ele && acc.indexOf(ele) < 0) acc.push(ele);
                 return acc;
@@ -328,7 +328,7 @@ Ele = _event.extend(arrProto, {
         return _filter(this.map(el =>
             [].filter.call(
                 _children(el.parentNode),
-                child => (child != el)
+                child => (child !== el)
             )
         ), sel);
     },
@@ -339,7 +339,7 @@ Ele = _event.extend(arrProto, {
     toggle(opt) {
         return this.each(el => {
             let _el = Ele(el);
-            let _opt = opt || el.style("display") == "none";
+            let _opt = opt || el.style("display") === "none";
             _el[_opt ? "show" : "hide"]();
         });
     },
@@ -367,12 +367,12 @@ Ele = _event.extend(arrProto, {
     attr(name, val) {
         let result;
         if (_is.str(name) && _is.undef(val)) {
-            result = this.length && this.get(0).nodeType == 1 &&
+            result = this.length && this.get(0).nodeType === 1 &&
                 this.get(0).getAttribute(name);
             return !_is.nul(result) ? result : undefined;
         } else {
             return this.each((el, idx) => {
-                if (el.nodeType != 1) return;
+                if (el.nodeType !== 1) return;
                 if (_is.arr(name)) {
                     for (let i in name)
                         _setAttr(el, i, name[i]);
@@ -385,7 +385,7 @@ Ele = _event.extend(arrProto, {
 
     removeAttr(name) {
         return this.each(el => {
-            el.nodeType == 1 && name.split(' ')
+            el.nodeType === 1 && name.split(' ')
                 .forEach(attr => { _setAttr(el, attr); });
         });
     },
@@ -393,7 +393,7 @@ Ele = _event.extend(arrProto, {
     data(name, value) {
         let attrName = `data-${name}`.toLowerCase();
         let data = _is.def(value) ? this.attr(attrName, value) : this.attr(attrName);
-        return data != null ? _valfix(data) : undefined;
+        return data !== null ? _valfix(data) : undefined;
     },
 
     val(...args) {
@@ -423,13 +423,13 @@ Ele = _event.extend(arrProto, {
                     left: _coords.left - parentOffset.left
                 };
 
-                if ($this.style('position') == 'static') props.position = 'relative';
+                if ($this.style('position') === 'static') props.position = 'relative';
                 $this.style(props);
             })
         }
 
         if (!this.length) return null;
-        if (documentElement != this.get(0) && !_contains(documentElement, this.get(0)))
+        if (documentElement !== this.get(0) && !_contains(documentElement, this.get(0)))
             return { top: 0, left: 0 };
 
         obj = this.get(0).getBoundingClientRect();
@@ -459,14 +459,14 @@ Ele = _event.extend(arrProto, {
         }
 
         if (_is.str(prop)) {
-            if (!val && val != 0) {
+            if (!val && val !== 0) {
                 this.each(el => { el.style.removeProperty(prop); });
             } else {
                 css = prop + ":" + _maybeAddPx(prop, val);
             }
         } else {
             for (key in prop) {
-                if (!prop[key] && prop[key] != 0) {
+                if (!prop[key] && prop[key] !== 0) {
                     this.each(el => { el.style.removeProperty(key); });
                 } else {
                     css += key + ':' + _maybeAddPx(key, prop[key]) + ';';
@@ -555,7 +555,7 @@ Ele = _event.extend(arrProto, {
         return this.map(function (el) {
             let parent = el.offsetParent || document.body;
             while (parent && !/^(?:body|html)$/i.test(parent.nodeName) &&
-                Ele(parent).style("position") == "static")
+                Ele(parent).style("position") === "static")
                 parent = parent.offsetParent;
             return parent;
         });
@@ -664,8 +664,8 @@ nativeEvents.reduce((acc, name) => {
 
                 if (parentInDoc) {
                     traverseDF(node, function (el) {
-                        if (!_is.nul(el.nodeName) && el.nodeName.toUpperCase() == 'SCRIPT' &&
-                            (!el.type || el.type == 'text/javascript') && !el.src) {
+                        if (!_is.nul(el.nodeName) && el.nodeName.toUpperCase() === 'SCRIPT' &&
+                            (!el.type || el.type === 'text/javascript') && !el.src) {
                             let target = el.ownerDocument ? el.ownerDocument.defaultView : window;
                             target.eval.call(target, el.innerHTML);
                         }

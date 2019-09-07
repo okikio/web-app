@@ -18,7 +18,7 @@ export let _log = (...args) => args.forEach(v => console.log(v));
 export let _capital = val => val[0].toUpperCase() + val.slice(1);
 
 // Test the type of a value
-export let _is = (val, type) => (typeof val == type);
+export let _is = (val, type) => (typeof val === type);
 
 // Is Instance Of
 let _isInst = (ctor, obj) => (ctor instanceof obj);
@@ -30,7 +30,7 @@ assign(_is, {
     el: el => _isInst(el, Element) || _isInst(el, Document),
     arrlike (obj) {
         let len = _is(obj.length, "number") && obj.length;
-        return len == 0 || len > 0 && (len - 1) in obj;
+        return len === 0 || len > 0 && (len - 1) in obj;
     },
     num: val => !isNaN(val) && _type("number") (val),
     class: obj => obj && obj._method && obj._class,
@@ -43,7 +43,7 @@ assign(_is, {
     fn: _type("function"),
     str: _type("string"),
     obj: _type("object"),
-    nul: v => v == null,
+    nul: v => v === null,
     inst: _isInst,
     arr: isArray,
     _type

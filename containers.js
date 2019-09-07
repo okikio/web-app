@@ -1,13 +1,13 @@
 let { env } = process;
 if (!('dev' in env)) require('dotenv').config();
-let dev = 'dev' in env && env.dev.toString() == "true";
-let staticSite = 'staticSite' in env && env.staticSite == "true";
+let dev = 'dev' in env && env.dev.toString() === "true";
+let staticSite = 'staticSite' in env && env.staticSite === "true";
 
 /*
     -- Rules --
     General rules to use the containers.
 
-    Containers are functions that return JSON Objects, these combine together to make a huge JSON Object tree. 
+    Containers are functions that return JSON Objects, these combine together to make a huge JSON Object tree.
     Pug takes the JSON and renders it for each page of the site allowing for granular control.
     Containers are used in the `./config.js` file, along with other info. to create pages.
     Container functions support Arrays as well as Arguments.
@@ -16,7 +16,7 @@ let staticSite = 'staticSite' in env && env.staticSite == "true";
     * Components
     * Attributes
     * Class Attributes
-    
+
     ---
 
     - Components represent HTML elements, sections, layers, etc...
@@ -26,7 +26,7 @@ let staticSite = 'staticSite' in env && env.staticSite == "true";
 
     -- Beware --
     Many components require certain components be bundled together to work properly.
-    * class_add(...) only work in _class(...) functions 
+    * class_add(...) only work in _class(...) functions
         eg. layer(
             ...,
             _class([
@@ -108,13 +108,13 @@ let section = component("section"); // The section component
 
 // -- Shortform Components --
 let _link = (_content, _href) => link([
-    href(_href + (dev && staticSite ? (_href == "/" ? "index.html" : ".html") : "")), 
+    href(_href + (dev && staticSite ? (_href === "/" ? "index.html" : ".html") : "")),
     content(_content)
 ]);
 
 // Allows a user to set specific types of sections (eg. header, main, footer, etc...)
-let _section = _type => { 
-    return (...args) => section([ ...anyArgs(args), type(_type) ]); 
+let _section = _type => {
+    return (...args) => section([ ...anyArgs(args), type(_type) ]);
 };
 
 let _header = _section("header"); // The section header component

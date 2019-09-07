@@ -7,7 +7,7 @@ try {
     let check = function () {
         "use strict";
 
-        if (typeof window.Symbol == "undefined") return false;
+        if (typeof window.Symbol === "undefined") return false;
         try {
             Function("class Foo {}") ();
             Function("let bar = x => x+1;") ();

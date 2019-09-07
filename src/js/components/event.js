@@ -80,7 +80,7 @@ let _event = _class({
 
             $Evt.forEach(_evt => {
                 $args = args;
-                if (_argNames(_evt.callback)[0] == "$evt")
+                if (_argNames(_evt.callback)[0] === "$evt")
                     { $args = [_evt, ...args]; }
                 _evt.callback
                     .apply(_is.undef(_evt.scope) ? scope : _evt.scope, $args);
@@ -103,7 +103,7 @@ let _event = _class({
                 let i, app = this._eventApp(callback, scope, $evt);
 
                 _Evt.forEach((val, _i) => {
-                    if (_stringify(val) == _stringify(app)) { i = _i; }
+                    if (_stringify(val) === _stringify(app)) { i = _i; }
                 }, this);
 
                 if (i > - 1) { _Evt.splice(i, 1); }
@@ -196,7 +196,7 @@ let _event = _class({
         } else {
             ev.split(" ").forEach(val => {
                 useCapture = /blur|focus/.test(val);
-                el[action](val, _emit(ev), ev == "scroll" ? passive :
+                el[action](val, _emit(ev), ev === "scroll" ? passive :
                             { useCapture });
             });
         }

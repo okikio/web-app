@@ -81,9 +81,9 @@ module.exports._render = plugin((app, opts, next) => {
 
 // Based on fastify-static
 module.exports._static = plugin((app, opts, next) => {
-    if (opts.prefix == undefined) opts.prefix = '/';
-    let prefix = opts.prefix[opts.prefix.length - 1] == '/' ? opts.prefix : (opts.prefix + '/');
-    let schema = { schema: { hide: typeof opts.schemaHide != 'undefined' ? opts.schemaHide : true } };
+    if (opts.prefix === undefined) opts.prefix = '/';
+    let prefix = opts.prefix[opts.prefix.length - 1] === '/' ? opts.prefix : (opts.prefix + '/');
+    let schema = { schema: { hide: typeof opts.schemaHide !== 'undefined' ? opts.schemaHide : true } };
     let _err = (msg, type = Error) => next(new type(msg));
     let root = opts.root, setHeaders = opts.setHeaders;
     let pathStat, sendOpts = {
@@ -99,9 +99,9 @@ module.exports._static = plugin((app, opts, next) => {
         etag: opts.etag
     };
 
-    if (root == undefined)
+    if (root === undefined)
         { return _err('"root" option is required'); }
-    if (typeof root != 'string')
+    if (typeof root !== 'string')
         { return _err('"root" option must be a string'); }
     if (!path.isAbsolute(root))
         { return _err('"root" option must be an absolute path'); }
@@ -111,11 +111,11 @@ module.exports._static = plugin((app, opts, next) => {
         if (!pathStat.isDirectory())
             { return _err('"root" option must point to a directory'); }
 
-        if (setHeaders != undefined && typeof setHeaders != 'function')
+        if (setHeaders !== undefined && typeof setHeaders !== 'function')
             { return _err('The `setHeaders` option must be a function', TypeError); }
 
     } catch (e) {
-        return e.code == 'ENOENT' ? app.log.warn(`"root" path "${root}" must exist`) : e;
+        return e.code === 'ENOENT' ? app.log.warn(`"root" path "${root}" must exist`) : e;
     }
 
     // Simplify path to file
@@ -133,7 +133,7 @@ module.exports._static = plugin((app, opts, next) => {
             stream.on('file', _file => { file = _file; });
             wrap = new PassThrough({
                 flush(fn) {
-                    if (reply.res.statusCode == 304) reply.send('');
+                    if (reply.res.statusCode === 304) reply.send('');
                     this.finished = true; fn();
                 }
             });
@@ -156,10 +156,10 @@ module.exports._static = plugin((app, opts, next) => {
             wrap.on('pipe', val => { reply.send(val); })
                 .on('data', val => { app.cache[key] = Buffer.from(val).toString(); });
 
-            if (setHeaders != undefined)
+            if (setHeaders !== undefined)
                 { stream.on('headers', setHeaders); }
 
-            if (opts.redirect == true) {
+            if (opts.redirect === true) {
                 stream.on('directory', () => {
                     let parsed = parse(req.raw.url);
                     reply.redirect(301, parsed.pathname + '/' + (parsed.search || ''));
@@ -168,7 +168,7 @@ module.exports._static = plugin((app, opts, next) => {
 
             stream.on('error', err => {
                 if (err) {
-                    if (err.code == 'ENOENT') return reply.callNotFound();
+                    if (err.code === 'ENOENT') return reply.callNotFound();
                     reply.send(err);
                 }
             });
@@ -183,25 +183,25 @@ module.exports._static = plugin((app, opts, next) => {
         });
     }
 
-    if (opts.serve != false) {
-        if (opts.wildcard == undefined || opts.wildcard == true) {
+    if (opts.serve !== false) {
+        if (opts.wildcard === undefined || opts.wildcard === true) {
             app.get(prefix + '*', schema, (req, res) => {
                 app.sendReply(req, res, '/' + req.params['*']);
             });
 
-            if (opts.redirect && prefix != opts.prefix) {
+            if (opts.redirect && prefix !== opts.prefix) {
                 app.get(opts.prefix, schema, (req, res) => {
                     let parsed = parse(req.raw.url);
                     res.redirect(301, parsed.pathname + '/' + (parsed.search || ''));
                 });
             }
         } else {
-            let globPattern = typeof opts.wildcard == 'string' ? opts.wildcard : '**/*';
+            let globPattern = typeof opts.wildcard === 'string' ? opts.wildcard : '**/*';
             glob(path.join(sendOpts.root, globPattern), { nodir: true }, (err, files) => {
                 if (err) return next(err);
 
                 let indexDirs = new Set(), route, pathname, file;
-                let indexes = typeof opts.index == 'undefined' ? ['index.html'] : [].concat(opts.index || []);
+                let indexes = typeof opts.index === 'undefined' ? ['index.html'] : [].concat(opts.index || []);
 
                 for (let _file of files) {
                     file = _file.replace(sendOpts.root.replace(/\\/g, '/'), '').replace(/^\//, '');

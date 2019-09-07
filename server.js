@@ -1,7 +1,7 @@
 let { env } = process;
 if (!('dev' in env)) require('dotenv').config();
-let dev = 'dev' in env && env.dev.toString() == "true";
-let heroku = 'heroku' in env && env.heroku.toString() == "true";
+let dev = 'dev' in env && env.dev.toString() === "true";
+let heroku = 'heroku' in env && env.heroku.toString() === "true";
 
 const compress = require("fastify-compress");
 const noIcon = require("fastify-no-icon");
@@ -31,7 +31,7 @@ let PORT = normalizePort(process.env.PORT || 3000);
 let maxAge = (dev ? 0 : 1) * 1000 * 60 * 60 * 24 * 7;
 let app = fastify({
     logger: dev && {
-        prettyPrint: { 
+        prettyPrint: {
             translateTime: "hh:MM:ss TT",
             ignore: 'pid,hostname,reqId' // --ignore
         }

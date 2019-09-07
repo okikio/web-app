@@ -1,8 +1,8 @@
 let { env } = process;
 if (!('dev' in env)) require('dotenv').config();
-let dev = 'dev' in env && env.dev.toString() == "true";
-let debug = 'debug' in env && env.debug.toString() == "true";
-let staticSite = 'staticSite' in env && env.staticSite == "true";
+let dev = 'dev' in env && env.dev.toString() === "true";
+let debug = 'debug' in env && env.debug.toString() === "true";
+let staticSite = 'staticSite' in env && env.staticSite === "true";
 
 const gulp = require('gulp');
 const { src, task, series, parallel, dest, watch } = gulp;
@@ -74,7 +74,7 @@ let posthtmlOpts = [
     tree => {
         let buf, warnings, mime, promises = [];
         tree.walk(node => {
-            if (node.tag == 'img' && node.attrs && node.attrs.src && node.attrs.class &&
+            if (node.tag === 'img' && node.attrs && node.attrs.src && node.attrs.class &&
                 node.attrs.class.includes("placeholder-img")) {
                 mime = lookup(node.attrs.src) || 'text/plain';
 
@@ -137,15 +137,15 @@ let stream = (_src, _opt = { }, done) => {
     let host = src(_src, _opt.opts), _pipes = _opt.pipes || [], _dest = _opt.dest || publicDest;
     return new Promise((resolve, reject) => {
         _pipes.forEach(val => {
-            if (val != undefined && val != null)
+            if (val !== undefined && val !== null)
                 { host = host.pipe(val).on('error', reject); }
         });
 
         host = host.pipe(dest(_dest))
-                   .on('end', typeof done == 'function' ? done : resolve); // Output
+                   .on('end', typeof done === 'function' ? done : resolve); // Output
 
         _end.forEach(val => {
-            if (val != undefined && val != null)
+            if (val !== undefined && val !== null)
                 { host = host.pipe(val).on('error', reject); }
         });
     });
@@ -175,8 +175,8 @@ let _exec = cmd => {
 let _execSeries = (...cmds) => {
     return Promise.all(
         cmds.reduce((acc, cmd, i) => {
-            if (cmd != null && cmd != undefined)
-                acc[i] = typeof cmd == "string" ? _exec(cmd) : cmd;
+            if (cmd !== null && cmd !== undefined)
+                acc[i] = typeof cmd === "string" ? _exec(cmd) : cmd;
             return acc;
         }, [])
     );
@@ -243,7 +243,7 @@ task("js", () =>
     streamList([
         ...["modern"].concat(!dev ? "general" : [])
             .map(type => {
-                let gen = type == 'general';
+                let gen = type === 'general';
                 let suffix = gen ? '' : '.modern';
                 return ['src/js/app.js', {
                     opts: { allowEmpty: true },

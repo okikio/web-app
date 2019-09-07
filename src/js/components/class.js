@@ -6,7 +6,7 @@ import { _log, _is, _removeProps, _fnval, _argNames, _path, _attr, _new, assign,
 
 // Attach properties to class prototype or the class itself
 export let _attachProp = function (where) {
-    let _prototype = where == "prototype";
+    let _prototype = where === "prototype";
     return function (_obj, ...args) {
         // If super class exists, set value of parent to `SuperClass` prototype
         let parent = _obj.SuperClass && _obj.SuperClass.prototype;
@@ -24,7 +24,7 @@ export let _attachProp = function (where) {
 
                 // If a Parent Class is Present, Set any argument/params named `$super` to the `Parent`
                 if (_is.fn(preVal)) {
-                    if (parent && _argNames(preVal)[0] == "$super") {
+                    if (parent && _argNames(preVal)[0] === "$super") {
                         // Let the first argument be the original value
                         _val = function (...args) {
                             let parentFn = parent[i].bind(this);
@@ -101,7 +101,7 @@ export let _alias = function (props = {}, opts) {
 export let _configAttr = function (attr = "get", type = "function") {
     return val => {
         let _val = val;
-        if (type == "function") {
+        if (type === "function") {
             _val = Function(`with (this) return ${val}`);
             _val.toString = val.toString;
         }
@@ -121,7 +121,7 @@ export let _callsuper = function (obj, method, ...args) {
     // Climb prototype chain to find method not equal to callee's method
     while (_super) {
         let _method = _super.prototype[method];
-        if ($[method] != _method)
+        if ($[method] !== _method)
             { _parent = _method; break; }
 
         $ = _super.prototype;
@@ -169,7 +169,7 @@ export let props = {
 };
 
 props = keys(props).reduce(function (acc, i) {
-    i.charAt(0) == "_" && (acc[i.slice(1)] = props[i]);
+    i.charAt(0) === "_" && (acc[i.slice(1)] = props[i]);
     return acc;
 }, props);
 
