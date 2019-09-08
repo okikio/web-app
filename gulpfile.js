@@ -123,7 +123,10 @@ let posthtmlOpts = [
 let minifyOpts = {
     mangle: { reserved: ["$super"] },
     keep_fnames: true, // change to true here
-    toplevel: false,
+    toplevel: true,
+    compress: {
+        dead_code: true
+    },
     ecma: 8
 };
 let minSuffix = { suffix: ".min" };
