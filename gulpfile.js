@@ -84,7 +84,7 @@ let posthtmlOpts = [
                             buf = Buffer.from(val.data, 'base64');
                             node.attrs.src = `data:${mime};base64,${buf.toString('base64')}`;
                         }).catch(err => {
-                            console.error(`The image with the src: ${node.attrs.src} `, err);
+                            console.error(`The image with the src: ${node.attrs.src} `, err.message); // , err
                         })
                 );
             }
@@ -271,7 +271,7 @@ task("js", () =>
                     dest: `${publicDest}/js` // Output
                 }];
             }),
-            dev && staticSite ? null : ['src/js/app.vendor.js', {
+            ['src/js/app.vendor.js', {
             opts: { allowEmpty: true },
             pipes: [
                 init(), // Sourcemaps init
@@ -359,28 +359,8 @@ task("config:watch", () =>
     _exec("gulp config html css")
 );
 
-task("update", () =>
-    stream("gulpfile.js", {
-        opts: { allowEmpty: true },
-        pipes: [
-            // Bundle Modules
-            rollup({
-                plugins: [
-                    rollupJSON(), // Parse JSON Exports
-                    commonJS(), // Use CommonJS to compile file
-                    rollupBabel(babelConfig.node) // Babelify file for minifing
-                ],
-                onwarn
-            }, 'cjs'),
-            debug ? null : terser(minifyOpts), // Minify the file
-            rename(minSuffix) // Rename
-        ],
-        dest: '.' // Output
-    })
-);
-
 task("gulpfile:watch", () =>
-    _execSeries("gulp update", "gulp")
+    _execSeries("gulp")
 );
 
 task("git", () =>
@@ -403,10 +383,10 @@ task('inline', () =>
 task('dev', series("config", parallel("server", "html", "js"), "css"));
 
 // Gulp task to minify all files, and inline them in the pages
-task('default', series("update", "dev", "inline"));
+task('default', series("dev", "inline"));
 
 // Gulp task to minify all files without -js
-task('other', series("update", "config", parallel("server", "html"), "css", "inline"));
+task('other', series("config", parallel("server", "html"), "css", "inline"));
 
 // Gulp task to check to make sure a file has changed before minify that file files
 task('watch', () => {

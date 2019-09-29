@@ -10,7 +10,7 @@
     "build:dev": "gulp dev",
     "dev:build": "gulp dev",
     "gulp:build": "gulp",
-    "build": "gulp --gulpfile ./gulpfile.min.js",
+    "build": "gulp",
     "start": "pm2 start ecosystem.config.js --env production",
     "logs": "pm2 logs fastify-app",
     "stop": "pm2 stop all",
