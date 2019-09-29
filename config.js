@@ -96,6 +96,114 @@ module.exports = {
                 ]),
                 // End Intro Layer
 
+                // Breakthrough layer
+                layer([
+                    layout([
+                        _class([
+                            _layout("contain-large"),
+                            padding("horz", "large")
+                        ]),
+                        values([
+                            _main([
+                                _class([ _layout("vert") ]),
+                                values([
+                                    row([
+                                        values([
+                                            col([
+                                                _class([ _col("6"), padding("bottom-small", "right-large") ]),
+                                                values([
+                                                    _content(`Breakthrough<br>Limits!`, [
+                                                        _style("bold", "line-height"),
+                                                        "h3", color("primary")
+                                                    ])
+                                                ])
+                                            ]),
+
+                                            col([
+                                                _class( _col("6") ),
+                                                values([
+                                                    _content(`Lorem Ipsum is simply dummy text of the printing and typesetting industry.
+                                                        Lorem Ipsum has been the industry's standard dummy text ever since the 1500s, when an
+                                                        unknown printer took a galley of type and scrambled it to make a type specimen book.`,
+                                                        [ _layout("block"), _style("line-height-double"), font("16") ])
+                                                ])
+                                            ])
+                                        ])
+                                    ])
+                                ])
+                            ])
+                        ])
+                    ])
+                ]),
+                // End Breakthrough layer
+
+                // Image Column layer
+                layer([
+                    layout([
+                        _class([ _layout("contain-large") ]),
+                        values([
+                            _main([
+                                _class([ _layout("shorten-vert") ]),
+                                values([
+                                    row([
+                                        _class([ margin("dull") ]),
+                                        values([
+                                            spacingColumns(3),
+
+                                            col([
+                                                _class([ _col("9"), padding("small") ]),
+                                                values([
+                                                    _tile([ "", "",
+                                                        _class([
+                                                            _layer("box", "surface", "shadow--1"),
+                                                            _layout("block")
+                                                        ])
+                                                    ])
+                                                ])
+                                            ])
+                                        ])
+                                    ]),
+
+                                    row([
+                                        _class([ margin("dull") ]),
+                                        values([
+                                            col([
+                                                _class([ _col("9"), padding("small", "vert-large") ]),
+                                                values([
+                                                    _tile([
+                                                        "Google Designs", "",
+                                                        _img(blueSkyImg, "City Alt"),
+                                                        _class([
+                                                            _layer("box", "surface", "shadow--1"),
+                                                            _layout("block")
+                                                        ])
+                                                    ])
+                                                ])
+                                            ]),
+
+                                            spacingColumns(3),
+                                        ])
+                                    ])
+                                ])
+                            ]),
+
+                            _main([
+                                values([
+                                    indent,
+                                    `Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy text ever since the 1500s, when an unknown printer
+                                        took a galley of type and scrambled it to make a type specimen book. It has survived not only five centuries, but also the leap into electronic typesetting, remaining essentially unchanged.
+                                        It was popularised in the 1960s with the release of Letraset sheets
+                                        containing Lorem Ipsum passages, and more recently with desktop publishing software like Aldus PageMaker including versions of Lorem Ipsum, `,
+                                    _link("home", "/")
+                                ])
+                            ])
+
+                        ])
+                    ])
+                ]),
+                // End Image Column layer
+
+
                 // Next Page layer
                 layer([
                     _class([ background("black") ]),
@@ -434,7 +542,7 @@ module.exports = {
                 // Image Banner layer
                 layer([
                     layout([
-                        _class([]),
+                        _class([ margin("vert-bottom-large") ]),
                         values([
                             _main([
                                 values([
@@ -446,7 +554,7 @@ module.exports = {
                                                 values([
                                                     _tile([ "", "",
                                                         _class([
-                                                            _layer("box", "box-flat", "box-tall", "surface", "shadow--2"),
+                                                            _layer("box", "box-flat", "box-tall", "surface", "shadow"),
                                                             _layout("block")
                                                         ])
                                                     ])

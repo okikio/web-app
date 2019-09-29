@@ -131,6 +131,109 @@ module.exports = {
                     }
                 }, {
                     "layer": {
+                        "layout": {
+                            "class": "layout-contain-large layout-padding-horz layout-padding-large",
+                            "values": [{
+                                "section": {
+                                    "class": "layout-vert",
+                                    "values": [{
+                                        "row": {
+                                            "values": [{
+                                                "col": {
+                                                    "class": "layout-col-6 layout-padding-bottom-small layout-padding-right-large",
+                                                    "values": [{
+                                                        "content": "Breakthrough<br>Limits!",
+                                                        "class": "style-bold style-line-height h3 style-color-primary"
+                                                    }]
+                                                }
+                                            }, {
+                                                "col": {
+                                                    "class": "layout-col-6",
+                                                    "values": [{
+                                                        "content": "Lorem Ipsum is simply dummy text of the printing and typesetting industry.\n                                                        Lorem Ipsum has been the industry's standard dummy text ever since the 1500s, when an\n                                                        unknown printer took a galley of type and scrambled it to make a type specimen book.",
+                                                        "class": "layout-block style-line-height-double style-font-16"
+                                                    }]
+                                                }
+                                            }]
+                                        }
+                                    }],
+                                    "type": "main"
+                                }
+                            }]
+                        }
+                    }
+                }, {
+                    "layer": {
+                        "layout": {
+                            "class": "layout-contain-large",
+                            "values": [{
+                                "section": {
+                                    "class": "layout-shorten-vert",
+                                    "values": [{
+                                        "row": {
+                                            "class": "layout-margin-dull",
+                                            "values": [{
+                                                "col": {
+                                                    "class": "layout-block layout-col-3"
+                                                }
+                                            }, {
+                                                "col": {
+                                                    "class": "layout-col-9 layout-padding-small",
+                                                    "values": [{
+                                                        "tile": {
+                                                            "title": "",
+                                                            "content": "",
+                                                            "class": "layer-box layer-surface layer-shadow--1 layout-block"
+                                                        }
+                                                    }]
+                                                }
+                                            }]
+                                        }
+                                    }, {
+                                        "row": {
+                                            "class": "layout-margin-dull",
+                                            "values": [{
+                                                "col": {
+                                                    "class": "layout-col-9 layout-padding-small layout-padding-vert-large",
+                                                    "values": [{
+                                                        "tile": {
+                                                            "title": "Google Designs",
+                                                            "content": "",
+                                                            "img": {
+                                                                "src": "/assets/blue-sky",
+                                                                "alt": "City Alt"
+                                                            },
+                                                            "class": "layer-box layer-surface layer-shadow--1 layout-block"
+                                                        }
+                                                    }]
+                                                }
+                                            }, {
+                                                "col": {
+                                                    "class": "layout-block layout-col-3"
+                                                }
+                                            }]
+                                        }
+                                    }],
+                                    "type": "main"
+                                }
+                            }, {
+                                "section": {
+                                    "values": [{
+                                        "content": " ",
+                                        "class": "layout-padding-top layout-margin-left-large layout-inline-block"
+                                    }, "Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy text ever since the 1500s, when an unknown printer\n                                        took a galley of type and scrambled it to make a type specimen book. It has survived not only five centuries, but also the leap into electronic typesetting, remaining essentially unchanged.\n                                        It was popularised in the 1960s with the release of Letraset sheets\n                                        containing Lorem Ipsum passages, and more recently with desktop publishing software like Aldus PageMaker including versions of Lorem Ipsum, ", {
+                                        "a": {
+                                            "href": "/index.html",
+                                            "content": "home"
+                                        }
+                                    }],
+                                    "type": "main"
+                                }
+                            }]
+                        }
+                    }
+                }, {
+                    "layer": {
                         "class": "layer-color-black",
                         "layout": {
                             "class": "layout-contain layout-padding-horz layout-padding-top",
@@ -510,7 +613,7 @@ module.exports = {
                 }, {
                     "layer": {
                         "layout": {
-                            "class": "",
+                            "class": "layout-margin-vert-bottom-large",
                             "values": [{
                                 "section": {
                                     "values": [{
@@ -523,7 +626,7 @@ module.exports = {
                                                         "tile": {
                                                             "title": "",
                                                             "content": "",
-                                                            "class": "layer-box layer-box-flat layer-box-tall layer-surface layer-shadow--2 layout-block"
+                                                            "class": "layer-box layer-box-flat layer-box-tall layer-surface layer-shadow layout-block"
                                                         }
                                                     }]
                                                 }
