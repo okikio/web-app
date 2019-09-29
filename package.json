@@ -19,8 +19,9 @@
     "dev": "nodemon ./server"
   },
   "engines": {
-    "node": "v12.5.0",
-    "npm": "6.9.0"
+    "node": "v12.11.0",
+    "npm": "6.11.3",
+    "yarn": "1.19.0"
   },
   "repository": {
     "type": "git",

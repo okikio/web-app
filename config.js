@@ -96,8 +96,42 @@ module.exports = {
                 ]),
                 // End Intro Layer
 
+                // Next Page layer
+                layer([
+                    _class([ background("black") ]),
+                    layout([
+                        _class([ _layout("contain"), padding("horz", "top") ]),
+                        values([
+                            section([
+                                _class([ "h4", _layout("shorten") ]),
+                                values([
+                                    _header([
+                                        title("Next"),
+                                        _class([ color("white"), font("light", "thin"), _style("spaceout") ])
+                                    ]),
+                                    _main([
+                                        _class([ _style("center"), padding("vert") ]),
+                                        values([
+                                            _content(`NASA Rocket Ship`, [ "h1", _style("bold", "primary") ]),
+                                        ])
+                                    ])
+
+                                ])
+                            ]),
+                            section([
+                                _class([
+                                    _layer("box", "box-flat", "surface", "shadow"),
+                                    _layout("block")
+                                ])
+                            ])
+
+                        ])
+                    ])
+                ]),
+                // End Next Page layer
+
                 // Footer
-                newFooter()
+                // newFooter()
             ]),
             noFooter()
         ]),
@@ -428,41 +462,7 @@ module.exports = {
                 // End Image Banner layer
 
                 // Footer
-                // newFooter(),
-
-                // Next Page layer
-                layer([
-                    _class([ background("black") ]),
-                    layout([
-                        _class([ _layout("contain"), padding("horz", "top") ]),
-                        values([
-                            section([
-                                _class([ "h4", _layout("shorten") ]),
-                                values([
-                                    _header([
-                                        title("Next"),
-                                        _class([ color("white"), font("light", "thin"), _style("spaceout") ])
-                                    ]),
-                                    _main([
-                                        _class([ _style("center"), padding("vert") ]),
-                                        values([
-                                            _content(`NASA Rocket Ship`, [ "h1", _style("bold", "primary") ]),
-                                        ])
-                                    ])
-
-                                ])
-                            ]),
-                            section([
-                                _class([
-                                    _layer("box", "box-flat", "surface", "shadow"),
-                                    _layout("block")
-                                ])
-                            ])
-
-                        ])
-                    ])
-                ]),
-                // End Next Page layer
+                newFooter(),
             ]),
             noFooter()
         ])

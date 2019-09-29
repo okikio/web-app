@@ -131,12 +131,34 @@ module.exports = {
                     }
                 }, {
                     "layer": {
-                        "class": "footer",
+                        "class": "layer-color-black",
                         "layout": {
-                            "section": {
-                                "class": "layout-padding style-center style-spaceout-small style-font-weight-bold style-font-title",
-                                "values": ["Made with ❤ by Okiki Ojo."]
-                            }
+                            "class": "layout-contain layout-padding-horz layout-padding-top",
+                            "values": [{
+                                "section": {
+                                    "class": "h4 layout-shorten",
+                                    "values": [{
+                                        "section": {
+                                            "title": "Next",
+                                            "class": "style-color-white style-font-light style-font-thin style-spaceout",
+                                            "type": "header"
+                                        }
+                                    }, {
+                                        "section": {
+                                            "class": "style-center layout-padding-vert",
+                                            "values": [{
+                                                "content": "NASA Rocket Ship",
+                                                "class": "h1 style-bold style-primary"
+                                            }],
+                                            "type": "main"
+                                        }
+                                    }]
+                                }
+                            }, {
+                                "section": {
+                                    "class": "layer-box layer-box-flat layer-surface layer-shadow layout-block"
+                                }
+                            }]
                         }
                     }
                 }],
@@ -515,34 +537,12 @@ module.exports = {
                     }
                 }, {
                     "layer": {
-                        "class": "layer-color-black",
+                        "class": "footer",
                         "layout": {
-                            "class": "layout-contain layout-padding-horz layout-padding-top",
-                            "values": [{
-                                "section": {
-                                    "class": "h4 layout-shorten",
-                                    "values": [{
-                                        "section": {
-                                            "title": "Next",
-                                            "class": "style-color-white style-font-light style-font-thin style-spaceout",
-                                            "type": "header"
-                                        }
-                                    }, {
-                                        "section": {
-                                            "class": "style-center layout-padding-vert",
-                                            "values": [{
-                                                "content": "NASA Rocket Ship",
-                                                "class": "h1 style-bold style-primary"
-                                            }],
-                                            "type": "main"
-                                        }
-                                    }]
-                                }
-                            }, {
-                                "section": {
-                                    "class": "layer-box layer-box-flat layer-surface layer-shadow layout-block"
-                                }
-                            }]
+                            "section": {
+                                "class": "layout-padding style-center style-spaceout-small style-font-weight-bold style-font-title",
+                                "values": ["Made with ❤ by Okiki Ojo."]
+                            }
                         }
                     }
                 }],
