@@ -9,7 +9,7 @@ const path = require("path");
 const glob = require("glob");
 const send = require("send");
 
-const { websiteURL, cloud_name, imageURLConfig } = require('./config.min');
+const { websiteURL, cloud_name, imageURLConfig } = require('./config');
 assets.config({ cloud_name, secure: true });
 
 // For faster efficient page switching using partial output
@@ -56,14 +56,14 @@ module.exports._render = plugin((app, opts, next) => {
         let data = "", res = this;
 
         if (key in app.cache) {
-            res.type("text/html").send(app.cache[key]);
+            this.type("text/html").send(app.cache[key]);
         } else {
             createReadStream(file)
                 .on("data", val => { data += val; })
-                .on("error", err => { res.log.error(err); })
+                .on("error", err => { this.log.error(err); })
                 .on("close", () => {
                     app.cache[key] = data;
-                    res.type("text/html").send(data);
+                    this.type("text/html").send(data);
                 });
         }
 
@@ -263,11 +263,11 @@ module.exports._assets = plugin((app, opts, next) => {
             let _url, height, width, quality, effect, crop, imgURLConfig;
 
             if (media) {
-                height = query.get("h");
-                width = query.get("w") || 'auto';
-                crop = query.get("crop") || imageURLConfig.crop;
-                effect = query.get("effect") || imageURLConfig.effect;
-                quality = query.get("quality") || imageURLConfig.quality;
+                height = query.h;
+                width = query.w || 'auto';
+                crop = query.crop || imageURLConfig.crop;
+                effect = query.effect || imageURLConfig.effect;
+                quality = query.quality || imageURLConfig.quality;
                 imgURLConfig = { ...imageURLConfig, width, height, quality, crop, effect };
                 _url = assets.url(asset, imgURLConfig);
             } else {

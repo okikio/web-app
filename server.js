@@ -59,18 +59,19 @@ app.use(logger('dev')) // Simple HTTP Logging
    .register(_static, { cacheControl: true, maxAge, root });
 
 // Routes and the pages to render
-for (let i in routes)
+for (let i in routes) {
     app.get(i, (req, res) => {
         res.header("cache-control", `public, max-age=${maxAge}`);
-        res.render(routes[i], req.headers["x-partial"]);
+        res.render(routes[i]); // , req.headers["x-partial"]
     });
+}
 
 // Error handling
 app.setNotFoundHandler((req, res) => {
     res
         .code(404)
         .type(req.headers["content-type"] || 'text/plain')
-        .render("404", req.headers["x-partial"]);
+        .render("404"); // , req.headers["x-partial"]
 });
 
 app.setErrorHandler((err, req, res) => {
