@@ -185,8 +185,22 @@ module.exports = {
                                         ])
                                     ])
                                 ])
-                            ]),
+                            ])
+                        ])
+                    ])
+                ]),
+                // End Image Column layer
 
+                // Lorem Ipsum layer
+                layer([
+                    _class([ padding("horz") ]),
+                    layout([
+                        _class([
+                            _layout("shorten", "contain"),
+                            margin("vert-dull-top", "vert-bottom-extra-large")
+                        ]),
+                        values([
+                            _header(title("Lorem itpsuim")),
                             _main([
                                 values([
                                     indent,
@@ -197,12 +211,10 @@ module.exports = {
                                     _link("home", "/")
                                 ])
                             ])
-
                         ])
                     ])
                 ]),
-                // End Image Column layer
-
+                // End Lorem Ipsum layer
 
                 // Next Page layer
                 layer([

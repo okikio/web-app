@@ -216,6 +216,19 @@ module.exports = {
                                     }],
                                     "type": "main"
                                 }
+                            }]
+                        }
+                    }
+                }, {
+                    "layer": {
+                        "class": "layout-padding-horz",
+                        "layout": {
+                            "class": "layout-shorten layout-contain layout-margin-vert-dull-top layout-margin-vert-bottom-extra-large",
+                            "values": [{
+                                "section": {
+                                    "title": "Lorem itpsuim",
+                                    "type": "header"
+                                }
                             }, {
                                 "section": {
                                     "values": [{
