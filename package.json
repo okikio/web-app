@@ -16,7 +16,9 @@
     "stop": "pm2 stop all",
     "restart": "pm2 restart all",
     "pm2-start": "pm2 start server.min.js",
-    "dev": "nodemon ./server"
+    "dev": "nodemon ./server",
+    "snyk-protect": "snyk protect",
+    "prepublish": "npm run snyk-protect"
   },
   "engines": {
     "node": "v12.11.1",
@@ -55,7 +57,8 @@
     "morgan": "^1.9.1",
     "pino-pretty": "^3.2.1",
     "pm2": "^3.5.1",
-    "send": "^0.17.1"
+    "send": "^0.17.1",
+    "snyk": "^1.234.0"
   },
   "devDependencies": {
     "@babel/core": "^7.5.5",
@@ -99,5 +102,6 @@
     "smoothstate": "^0.7.2",
     "swup": "^2.0.5",
     "typographic-single-spaces": "^1.0.2"
-  }
+  },
+  "snyk": true
 }
