@@ -7,14 +7,14 @@ let staticSite = 'staticSite' in env && env.staticSite === "true";
 const gulp = require('gulp');
 const { src, task, series, parallel, dest, watch } = gulp;
 
-const nodeResolve = require('rollup-plugin-node-resolve');
+const nodeResolve = require('@rollup/plugin-node-resolve');
 const builtins = require("rollup-plugin-node-builtins");
 const browserSync = require('browser-sync').create();
 const { init, write } = require('gulp-sourcemaps');
-const commonJS = require('rollup-plugin-commonjs');
-const rollupBabel = require('rollup-plugin-babel');
+const commonJS = require('@rollup/plugin-commonjs');
+const rollupBabel = require('@rollup/plugin-babel');
 const { stringify } = require('./util/stringify');
-const rollupJSON = require("rollup-plugin-json");
+const rollupJSON = require("@rollup/plugin-json");
 const { babelConfig } = require("./browserlist");
 const replace = require('gulp-string-replace');
 const { html, js } = require('gulp-beautify');
@@ -89,8 +89,8 @@ let posthtmlOpts = [
                 );
             }
 
-		    return node;
-		});
+            return node;
+        });
 
         return Promise.all(promises).then(() => {
             // Filter errors from messages as warnings
@@ -98,8 +98,7 @@ let posthtmlOpts = [
 
             if (warnings.length) {
                 // Conditionally warn the user about any issues
-                console.warn(`\nWarnings (${warnings.length}):\n${
-                    warnings.map(msg => `  ${msg.message}`).join('\n') }\n`);
+                console.warn(`\nWarnings (${warnings.length}):\n${warnings.map(msg => `  ${msg.message}`).join('\n')}\n`);
             }
 
             // Return the ast
@@ -110,11 +109,11 @@ let posthtmlOpts = [
     // Dom process
     require('posthtml-doctype')({ doctype: 'HTML 5' }),
     require('posthtml-link-noreferrer')({
-      attr: ['noopener', 'noreferrer']
+        attr: ['noopener', 'noreferrer']
     }),
     require('posthtml-lazyload')({
-      loading: 'auto',
-      class: 'core-img',
+        loading: 'auto',
+        class: 'core-img',
     }),
     require('posthtml-inline-assets')(),
     require('posthtml-lorem')(),
@@ -133,21 +132,19 @@ let publicDest = 'public';
 let { assign } = Object;
 
 // Streamline Gulp Tasks
-let stream = (_src, _opt = { }, done) => {
+let stream = (_src, _opt = {}, done) => {
     let _end = _opt.end || [];
     let host = src(_src, _opt.opts), _pipes = _opt.pipes || [], _dest = _opt.dest || publicDest;
     return new Promise((resolve, reject) => {
         _pipes.forEach(val => {
-            if (val !== undefined && val !== null)
-                { host = host.pipe(val).on('error', reject); }
+            if (val !== undefined && val !== null) { host = host.pipe(val).on('error', reject); }
         });
 
         host = host.pipe(dest(_dest))
-                   .on('end', typeof done === 'function' ? done : resolve); // Output
+            .on('end', typeof done === 'function' ? done : resolve); // Output
 
         _end.forEach(val => {
-            if (val !== undefined && val !== null)
-                { host = host.pipe(val).on('error', reject); }
+            if (val !== undefined && val !== null) { host = host.pipe(val).on('error', reject); }
         });
     });
 };
@@ -164,11 +161,11 @@ let streamList = (...args) => {
 // Based on: [https://gist.github.com/millermedeiros/4724047]
 let _exec = cmd => {
     var parts = cmd.toString().split(/\s+/g);
-    return new Promise((resolve = () => {}) => {
+    return new Promise((resolve = () => { }) => {
         spawn(parts[0], parts.slice(1), { shell: true, stdio: 'inherit' })
             .on('data', data => process.stdout.write(data))
             .on('error', err => console.error(err))
-            .on('close', () => (resolve || function () {}) ());
+            .on('close', () => (resolve || function () { })());
     });
 };
 
@@ -213,10 +210,10 @@ task('html', () => {
                         let _imgURLConfig = { ...imageURLConfig, width, height, quality, crop, effect };
 
                         return staticSite ?
-                                (/\/raw\/[^\s"']+/.test(url) ?
-                                    `${assetURL + url.replace(queryString, '')}` :
-                                    assets.url(url.replace(queryString, ''), _imgURLConfig)
-                                ).replace("/assets/", "") : url;
+                            (/\/raw\/[^\s"']+/.test(url) ?
+                                `${assetURL + url.replace(queryString, '')}` :
+                                assets.url(url.replace(queryString, ''), _imgURLConfig)
+                            ).replace("/assets/", "") : url;
                     })
                 ]
             }]
@@ -271,7 +268,7 @@ task("js", () =>
                     dest: `${publicDest}/js` // Output
                 }];
             }),
-            ['src/js/app.vendor.js', {
+        ['src/js/app.vendor.js', {
             opts: { allowEmpty: true },
             pipes: [
                 init(), // Sourcemaps init

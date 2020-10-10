@@ -4,7 +4,6 @@ import { _log } from "./components/util";
 import preload from '@swup/preload-plugin';
 import scrollPlugin from "@swup/scroll-plugin";
 
-// import './components/smoothstate';
 // import _class from "./components/class";
 // import _event from "./components/event";
 
