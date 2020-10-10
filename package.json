@@ -2,7 +2,6 @@
   "name": "web-app",
   "version": "1.0.0",
   "description": "A web app.",
-  "main": "./server.min",
   "scripts": {
     "test": "npm run build",
     "watch": "gulp dev && gulp watch",
