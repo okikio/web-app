@@ -6,6 +6,7 @@ dependencies:
   '@rollup/plugin-json': 4.1.0_rollup@2.29.0
   '@rollup/plugin-node-resolve': 9.0.0_rollup@2.29.0
   axios: 0.19.2
+  cloudinary: 1.23.0
   dotenv: 8.2.0
   glob: 7.1.6
   mime-types: 2.1.27
@@ -2171,6 +2172,25 @@ packages:
     dev: true
     resolution:
       integrity: sha512-2EF8zTQOxYq70Y4XKtorQupqF0m49MBz2/yf5Bj+MHjvpG3Hy7sImifnqD6UA+TKYxeSV+u6qqQPawN5UvnpKQ==
+  /cloudinary-core/2.11.3_lodash@4.17.20:
+    dependencies:
+      lodash: 4.17.20
+    dev: false
+    peerDependencies:
+      lodash: '>=4.0'
+    resolution:
+      integrity: sha512-ZRnpjSgvx+LbSf+aEz5NKzxDB4Z0436aY/0BSDa90kAHiwAyd84VyEi95I74SE80e15Ri9t5S2xtksTXpzk9Xw==
+  /cloudinary/1.23.0:
+    dependencies:
+      cloudinary-core: 2.11.3_lodash@4.17.20
+      core-js: 3.6.5
+      lodash: 4.17.20
+      q: 1.5.1
+    dev: false
+    engines:
+      node: '>=0.6'
+    resolution:
+      integrity: sha512-akOxzroonvwWkuSVq7BI50nYpZPRXc5DbQIYETCVeKX9ZoToH2Gvc3MdUH63UtKiszuGYE51q2B+jQsJkBp2AQ==
   /code-point-at/1.1.0:
     dev: true
     engines:
@@ -2356,6 +2376,11 @@ packages:
     requiresBuild: true
     resolution:
       integrity: sha512-5wjnpaT/3dV+XB4borEsnAYQchn00XSgTAWKDkEqv+K8KevjbzmofK6hfJ9TZIlpj2N0xQpazy7PiRQiWHqzWg==
+  /core-js/3.6.5:
+    dev: false
+    requiresBuild: true
+    resolution:
+      integrity: sha512-vZVEEwZoIsI+vPEuoF9Iqf5H7/M3eeQqWlQnYa8FSKKePuYTf5MWnxb5SDAzCa60b3JBRS5g9b+Dq7b1y/RCrA==
   /core-util-is/1.0.2:
     dev: true
     resolution:
@@ -6151,6 +6176,13 @@ packages:
     hasBin: true
     resolution:
       integrity: sha512-hkOreFTgiyMHMmC2BxzdIw5DuC6kxAbP/gGOGd3MEsF3+5m69rIvUEPaxrnoUtfODTFKe9hcXjGwC6jcjoyhOw==
+  /q/1.5.1:
+    dev: false
+    engines:
+      node: '>=0.6.0'
+      teleport: '>=0.2.0'
+    resolution:
+      integrity: sha1-fjL3W0E4EpHQRhHxvxQQmsAGUdc=
   /qs/6.2.3:
     dev: true
     engines:
@@ -8038,6 +8070,7 @@ specifiers:
   autoprefixer: ^9.8.6
   axios: ^0.19.2
   browser-sync: ^2.26.12
+  cloudinary: ^1.23.0
   dotenv: ^8.2.0
   eslint: ^6.8.0
   fast-stringify: ^2.0.0

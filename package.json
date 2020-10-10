@@ -38,6 +38,7 @@
     "@rollup/plugin-json": "^4.1.0",
     "@rollup/plugin-node-resolve": "^9.0.0",
     "axios": "^0.19.2",
+    "cloudinary": "^1.23.0",
     "dotenv": "^8.2.0",
     "glob": "^7.1.6",
     "mime-types": "^2.1.27"
