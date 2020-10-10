@@ -68,40 +68,40 @@ let posthtmlOpts = [
     tree => {
         tree.match(/\n\s\w/gim, node => node.replace(/\n\s/gim, ' '));
     },
-    tree => {
-        let buf, warnings, mime, promises = [];
-        tree.walk(node => {
-            if (node.tag === 'img' && node.attrs && node.attrs.src && node.attrs.class &&
-                node.attrs.class.includes("placeholder-img")) {
-                mime = lookup(node.attrs.src) || 'text/plain';
+    // tree => {
+    //     let buf, warnings, mime, promises = [];
+    //     tree.walk(node => {
+    //         if (node.tag === 'img' && node.attrs && node.attrs.src && node.attrs.class &&
+    //             node.attrs.class.includes("placeholder-img")) {
+    //             mime = lookup(node.attrs.src) || 'text/plain';
 
-                promises.push(
-                    axios.get(node.attrs.src, { responseType: 'arraybuffer' })
-                        .then(val => {
-                            buf = Buffer.from(val.data, 'base64');
-                            node.attrs.src = `data:${mime};base64,${buf.toString('base64')}`;
-                        }).catch(err => {
-                            console.error(`The image with the src: ${node.attrs.src} `, err.message); // , err
-                        })
-                );
-            }
+    //             promises.push(
+    //                 axios.get(node.attrs.src, { responseType: 'arraybuffer' })
+    //                     .then(val => {
+    //                         buf = Buffer.from(val.data, 'base64');
+    //                         node.attrs.src = `data:${mime};base64,${buf.toString('base64')}`;
+    //                     }).catch(err => {
+    //                         console.error(`The image with the src: ${node.attrs.src} `, err.message); // , err
+    //                     })
+    //             );
+    //         }
 
-            return node;
-        });
+    //         return node;
+    //     });
 
-        return Promise.all(promises).then(() => {
-            // Filter errors from messages as warnings
-            warnings = tree.messages.filter(msg => msg instanceof Error);
+    //     return Promise.all(promises).then(() => {
+    //         // Filter errors from messages as warnings
+    //         warnings = tree.messages.filter(msg => msg instanceof Error);
 
-            if (warnings.length) {
-                // Conditionally warn the user about any issues
-                console.warn(`\nWarnings (${warnings.length}):\n${warnings.map(msg => `  ${msg.message}`).join('\n')}\n`);
-            }
+    //         if (warnings.length) {
+    //             // Conditionally warn the user about any issues
+    //             console.warn(`\nWarnings (${warnings.length}):\n${warnings.map(msg => `  ${msg.message}`).join('\n')}\n`);
+    //         }
 
-            // Return the ast
-            return tree;
-        });
-    },
+    //         // Return the ast
+    //         return tree;
+    //     });
+    // },
 
     // Dom process
     require('posthtml-doctype')({ doctype: 'HTML 5' }),

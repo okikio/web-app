@@ -127,7 +127,7 @@ html(lang="en")
         ul
           - for (let p of Object.keys(config.pages)) {
               li
-                +link({ content: p, href: `/${p}.html` })
+                +link({ content: p, href: `./${p}.html` })
           - }
 
         - let layerLists = page.values;
