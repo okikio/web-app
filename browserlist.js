@@ -11,11 +11,12 @@ let babelConfig = {
 
 ["modern", "general"].forEach(function (type) {
     babelConfig[type] = {
+        babelHelpers: 'bundled',
         "babelrc": false,
         "presets": [
             ["@babel/preset-env", {
                 "useBuiltIns": false,
-                "modules": 'false',
+                "modules": false,
                 "targets": {
                     "browsers": browserlist[type]
                 }

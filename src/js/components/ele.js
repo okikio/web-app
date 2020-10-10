@@ -1,9 +1,7 @@
-import anime from "animejs";
 import { _matches, _log, _is, keys, _fnval, _capital } from "./util";
 import { _get } from "./class";
 import _event from './event';
 
-export const { timeline, remove, stagger, random } = anime;
 const { documentElement } = document;
 
 let Ele;
@@ -579,23 +577,6 @@ Ele = _event.extend(arrProto, {
             top: offset.top - parentOffset.top,
             left: offset.left - parentOffset.left
         }
-    },
-
-    getAnime() { return this.anime; },
-    timeline(opt = {}) {
-        this.anime = timeline({
-            targets: _toArr(this),
-            ...opt
-        });
-
-        return this;
-    },
-    animate(opt = {}, offset) {
-        opt = _fnval(opt, [{ stagger, remove, random }, offset], this);
-        _is.def(this.anime) && this.anime.add ? this.anime.add(opt, offset) :
-            (this.anime = anime({ targets: _toArr(this), ...opt }));
-
-        return this;
     },
 },
 

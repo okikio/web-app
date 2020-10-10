@@ -61,7 +61,7 @@ let attr = (attr, defaults, list) => (...vals) => {
 };
 
 // Class attribute container
-let _class = (...args) => attr("class", "") (anyArgs(args).join(' '));
+let _class = (...args) => attr("class", "")(anyArgs(args).join(' '));
 
 // The base for containers that add to the class attribute
 let class_add = prefix => (...args) => {
@@ -108,13 +108,13 @@ let section = component("section"); // The section component
 
 // -- Shortform Components --
 let _link = (_content, _href) => link([
-    href(_href + (dev && staticSite ? (_href === "/" ? "index.html" : ".html") : "")),
+    href(`.` + _href + (_href === "/" ? "index.html" : ".html")),
     content(_content)
 ]);
 
 // Allows a user to set specific types of sections (eg. header, main, footer, etc...)
 let _section = _type => {
-    return (...args) => section([ ...anyArgs(args), type(_type) ]);
+    return (...args) => section([...anyArgs(args), type(_type)]);
 };
 
 let _header = _section("header"); // The section header component
@@ -122,7 +122,7 @@ let _main = _section("main"); // The section main component
 let _footer = _section("footer"); // The section footer component
 
 let _tabs = (...args) => tabs([
-    values( anyArgs(args).map(val => _link(val.toLowerCase(), `/${val}`)) )
+    values(anyArgs(args).map(val => _link(val.toLowerCase(), `/${val}`)))
 ]);
 
 let _img = (...args) => {
@@ -132,23 +132,23 @@ let _img = (...args) => {
 
 let _hero = (...args) => {
     let [$title = "Title", $img = [], ...$args] = anyArgs(args);
-    return hero([ title($title), _img($img), ...anyArgs($args) ]);
+    return hero([title($title), _img($img), ...anyArgs($args)]);
 };
 
 let _tile = (...args) => {
     let [$title, $content, ...$args] = anyArgs(args);
-    return tile([ title($title), content($content), ...anyArgs($args) ]);
+    return tile([title($title), content($content), ...anyArgs($args)]);
 };
 
 let _content = (...args) => {
     let [$txt, $class = [], ...$args] = anyArgs(args);
-    return assign( content($txt), _class($class), ...anyArgs($args) );
+    return assign(content($txt), _class($class), ...anyArgs($args));
 };
 
 // Shared similarites between page containers
 let page = (...args) => {
     let defaults = [title("Page"), _tabs("about", "projects", "contact")];
-    return component("page") (assign(assign(...defaults), ...anyArgs(args)));
+    return component("page")(assign(assign(...defaults), ...anyArgs(args)));
 };
 
 assign(page, { _content, _col, _style, _layer, _layout, type, _header, _main, _footer, _link, _tabs, _tile, _img, _hero, values, title, tile, tabs, src, section, row, page, padding, margin, link, layout, layer, img, href, hero, font, content, component, color, col, _class, class_add, background, attr, alt });

@@ -7,13 +7,12 @@ let staticSite = 'staticSite' in env && env.staticSite === "true";
 const gulp = require('gulp');
 const { src, task, series, parallel, dest, watch } = gulp;
 
-const nodeResolve = require('@rollup/plugin-node-resolve');
+const { nodeResolve } = require('@rollup/plugin-node-resolve');
 const builtins = require("rollup-plugin-node-builtins");
 const browserSync = require('browser-sync').create();
 const { init, write } = require('gulp-sourcemaps');
 const commonJS = require('@rollup/plugin-commonjs');
-const rollupBabel = require('@rollup/plugin-babel');
-const { stringify } = require('./util/stringify');
+const { babel } = require('@rollup/plugin-babel');
 const rollupJSON = require("@rollup/plugin-json");
 const { babelConfig } = require("./browserlist");
 const replace = require('gulp-string-replace');
@@ -22,12 +21,10 @@ const rollup = require('gulp-better-rollup');
 const { spawn } = require('child_process');
 const posthtml = require('gulp-posthtml');
 const { lookup } = require("mime-types");
-const htmlmin = require('gulp-htmlmin');
 const assets = require("cloudinary").v2;
 const postcss = require('gulp-postcss');
 const terser = require('gulp-terser');
 const rename = require('gulp-rename');
-const { writeFile } = require("fs");
 const config = require('./config');
 const sass = require('gulp-sass');
 const pug = require('gulp-pug');
@@ -128,13 +125,13 @@ let minifyOpts = {
 };
 let minSuffix = { suffix: ".min" };
 let watchDelay = { delay: 1000 };
-let publicDest = 'public';
+let docsDest = 'docs';
 let { assign } = Object;
 
 // Streamline Gulp Tasks
 let stream = (_src, _opt = {}, done) => {
     let _end = _opt.end || [];
-    let host = src(_src, _opt.opts), _pipes = _opt.pipes || [], _dest = _opt.dest || publicDest;
+    let host = src(_src, _opt.opts), _pipes = _opt.pipes || [], _dest = _opt.dest || docsDest;
     return new Promise((resolve, reject) => {
         _pipes.forEach(val => {
             if (val !== undefined && val !== null) { host = host.pipe(val).on('error', reject); }
@@ -193,9 +190,9 @@ task('html', () => {
                         extname: ".html"
                     }),
                     // Pug compiler
-                    pug({ locals: { ...page, cloud_name, dev, staticSite } }),
+                    pug({ locals: { ...page, cloud_name, dev, staticSite, config } }),
                     // Minify or Beautify html
-                    dev ? html({ indent_size: 4 }) : htmlmin(htmlMinOpts),
+                    html({ indent_size: 4 }),
                     // Replace /assets/... URLs
                     replace(/\/assets\/[^\s"']+/g, url => {
                         let URLObj = new URL(`${assetURL + url}`.replace("/assets/", ""));
@@ -209,11 +206,14 @@ task('html', () => {
                         let quality = query.get("quality") || imageURLConfig.quality;
                         let _imgURLConfig = { ...imageURLConfig, width, height, quality, crop, effect };
 
-                        return staticSite ?
-                            (/\/raw\/[^\s"']+/.test(url) ?
-                                `${assetURL + url.replace(queryString, '')}` :
-                                assets.url(url.replace(queryString, ''), _imgURLConfig)
-                            ).replace("/assets/", "") : url;
+                        return (/\/raw\/[^\s"']+/.test(url) ?
+                            `${assetURL + url.replace(queryString, '')}` :
+                            assets.url(url.replace(queryString, ''), _imgURLConfig)
+                        ).replace("/assets/", "");
+                    }, {
+                        logs: {
+                            enabled: false
+                        }
                     })
                 ]
             }]
@@ -226,13 +226,13 @@ task("css", () =>
         pipes: [
             init(), // Sourcemaps init
             // Minify scss to css
-            sass({ outputStyle: dev ? 'expanded' : 'compressed' }).on('error', sass.logError),
+            sass({ outputStyle: 'compressed' }).on('error', sass.logError),
             // Autoprefix &  Remove unused CSS
             postcss(), // Rest of code is in postcss.config.js
             rename(minSuffix), // Rename
-            write(...srcMapsWrite) // Put sourcemap in public folder
+            write(...srcMapsWrite) // Put sourcemap in docs folder
         ],
-        dest: `${publicDest}/css`, // Output
+        dest: `${docsDest}/css`, // Output
         end: [browserSync.stream()]
     })
 );
@@ -254,7 +254,7 @@ task("js", () =>
                                 rollupJSON(), // Parse JSON Exports
                                 commonJS(), // Use CommonJS to compile the program
                                 nodeResolve(), // Bundle all Modules
-                                rollupBabel(babelConfig[type]) // Babelify file for uglifing
+                                babel(babelConfig[type]) // Babelify file for uglifing
                             ],
                             onwarn
                         }, gen ? 'umd' : 'es'),
@@ -263,9 +263,9 @@ task("js", () =>
                             assign({}, minifyOpts, gen ? { ie8: true, ecma: 5 } : {})
                         ),
                         rename(`app${suffix}.min.js`), // Rename
-                        write(...srcMapsWrite) // Put sourcemap in public folder
+                        write(...srcMapsWrite) // Put sourcemap in docs folder
                     ],
-                    dest: `${publicDest}/js` // Output
+                    dest: `${docsDest}/js` // Output
                 }];
             }),
         ['src/js/app.vendor.js', {
@@ -279,7 +279,7 @@ task("js", () =>
                         rollupJSON(), // Parse JSON Exports
                         commonJS(), // Use CommonJS to compile the program
                         nodeResolve(), // Bundle all Modules
-                        rollupBabel(babelConfig.general) // ES5 file for uglifing
+                        babel(babelConfig.general) // ES5 file for uglifing
                     ],
                     onwarn
                 }, 'umd'),
@@ -288,72 +288,16 @@ task("js", () =>
                     assign({}, minifyOpts, { ie8: true, ecma: 5 })
                 ),
                 rename(minSuffix), // Rename
-                write(...srcMapsWrite) // Put sourcemap in public folder
+                write(...srcMapsWrite) // Put sourcemap in docs folder
             ],
-            dest: `${publicDest}/js` // Output
+            dest: `${docsDest}/js` // Output
         }]
     ])
 );
 
-task("server", () =>
-    streamList([
-        ["server.js", {
-            opts: { allowEmpty: true },
-            pipes: [
-                // Bundle Modules
-                rollup({
-                    plugins: [
-                        rollupJSON(), // Parse JSON Exports
-                        commonJS(), // Use CommonJS to compile file
-                        rollupBabel(babelConfig.node) // Babelify file for minifing
-                    ],
-                    onwarn
-                }, 'cjs'),
-                debug ? null : terser(minifyOpts), // Minify the file
-                rename(minSuffix) // Rename
-            ],
-            dest: '.' // Output
-        }]
-    ])
-);
-
-task("config", () =>
-    streamList(
-        new Promise((resolve, reject) => {
-            // Create config.min
-            writeFile(
-                "./config.min.js", `module.exports = ${stringify(config)};`,
-                err => {
-                    if (err) { reject(); throw err; }
-                    resolve();
-                }
-            );
-        }),
-        ["config.min.js", {
-            opts: { allowEmpty: true },
-            pipes: [
-                // Minify the file
-                terser(minifyOpts),
-            ],
-            dest: '.' // Output
-        }],
-        dev ? ["config.min.js", {
-            opts: { allowEmpty: true },
-            pipes: [
-                js({ indent_size: 4 }), // Beautify the file
-                // Rename
-                rename({
-                    basename: "config-dev",
-                    extname: ".js"
-                })
-            ],
-            dest: '.' // Output
-        }] : null
-    )
-);
 
 task("config:watch", () =>
-    _exec("gulp config html css")
+    _exec("gulp html css")
 );
 
 task("gulpfile:watch", () =>
@@ -369,7 +313,7 @@ task("git", () =>
 );
 
 task('inline', () =>
-    stream('public/*.html', {
+    stream('docs/*.html', {
         pipes: [
             posthtml(posthtmlOpts)
         ]
@@ -377,19 +321,15 @@ task('inline', () =>
 );
 
 // Gulp task to minify all files
-task('dev', series("config", parallel("server", "html", "js"), "css"));
+task('dev', series(parallel("html", "js"), "css"));
 
 // Gulp task to minify all files, and inline them in the pages
 task('default', series("dev", "inline"));
 
-// Gulp task to minify all files without -js
-task('other', series("config", parallel("server", "html"), "css", "inline"));
-
 // Gulp task to check to make sure a file has changed before minify that file files
 task('watch', () => {
-    browserSync.init({ server: "./public" });
+    browserSync.init({ server: "./docs" });
 
-    watch(['server.js', 'plugin.js'], watchDelay, series('server'));
     watch(['config.js', 'containers.js'], watchDelay, series('config:watch'));
     watch(['gulpfile.js', 'postcss.config.js', 'util/*.js'], watchDelay, series('gulpfile:watch', 'css', 'js'));
 
@@ -398,6 +338,6 @@ task('watch', () => {
     watch(['src/**/*.js', '!src/**/app.vendor.js'], watchDelay, series('js'));
 
     watch('src/**/app.vendor.js', watchDelay, series('js'));
-    watch(['public/**/*', '!public/css/*.css'])
+    watch(['docs/**/*', '!docs/css/*.css'])
         .on('change', browserSync.reload);
 });

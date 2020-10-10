@@ -1,11 +1,8 @@
-import swup from "swup";
+import barba from "@barba/core";
 import el from "./components/ele";
 import { _log } from "./components/util";
-import preload from '@swup/preload-plugin';
-import scrollPlugin from "@swup/scroll-plugin";
 
-// import _class from "./components/class";
-// import _event from "./components/event";
+import { animate } from "@okikio/animate";
 
 let _backToTop = el('#back-to-top');
 let _navbar = el('.navbar');
@@ -69,18 +66,55 @@ _load = () => {
 };
 
 _load();
-new swup({
-    requestHeaders: {
-        "X-Requested-With": "swup", // So we can tell request comes from swup
-        "x-partial": "swup" // Request a partial html page
-    },
-    plugins: [new preload(), new scrollPlugin({
-        doScrollingRightAway: false,
-        animateScroll: true,
-        scrollFriction: 0.3,
-        scrollAcceleration: 0.04,
-    })]
-})
+barba.init({
+    // debug: true,
+    transitions: [{
+        enter({ current, next }) {
+            const done = this.async();
+            try {
+                let currentmain = current.container.querySelector(".main");
+                let nextmain = next.container.querySelector(".main");
 
-// This event runs for every page view after initial load
-.on('contentReplaced', _load);
+                nextmain.style.opacity = "0";
+                currentmain.style.opacity = "1";
+
+                (async () => {
+                    await animate({
+                        target: currentmain,
+                        opacity: [1, 0],
+                        easing: "ease",
+                        duration: 300
+                    });
+                    currentmain.style.opacity = "0";
+
+                    done();
+                })();
+            } catch (e) {
+                console.log(e.message);
+                done();
+            }
+        },
+        after({ next }) {
+            const done = this.async();
+            try {
+                let nextmain = next.container.querySelector(".main");
+
+                (async () => {
+                    await animate({
+                        target: nextmain,
+                        opacity: [0, 1],
+                        easing: "ease",
+                        duration: 300,
+                    });
+
+                    nextmain.style.opacity = "1";
+                    _load();
+                    done();
+                })();
+            } catch (e) {
+                console.log(e.message);
+                done();
+            }
+        },
+    }]
+});

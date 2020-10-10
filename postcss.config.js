@@ -7,7 +7,7 @@ const csso = require("postcss-csso");
 module.exports = {
     plugins: [
         purgecss({
-            content: ['public/**/*.html'],
+            content: ['docs/**/*.html'],
             whitelistPatterns: [/-show$/, /-focus$/],
             keyframes: false,
             fontFace: false

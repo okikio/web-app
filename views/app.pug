@@ -16,9 +16,8 @@ html(lang="en")
     link(rel='dns-prefetch' href='https://cdnjs.cloudflare.com/')
     link(rel='preconnect' href='https://cdnjs.cloudflare.com/')
 
-    if staticSite
-      link(rel='dns-prefetch' href=`https://res.cloudinary.com/${cloud_name}/`)
-      link(rel='preconnect' href=`https://res.cloudinary.com/${cloud_name}/`)
+    link(rel='dns-prefetch' href=`https://res.cloudinary.com/${cloud_name}/`)
+    link(rel='preconnect' href=`https://res.cloudinary.com/${cloud_name}/`)
 
     link(rel="preload" href="https://polyfill.io/v3/polyfill.min.js?flags=gated&features=IntersectionObserver%2CHTMLPictureElement%2CIntersectionObserverEntry%2CXMLHttpRequest%2Cconsole.log%2Cdocument.querySelector%2Cfetch%2CrequestAnimationFrame%2C%7Ehtml5-elements%2C%7Eviewport%2CgetComputedStyle%2CMutationObserver%2CObject.assign%2CObject.getOwnPropertyNames%2CObject.keys%2CObject.values%2CRegExp.prototype.flags%2CURL%2Cblissfuljs%2Cdefault%2Ces2015%2Ces2016%2Ces2017%2Ces2018%2Ces5%2Ces6%2Ces7%2CArray.prototype.includes%2CArray.prototype.filter%2CArray.prototype.find%2CArray.prototype.forEach%2CArray.prototype.every%2CArray.isArray%2CArray.from%2CEvent" as="script" async crossorigin="anonymous")
 
@@ -99,69 +98,77 @@ html(lang="en")
     include ./components/layer.pug
     include ./components/layout.pug
     include ./components/section.pug
+    include ./components/content.pug
     include ./components/hero.pug
     include ./components/footer.pug
-  body
+  body(data-barba="wrapper")
     //- Navbar etc...
     +header(page)
 
-    mixin sectionView(section)
-      if typeof section == "object"
-        +section(section)
+    div(data-barba="container")
+      mixin sectionView(section)
+        if typeof section == "object"
+          +section(section)
 
-    mixin layoutView(layout)
-      if typeof layout == "object"
-        - let sectionList = layout.values;
-        - let section = layout.section;
-        +layout(layout)
-          +sectionView(section)
+      mixin layoutView(layout)
+        if typeof layout == "object"
+          - let sectionList = layout.values;
+          - let section = layout.section;
+          +layout(layout)
+            +sectionView(section)
 
-          if Array.isArray(sectionList)
-            each sections in sectionList
-              - let section = sections.section;
-                +sectionView(section)
+            if Array.isArray(sectionList)
+              each sections in sectionList
+                - let section = sections.section;
+                  +sectionView(section)
 
-    .header-top-spot
-    main.main#swup.transition-fade
-      - let layerLists = page.values;
+      .header-top-spot
+      main.main#swup.transition-fade
+        ul
+          - for (let p of Object.keys(config.pages)) {
+              li
+                +link({ content: p, href: `/${p}.html` })
+          - }
 
-      //- Page Layers
-      if Array.isArray(layerLists)
-        each layers in layerLists
-          - let layer = layers.layer;  //- Display Custom Layer if it exists
-          - let hero = layers.hero; //- Display Hero Layer if it exists
+        - let layerLists = page.values;
 
-          if typeof hero == "object"
-            +hero(hero)
+        //- Page Layers
+        if Array.isArray(layerLists)
+          each layers in layerLists
+            - let layer = layers.layer;  //- Display Custom Layer if it exists
+            - let hero = layers.hero; //- Display Hero Layer if it exists
 
-          if typeof layer == "object"
-            - let layout = layer.layout;
-            - let layoutList = layer.values;
-            +layer(layer)
-              +layoutView(layout)
+            if typeof hero == "object"
+              +hero(hero)
 
-              if Array.isArray(layoutList)
-                each layouts in layoutList
-                  - let layout = layouts.layout;
-                  +layoutView(layout)
+            if typeof layer == "object"
+              - let layout = layer.layout;
+              - let layoutList = layer.values;
+              +layer(layer)
+                +layoutView(layout)
 
-    .layer-action-center.layer-action-center-show
-      article
-        .layout-flex.layout-padding-horz
-          section.layout-spacer
-          section
-            button#back-to-top.btn.layer-round.layout-padding-small.layer-surface.layer-shadow.layer-secondary-hover.style-secondary.style-hover-black(tabindex='-1', type='button')
-              span.btn-group
-                i.icon.style-font-sz-24 expand_less
+                if Array.isArray(layoutList)
+                  each layouts in layoutList
+                    - let layout = layouts.layout;
+                    +layoutView(layout)
 
-            if page.noFooter
-              button.copyright-btn#swup.btn.btn-default.layer-round.layout-padding-small.layer-surface.layer-shadow.layer-secondary-hover.style-secondary.style-hover-black(tabindex='-1', type='button')
-                span.btn-group.style-font-sz-24
-                  i.icon copyright
-                  span.btn-spacer
-                  span.btn-content 2019 Okiki Ojo
+      .layer-action-center.layer-action-center-show
+        article
+          .layout-flex.layout-padding-horz
+            section.layout-spacer
+            section
+              button#back-to-top.btn.layer-round.layout-padding-small.layer-surface.layer-shadow.layer-secondary-hover.style-secondary.style-hover-black(tabindex='-1', type='button')
+                span.btn-group
+                  i.icon.style-font-sz-24 expand_less
 
-    if !page.noFooter
-      +footer("Made with ❤ by Okiki Ojo.")
+              if page.noFooter
+                button.copyright-btn#swup.btn.btn-default.layer-round.layout-padding-small.layer-surface.layer-shadow.layer-secondary-hover.style-secondary.style-hover-black(tabindex='-1', type='button')
+                  span.btn-group.style-font-sz-24
+                    i.icon copyright
+                    span.btn-spacer
+                    span.btn-content 2019 Okiki Ojo
+
+      if !page.noFooter
+        +footer("Made with ❤ by Okiki Ojo.")
 
     script(src=`${dev ? './js/app.modern.min.js' : './js/app.vendor.min.js'}` inline defer)
