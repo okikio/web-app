@@ -1,6 +1,0 @@
-language: node_js
-node_js:
-  - "v14"
-cache: npm
-cache: yarn
-cache: pnpm
