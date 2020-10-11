@@ -12,10 +12,12 @@ jobs:
         with:
           persist-credentials: false
 
-      - name: Install and Build 🔧
+      - name: Node v14
         uses: actions/setup-node@v1.4.4
         with:
           node-version: '14.x'
+
+      - name: Install and Build 🔧
         run: |
           npm install pnpm
           npx pnpm install
