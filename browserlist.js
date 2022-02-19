@@ -15,7 +15,7 @@ let babelConfig = {
         "presets": [
             ["@babel/preset-env", {
                 "useBuiltIns": false,
-                "modules": 'false',
+                "modules": 'auto',
                 "targets": {
                     "browsers": browserlist[type]
                 }

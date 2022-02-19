@@ -1,5 +1,4 @@
 language: node_js
 node_js:
-  - "v12.11.1"
+  - "v16"
 cache: npm
-cache: yarn

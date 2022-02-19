@@ -44,11 +44,6 @@ html(lang="en")
     <![endif]-->
 
     link(rel='stylesheet' href='./css/app.min.css' inline async)
-    <!--[if lt IE 10]>
-      script(src='https://cdnjs.cloudflare.com/ajax/libs/flexibility/2.0.1/flexibility.js' async)
-      script.
-        flexibility(document.documentElement);
-    <![endif]-->
 
     script.
       var check = function () {
@@ -78,9 +73,6 @@ html(lang="en")
       };
 
       if (/msie|trident|edge/g.test(navigator.userAgent.toLowerCase()) || !check()) {
-        _require("https://cdnjs.cloudflare.com/ajax/libs/flexibility/2.0.1/flexibility.js", function () {
-          //- flexibility(document.documentElement);
-        });
         _require("https://cdnjs.cloudflare.com/ajax/libs/picturefill/3.0.3/picturefill.min.js");
         _require("https://cdnjs.cloudflare.com/ajax/libs/html5-history-api/4.2.10/history.min.js");
         _require("https://cdnjs.cloudflare.com/ajax/libs/html5-history-api/4.2.10/history.ielte7.min.js");

@@ -7,14 +7,14 @@ let staticSite = 'staticSite' in env && env.staticSite === "true";
 const gulp = require('gulp');
 const { src, task, series, parallel, dest, watch } = gulp;
 
-const nodeResolve = require('rollup-plugin-node-resolve');
+const { default: nodeResolve } = require('@rollup/plugin-node-resolve');
 const builtins = require("rollup-plugin-node-builtins");
 const browserSync = require('browser-sync').create();
 const { init, write } = require('gulp-sourcemaps');
-const commonJS = require('rollup-plugin-commonjs');
-const rollupBabel = require('rollup-plugin-babel');
+const commonJS = require('@rollup/plugin-commonjs');
+const { default: rollupBabel } = require('@rollup/plugin-babel');
 const { stringify } = require('./util/stringify');
-const rollupJSON = require("rollup-plugin-json");
+const rollupJSON = require("@rollup/plugin-json");
 const { babelConfig } = require("./browserlist");
 const replace = require('gulp-string-replace');
 const { html, js } = require('gulp-beautify');
@@ -29,7 +29,7 @@ const terser = require('gulp-terser');
 const rename = require('gulp-rename');
 const { writeFile } = require("fs");
 const config = require('./config');
-const sass = require('gulp-sass');
+const sass = require("gulp-sass")(require("sass"));
 const pug = require('gulp-pug');
 const axios = require("axios");
 

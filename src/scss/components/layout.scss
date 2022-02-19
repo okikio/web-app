@@ -3,6 +3,8 @@
      * vert = vertical
      * horz = horizontal
 */
+@use "sass:math";
+
 .layout {
    position: relative;
    display: block;
@@ -537,7 +539,7 @@
 
          @for $i from 1 through 12 {
             &-#{$i} {
-               max-width: 100% / 12 * $i;
+               max-width: math.div(100%, 12) * $i;
                @media (max-width: 750px) {
                   @if $i >= 6 {
                      max-width: 100%;
