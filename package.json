@@ -84,7 +84,7 @@
         "gulp-string-replace": "^1.1.2",
         "gulp-terser": "^2.1.0",
         "nodemon": "^3.0.1",
-        "postcss": "^8.4.26",
+        "postcss": "^8.4.31",
         "postcss-csso": "^6.0.1",
         "posthtml-doctype": "^1.1.1",
         "posthtml-inline-assets": "^3.1.0",
