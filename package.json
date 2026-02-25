@@ -92,7 +92,7 @@
         "posthtml-link-noreferrer": "^1.0.10",
         "posthtml-lorem": "^1.0.0",
         "posthtml-textr": "^1.0.5",
-        "rollup": "^3.26.2",
+        "rollup": "^3.30.0",
         "rollup-plugin-node-builtins": "^2.1.2",
         "sass": "^1.63.6",
         "smoothstate": "^0.7.2",
