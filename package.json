@@ -57,7 +57,7 @@
         "snyk": "^1.1189.0"
     },
     "devDependencies": {
-        "@babel/core": "^7.22.9",
+        "@babel/core": "^7.29.6",
         "@babel/preset-env": "^7.22.9",
         "@fullhuman/postcss-purgecss": "^5.0.0",
         "@rollup/plugin-babel": "^6.0.3",
